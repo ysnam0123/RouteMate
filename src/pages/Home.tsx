@@ -1,5 +1,6 @@
 import useRandomBackgroundImage from '../hook/Homebackground';
 
+import Button from '../components/button';
 import homeButtonIcon from '../assets/icons/homeIcon.svg';
 import searchIcon from '../assets/icons/Search.svg';
 import homeLogo from '../assets/images/homeLogo.png';
@@ -26,29 +27,20 @@ export default function Home() {
           </h1>
           {/* 여행이야기, 검색하기 */}
           <div className="flex flex-row gap-25 ml-[150px] mt-[50px]">
-            <button
-              className="flex gap-2 items-center justify-center bg-[white] w-[155px] h-[50px] rounded-xl 
-              hover:border-3 hover:border-[#4DACFF] hover:text-[#4DA0FF] 
-              cursor-pointer
-              transition-all duration-100 ease-in
-              active:scale-95
-              
-              "
+            <Button
+              className="flex gap-2 items-center justify-center bg-[white] w-[155px] h-[50px] text-black
+              hover:border-3 hover:border-[#4DACFF] hover:text-[#4DA0FF]"
             >
               <img src={homeButtonIcon} alt="homeButtonIcon" />
               <span className="mt-[4px] "> 여행 이야기</span>
-            </button>
-            <button
-              className="flex gap-2 items-center justify-center bg-[white] w-[155px] h-[50px] rounded-xl
-              transition-all duration-100 ease-in
-              cursor-pointer
-            hover:border-3 hover:border-[#FF6A09] hover:text-[#FF6A09] 
-            active:scale-95
-            "
+            </Button>
+            <Button
+              className="flex gap-2 items-center justify-center bg-[white] w-[155px] h-[50px] text-black
+            hover:border-3 hover:border-[#FF6A09] hover:text-[#FF6A09]"
             >
               <img src={searchIcon} alt="searchIcon" />
               <span className="mt-[4px]"> 검색하기 </span>
-            </button>
+            </Button>
           </div>
         </div>
         {/* 오른쪽 전체 wrapper */}
@@ -72,22 +64,12 @@ export default function Home() {
           </div>
           {/* button box */}
           <div className="flex flex-col gap-5">
-            <button
-              className="bg-[#60B5FF] w-[248px] h-[50px] rounded-[7px] font-semibold text-[22px] text-white shadow-[4px_6px_4px_rgba(0,0,0,0.25)]
-              cursor-pointer
-              hover:bg-[#3985C7] active:scale-95 transition-all duration-100 ease-in-out
-"
-            >
+            <Button className="bg-[#60B5FF] w-[248px] h-[50px] text-[22px] hover:bg-[#3985C7]">
               Log In
-            </button>
-            <button
-              className="bg-[#FF9149] w-[248px] h-[50px] rounded-[7px] font-semibold text-[22px] text-white shadow-[4px_6px_4px_rgba(0,0,0,0.25)]
-              cursor-pointer
-              hover:bg-[#C36B32] active:scale-95 transition-all duration-100 ease-in-out
-"
-            >
+            </Button>
+            <Button className="bg-[#FF9149] w-[248px] h-[50px]  text-[22px] hover:bg-[#C36B32]">
               Register
-            </button>
+            </Button>
           </div>
         </div>
       </div>
