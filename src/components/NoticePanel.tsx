@@ -47,7 +47,10 @@ const notifications = [
 function NoticePanel({ onClose }: NoticePanelProps): React.ReactElement {
   return (
     // 패널 전체 높이를 채우고 내부에서 스크롤되도록 설정
-    <div className="p-4 flex flex-col h-full bg-white">
+    <div
+      className="px-4 flex flex-col text-sm bg-white rounded-lg shadow-md h-full w-80"
+      style={{ boxShadow: "4px 0 6px rgba(0, 0, 0, 0.15)" }}
+    >
       {/* 헤더 */}
       <div className="flex justify-between items-center mb-4 flex-shrink-0">
         <h2 className="text-2xl font-bold text-orange-500">알림</h2>
