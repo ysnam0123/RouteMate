@@ -7,7 +7,7 @@ interface SearchPanelProps {
 function SearchPanel({ onClose }: SearchPanelProps): React.ReactElement {
   return (
     <div
-      className="px-4 flex flex-col text-sm bg-white rounded-lg shadow-md h-full w-80" // 좌우 패딩 유지, 상하 패딩 없음
+      className="px-4 flex flex-col text-sm bg-white rounded-lg shadow-md h-full w-80"
       style={{ boxShadow: "4px 0 6px rgba(0, 0, 0, 0.15)" }}
     >
       {/* 헤더: 제목, 라디오 버튼, 닫기 버튼을 한 줄에 배치 */}
