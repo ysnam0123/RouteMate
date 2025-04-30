@@ -78,8 +78,11 @@ function Sidebar(): React.ReactElement {
   };
 
   let isExpanded = highlightedItemId !== null;
+
   // let sidebarWidth = isExpanded ? "w-[500px] border-r-0" : "w-[70px]";
-  let menuPanelWidth = isExpanded ? "w-[70px]" : "w-[200px]";
+  let shouldShrinkSidebar =
+    highlightedItemId === "search" || highlightedItemId === "notice";
+  let menuPanelWidth = shouldShrinkSidebar ? "w-[70px]" : "w-[200px]";
 
   return (
     <nav className="h-screen bg-white flex transition-all duration-300">
@@ -109,8 +112,7 @@ function Sidebar(): React.ReactElement {
                 <span
                   className={`text-sm ${
                     isItemActive ? "text-white" : "text-gray-800"
-                  }
-                     ${isExpanded ? "hidden" : ""}`}
+                  } ${shouldShrinkSidebar ? "hidden" : ""}`}
                 >
                   {item.text}
                 </span>
