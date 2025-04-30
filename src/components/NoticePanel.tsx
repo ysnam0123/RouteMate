@@ -6,7 +6,7 @@ interface NoticePanelProps {
 }
 
 // 임시 알림 데이터 (실제로는 상태나 props로 받아야 함)
-const notifications = [
+let notifications = [
   {
     id: 1,
     avatar: "/src/assets/images/알림 프사.png",
@@ -52,8 +52,8 @@ function NoticePanel({ onClose }: NoticePanelProps): React.ReactElement {
       style={{ boxShadow: "4px 0 6px rgba(0, 0, 0, 0.15)" }}
     >
       {/* 헤더 */}
-      <div className="flex justify-between items-center mb-4 flex-shrink-0">
-        <h2 className="text-2xl font-bold text-orange-500">알림</h2>
+      <div className="flex justify-between items-center mb-4 pt-4">
+        <h2 className="text-2xl font-bold text-orange-500 mr-19">알림</h2>
         <button
           onClick={onClose}
           className="text-gray-500 hover:text-gray-700 text-xl"
