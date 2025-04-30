@@ -10,7 +10,7 @@ import { useState } from 'react';
 import SearchPanel from './SearchPanel';
 import NoticePanel from './NoticePanel';
 
-const menuItems: MenuItem[] = [
+let menuItems: MenuItem[] = [
   {
     id: 'share',
     icon: <img src={newPostIcon} />,
@@ -47,15 +47,13 @@ const menuItems: MenuItem[] = [
 ];
 
 function Sidebar(): React.ReactElement {
-  const [isSearchMode, setIsSearchMode] = useState<boolean>(false);
-  const [highlightedItemId, setHighlightedItemId] = useState<string | null>(
-    null
-  );
+  let [isSearchMode, setIsSearchMode] = useState<boolean>(false);
+  let [highlightedItemId, setHighlightedItemId] = useState<string | null>(null);
 
-  const handleItemClick = (item: MenuItem, event: React.MouseEvent) => {
+  let handleItemClick = (item: MenuItem, event: React.MouseEvent) => {
     event.preventDefault();
     if (item.isSearchTrigger) {
-      const nextSearchMode = !isSearchMode;
+      let nextSearchMode = !isSearchMode;
       setIsSearchMode(nextSearchMode);
       setHighlightedItemId(nextSearchMode ? item.id : null);
     } else {
@@ -70,45 +68,51 @@ function Sidebar(): React.ReactElement {
     }
   };
 
-  const handleCloseSearch = () => {
+  let handleCloseSearch = () => {
     setIsSearchMode(false);
     setHighlightedItemId(null);
   };
 
-  const handleClosePanel = () => {
-    setHighlightedItemId(null); // 하이라이트만 제거 (검색모드는 영향 없음)
+  let handleClosePanel = () => {
+    setHighlightedItemId(null);
   };
 
-  const isExpanded = highlightedItemId !== null;
-  const sidebarWidth = isExpanded ? 'w-[500px] border-r-0' : 'w-[70px]';
+  let isExpanded = highlightedItemId !== null;
+  // let sidebarWidth = isExpanded ? "w-[500px] border-r-0" : "w-[70px]";
+  let menuPanelWidth = isExpanded ? 'w-[70px]' : 'w-[200px]';
 
   return (
-    <nav
-      // 너비와 트랜지션은 이전 코드와 동일하게 유지 (w-[450px] 또는 필요시 w-[430px] 등 사용)
-      className={`h-screen bg-[#EDF9FF] border-r border-gray-200 flex transition-all duration-300 ease-in-out ${sidebarWidth}`}
-    >
-      {/* --- 1. 아이콘 컬럼 (항상 표시) --- */}
-      {/* 아이콘 컬럼은 하나만 남깁니다. */}
-      <div className="w-[70px] p-4 flex-shrink-0 overflow-y-auto border-r border-gray-200">
-        <ul>
+    <nav className="h-screen bg-white flex transition-all duration-300">
+      <div
+        className={`p-4 overflow-y-auto bg-sky-100 transition-all duration-300 ease-in-out ${menuPanelWidth}`}
+      >
+        <ul className="items-start justify-start text-left">
           {menuItems.map((item) => {
-            const isItemActive = item.id === highlightedItemId;
-            const iconContainerClasses = `p-2 mb-2 rounded-md cursor-pointer transition duration-150 ease-in-out group flex items-center justify-center ${
+            let isItemActive = item.id === highlightedItemId;
+            let iconContainerClasses = `p-2 mb-2 rounded-md cursor-pointer transition duration-150 ease-in-out group flex items-center justify-center ${
               isItemActive ? 'bg-orange-500 shadow-md' : 'hover:bg-gray-200'
             }`;
             return (
               <li
                 key={item.id}
-                className={iconContainerClasses.trim()}
+                className={`${iconContainerClasses.trim()} items-start justify-start text-left`}
                 onClick={(e) => handleItemClick(item, e)}
-                title={item.text} // 툴팁
+                title={item.text}
               >
                 <span
-                  className={`w-5 h-5 block ${
+                  className={`w-5 h-5 block mr-3 flex-shrink-0 ${
                     isItemActive ? 'filter brightness-0 invert' : ''
                   }`}
                 >
                   {item.icon}
+                </span>
+                <span
+                  className={`text-sm ${
+                    isItemActive ? 'text-white' : 'text-gray-800'
+                  }
+                     ${isExpanded ? 'hidden' : ''}`}
+                >
+                  {item.text}
                 </span>
               </li>
             );
@@ -116,45 +120,30 @@ function Sidebar(): React.ReactElement {
         </ul>
       </div>
 
-      {/* --- 아이콘 컬럼 중복 부분 삭제 --- */}
-      {/* <div className="w-[70px] p-4 flex-shrink-0 overflow-y-auto border-r border-gray-200"> ... </div> */}
-
-      {/* --- 2. 컨텐츠 영역 (확장 시 표시) --- */}
-      {/* 컨텐츠 영역도 하나만 남깁니다 (NoticePanel 로직이 있는 버전). */}
       <div className="flex-grow overflow-hidden">
         {' '}
-        {/* 이전 px-4 등은 제거됨 */}
-        {/* isExpanded 상태일 때만 내부 컨텐츠 렌더링 */}
         {isExpanded && (
-          // h-full로 높이 채우기
           <div className="h-full w-full bg-white">
             {' '}
-            {/* 너비 100% 명시 */}
             {isSearchMode ? (
-              // 검색 모드일 때 SearchPanel 렌더링
               <SearchPanel onClose={handleCloseSearch} />
             ) : (
-              // 검색 모드가 아닐 때 highlightedItemId에 따라 분기
               <>
                 {highlightedItemId === 'notice' && (
-                  // 'notice' 일 때 NoticePanel 렌더링
                   <NoticePanel onClose={handleClosePanel} />
                 )}
 
-                {/* 다른 아이템 ID에 대한 처리 (우선 제목만 표시) */}
                 {highlightedItemId &&
                   highlightedItemId !== 'notice' &&
                   highlightedItemId !== 'search' && (
                     <div className="p-4">
                       {' '}
-                      {/* 기본 패딩 추가 */}
                       <h2 className="text-lg font-semibold mb-4">
                         {
                           menuItems.find((i) => i.id === highlightedItemId)
                             ?.text
                         }
                       </h2>
-                      {/* 각 메뉴에 맞는 컴포넌트 추가 필요 */}
                       <p>
                         Content for '
                         {
