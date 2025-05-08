@@ -7,7 +7,7 @@ interface SearchPanelProps {
 function SearchPanel({ onClose }: SearchPanelProps): React.ReactElement {
   return (
     <div
-      className="px-4 flex flex-col text-sm bg-white rounded-lg shadow-md h-full w-80"
+      className="px-4 flex flex-col text-sm bg-white rounded-lg shadow-md h-full w-90"
       style={{ boxShadow: "4px 0 6px rgba(0, 0, 0, 0.15)" }}
     >
       {/* 헤더: 제목, 라디오 버튼, 닫기 버튼을 한 줄에 배치 */}
@@ -15,7 +15,7 @@ function SearchPanel({ onClose }: SearchPanelProps): React.ReactElement {
         {" "}
         {/* 헤더 영역 */}
         {/* 1. 제목 */}
-        <h2 className="text-2xl font-semibold text-orange-500 flex-shrink-0 mr-19">
+        <h2 className="text-2xl font-semibold flex-shrink-0 mr-19">
           {" "}
           {/* 너비 줄어들지 않게, 오른쪽 마진 추가 */}
           검색
@@ -73,7 +73,12 @@ function SearchPanel({ onClose }: SearchPanelProps): React.ReactElement {
       <div className="relative mb-4 flex justify-end">
         <select
           // 기존 input과 유사한 스타일 적용 + select 스타일링 위한 클래스 추가
-          className="w-1/2 p-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-500 appearance-none bg-white pr-8 cursor-pointer" // appearance-none, bg-white, pr-8, cursor-pointer 추가
+          className="w-1/2 p-2 border border-gray-300 rounded focus:outline-none"
+          style={{
+            borderColor: "var(--color-main-skyBlue-hover)",
+            boxShadow: "0 0 0 1px var(--color-lightGray-focus)", // ring 대체
+            appearance: "none",
+          }}
           defaultValue="" // 플레이스홀더 역할을 하는 첫 옵션이 기본 선택되도록
           // onChange={(e) => { /* 선택 변경 시 처리 로직 */ }}
           // value={selectedChannel} // React 상태와 연결 시
@@ -106,50 +111,58 @@ function SearchPanel({ onClose }: SearchPanelProps): React.ReactElement {
           type="text"
           //   placeholder="검색어를 입력하세요." // 필요에 따라 placeholder 변경 가능
           // 일반적인 입력창 스타일 적용
-          className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-orange-500 focus:border-orange-500 hover:border-orange-500"
+          className="w-full p-2 border border-gray-300 rounded focus:outline-none"
+          // style={{
+          //   borderColor: "var(--color-main-skyBlue-hover)",
+          //   boxShadow: "0 0 0 1px var(--color-lightGray-focus)", // ring 대체
+          // }}
           // onChange={(e) => { /* 검색어 상태 업데이트 로직 */ }}
           // value={searchTerm} // React 상태와 연결 시
         />
       </div>
       {/* 최근 검색 항목 */}
       <div className="flex-grow overflow-y-auto border-t border-gray-200 pt-3 pb-4">
-        <h3 className="text-base font-black mb-2 text-gray-700">
+        <h3 className="text-base font-bold mb-2 text-black-700">
           최근 검색 항목
         </h3>
         {/* ... ul, li 등 ... (이하 동일) */}
         <ul>
           <li className="flex justify-between items-center py-1.5 mb-1 group">
-            <span className="text-gray-800 cursor-pointer hover:text-blue-600">
-              채널 주인 1
-            </span>
-            <button
-              className="text-gray-400 hover:text-red-500 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-              aria-label="Remove search item"
-            >
-              ✕
-            </button>
+            <div className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
+              <img
+                src="/src/assets/images/Ellipse 25.png"
+                alt="프로필"
+                className="w-8 h-8 rounded-full mr-1"
+              />
+              <span className="text-gray-800">채널 주인 1</span>
+            </div>
+            <button aria-label="Remove search item">✕</button>
           </li>
           <li className="flex justify-between items-center py-1.5 mb-1 group">
-            <span className="text-gray-800 cursor-pointer hover:text-blue-600">
-              채널 주인 2
-            </span>
-            <button
-              className="text-gray-400 hover:text-red-500 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-              aria-label="Remove search item"
-            >
-              ✕
-            </button>
+            <div className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
+              <img
+                src="/src/assets/images/Ellipse 25.png"
+                alt="프로필"
+                className="w-8 h-8 rounded-full mr-1"
+              />
+              <span className="text-gray-800 cursor-pointer hover:text-blue-600">
+                채널 주인 2
+              </span>
+            </div>
+            <button aria-label="Remove search item">✕</button>
           </li>
           <li className="flex justify-between items-center py-1.5 mb-1 group">
-            <span className="text-gray-800 cursor-pointer hover:text-blue-600">
-              채널 주인 3
-            </span>
-            <button
-              className="text-gray-400 hover:text-red-500 text-xs opacity-0 group-hover:opacity-100 transition-opacity"
-              aria-label="Remove search item"
-            >
-              ✕
-            </button>
+            <div className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
+              <img
+                src="/src/assets/images/Ellipse 25.png"
+                alt="프로필"
+                className="w-8 h-8 rounded-full mr-1"
+              />
+              <span className="text-gray-800 cursor-pointer hover:text-blue-600">
+                채널 주인 3
+              </span>
+            </div>
+            <button aria-label="Remove search item">✕</button>
           </li>
         </ul>
       </div>
