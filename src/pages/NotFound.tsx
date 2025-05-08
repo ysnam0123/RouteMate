@@ -1,4 +1,4 @@
-import Button from '../components/button';
+import Button from '../components/common/button';
 import NotFoundImg from '../assets/images/NotFound.svg';
 export default function NotFound() {
   return (

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import ChannelNav from '../components/ChannelNav';
+import ChannelNav from '../components/channel/ChannelNav';
 
 interface Channel {
   _id: string;

@@ -1,22 +1,24 @@
-import Sidebar from './components/Sidebar';
+import Sidebar from './components/sidebar/Sidebar';
 import Channel from './pages/Channel';
-import Header from './layout/Header';
-import Post from './components/Post';
+import Header from './components/layout/Header';
+import Home from './pages/Home';
+import { Routes, Route } from 'react-router-dom';
+import RootLayout from './components/layout/RootLayout';
+// import Login from './pages/Login';
+// import Register from './pages/Register';
+import NotFound from './pages/NotFound';
 export default function App() {
   return (
     <>
-      <Header />
-      <div className="flex flex-row">
-        <Sidebar />
-        <div className="flex flex-col">
-          <div className="flex justify-center w-screen">
-            <Channel />
-          </div>
-          <div className="flex justify-center">
-            <Post />
-          </div>
-        </div>
-      </div>
+      <Routes>
+        <Route element={<RootLayout />}>
+          <Route path="/" element={<Home />} />
+          {/* <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} /> */}
+          <Route path="/channel" element={<Channel />} />
+        </Route>
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </>
   );
 }
