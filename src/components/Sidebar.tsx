@@ -85,11 +85,11 @@ function Sidebar(): React.ReactElement {
   let menuPanelWidth = shouldShrinkSidebar ? "w-[70px]" : "w-[235px]";
 
   return (
-    <nav className="h-screen bg-white flex transition-all duration-300 pt-4">
+    <nav className="h-screen bg-white flex transition-all duration-300">
       <div
         className={`p-4 overflow-y-auto bg-[var(--color-sideBody)] transition-all duration-300 ease-in-out ${menuPanelWidth}`}
       >
-        <ul className="items-start justify-start text-left">
+        <ul className="items-start justify-start text-left mt-1.5">
           {menuItems.map((item) => {
             let isItemActive = item.id === highlightedItemId;
             let iconContainerClasses = `p-2 mb-2 rounded-md cursor-pointer transition duration-150 ease-in-out group flex items-center justify-center ${
