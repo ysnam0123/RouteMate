@@ -12,7 +12,7 @@ export default function Tag({ icon, label, selected, onClick }: TagProps) {
     <div
       onClick={onClick}
       className={twMerge(
-        "w-42 h-8 border border-[#949494] rounded-[19px] text-[#949494] mx-0.5 my-0.5 flex items-center gap-1 px-5 cursor-pointer hover:text-[var(--color-main-skyBlue)] hover:border-[var(--color-main-skyBlue)] hover:border-2 transition-all duration-200",
+        "w-42 h-8 border border-[#949494] rounded-[19px] text-[#949494] mx-3 my-1.5 flex items-center gap-1 px-5 cursor-pointer hover:text-[var(--color-main-skyBlue)] hover:border-[var(--color-main-skyBlue)] hover:border-2 transition-all duration-200",
         selected &&
           "border-[var(--color-main-skyBlue)] text-[var(--color-main-skyBlue)] border-2"
       )}
