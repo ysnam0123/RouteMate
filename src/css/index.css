@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @import './tailwind.css';
 @import './root.css';
 @font-face {
@@ -8,6 +9,19 @@
 }
 .montserrat {
   font-family: 'Montserrat';
+=======
+@import "./root.css";
+@import "./tailwind.css";
+
+@font-face {
+  font-family: "Montserrat";
+  src: url("/src/fonts/Montserrat.woff2") format("woff2"),
+    url("/src/fonts/Montserrat.woff") format("woff");
+  font-style: normal;
+}
+.montserrat {
+  font-family: "Montserrat";
+>>>>>>> origin/publish/sidebar
   font-style: normal;
 }
 @layer utilities {

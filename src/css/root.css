@@ -1,13 +1,24 @@
+<<<<<<< HEAD
 /* src/main.tsx 또는 src/index.tsx */
+=======
+>>>>>>> origin/publish/sidebar
 :root {
   --color-main-navy: #063579;
   --color-main-skyBlue: #60b5ff;
   --color-main-blue: #3b82f6;
+<<<<<<< HEAD
   --color-lightGray: #e5e5e5;
   --color-darkGray: #434343;
   --color-white: #ffffff;
   --color-darkNavy: #202e48;
   --color-black: #000000;
+=======
+  --color-lightGray: #e4e4e4;
+  --color-darkGray: #434343;
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-darkNavy: #202e48;
+>>>>>>> origin/publish/sidebar
 
   /* focus */
   --color-lightGray-focus: #60b5ff;
@@ -30,6 +41,7 @@
   --color-selected: #3b82f6;
 
   /* 게시글 */
+<<<<<<< HEAD
   --color-channel-notSelected: #8f8f8f;
   --color-channel-selected: #60b5ff;
   --color-post-border: #aeaeae;
@@ -41,3 +53,11 @@
 /* .dark{
 
 } */
+=======
+  --color-theme: #2a728c;
+}
+
+/* .dark{
+  
+  } */
+>>>>>>> origin/publish/sidebar

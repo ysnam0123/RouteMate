@@ -9,36 +9,61 @@ interface NoticePanelProps {
 let notifications = [
   {
     id: 1,
+<<<<<<< HEAD:src/components/sidebar/NoticePanel.tsx
     avatar: '/src/assets/images/알림 프사.png',
     text: 'namyoonseo 님의 발자국을 남겼습니다.',
+=======
+    avatar: "/src/assets/images/알림 프사.png",
+    text: "namyoonseo 님이 발자국을 남겼습니다.",
+>>>>>>> origin/publish/sidebar:src/components/NoticePanel.tsx
     comment: ':"댓글"',
     time: '3분 전',
   },
   {
     id: 2,
+<<<<<<< HEAD:src/components/sidebar/NoticePanel.tsx
     avatar: '/src/assets/images/알림 프사.png',
     text: 'namyoonseo 님의 회원님의 게시글을 좋아합니다.',
+=======
+    avatar: "/src/assets/images/알림 프사.png",
+    text: "namyoonseo 님이 회원님의 게시글을 좋아합니다.",
+>>>>>>> origin/publish/sidebar:src/components/NoticePanel.tsx
     comment: null,
     time: '3분 전',
   },
   {
     id: 3,
+<<<<<<< HEAD:src/components/sidebar/NoticePanel.tsx
     avatar: '/src/assets/images/알림 프사.png',
     text: 'namyoonseo 님의 발자국을 남겼습니다.',
+=======
+    avatar: "/src/assets/images/알림 프사.png",
+    text: "namyoonseo 님이 발자국을 남겼습니다.",
+>>>>>>> origin/publish/sidebar:src/components/NoticePanel.tsx
     comment: ':"댓글"',
     time: '3분 전',
   },
   {
     id: 4,
+<<<<<<< HEAD:src/components/sidebar/NoticePanel.tsx
     avatar: '/src/assets/images/알림 프사.png',
     text: 'namyoonseo 님의 발자국을 남겼습니다.',
+=======
+    avatar: "/src/assets/images/알림 프사.png",
+    text: "namyoonseo 님이 발자국을 남겼습니다.",
+>>>>>>> origin/publish/sidebar:src/components/NoticePanel.tsx
     comment: ':"댓글"',
     time: '3분 전',
   },
   {
     id: 5,
+<<<<<<< HEAD:src/components/sidebar/NoticePanel.tsx
     avatar: '/src/assets/images/알림 프사.png',
     text: 'namyoonseo 님의 발자국을 남겼습니다.',
+=======
+    avatar: "/src/assets/images/알림 프사.png",
+    text: "namyoonseo 님이 발자국을 남겼습니다.",
+>>>>>>> origin/publish/sidebar:src/components/NoticePanel.tsx
     comment: '"댓글"',
     time: '3분 전',
   },
@@ -48,12 +73,17 @@ function NoticePanel({ onClose }: NoticePanelProps): React.ReactElement {
   return (
     // 패널 전체 높이를 채우고 내부에서 스크롤되도록 설정
     <div
+<<<<<<< HEAD:src/components/sidebar/NoticePanel.tsx
       className="px-4 flex flex-col text-sm bg-white rounded-lg shadow-md h-full w-80"
       style={{ boxShadow: '4px 0 6px rgba(0, 0, 0, 0.15)' }}
+=======
+      className="px-4 flex flex-col text-sm bg-white rounded-lg shadow-md h-full w-90"
+      style={{ boxShadow: "4px 0 6px rgba(0, 0, 0, 0.15)" }}
+>>>>>>> origin/publish/sidebar:src/components/NoticePanel.tsx
     >
       {/* 헤더 */}
       <div className="flex justify-between items-center mb-4 pt-4">
-        <h2 className="text-2xl font-bold text-orange-500 mr-19">알림</h2>
+        <h2 className="text-2xl font-bold mr-19">알림</h2>
         <button
           onClick={onClose}
           className="text-gray-500 hover:text-gray-700 text-xl cursor-pointer"
@@ -71,15 +101,15 @@ function NoticePanel({ onClose }: NoticePanelProps): React.ReactElement {
           >
             {/* 아바타 이미지 */}
             <img
-              src={notice.avatar}
+              src="/src/assets/images/Ellipse 35.png"
               alt="avatar"
               className="w-8 h-8 rounded-full flex-shrink-0 mt-1"
             />
             {/* 텍스트 내용 */}
-            <div className="flex-grow text-sm">
+            <div className="flex-grow text-xs">
               <p className="text-gray-800 font-bold">{notice.text}</p>
               {notice.comment && (
-                <p className="text-gray-600 mt-1">{notice.comment}</p>
+                <p className="text-gray-800 font-bold">{notice.comment}</p>
               )}
             </div>
             {/* 시간 */}

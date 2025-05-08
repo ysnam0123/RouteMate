@@ -6,12 +6,14 @@ import emailNot from '../assets/icons/emailNotOk.png';
 import emailOk from '../assets/icons/emailOk.png';
 import passwordNot from '../assets/icons/passwordNotOk.svg';
 import passwordOk from '../assets/icons/passwordOk.svg';
+import useRandomVideo from '../hook/RandomVideo';
 
 export default function Register() {
   const [email, setEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const video = useRandomVideo();
 
   // 이메일 올바르게 쳤나 확인
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,7 +38,15 @@ export default function Register() {
 
   return (
     <div className="w-screen h-screen flex items-center justify-center bg-[var(--color-darkNavy)]">
-      <div className="w-[650px] h-[750px] bg-[var(--color-white)] rounded-[30px] flex flex-col">
+      <video
+        autoPlay
+        muted
+        loop
+        className="absolute top-0 left-0 w-full h-full object-cover z-0"
+      >
+        <source src={video} type="video/mp4" />
+      </video>
+      <div className="relative w-[650px] h-[750px] bg-[var(--color-white)] rounded-[30px] flex flex-col mb-[150px]">
         {/* 상단 */}
         <div className="w-[650px] h-[440px] flex items-center justify-center relative border-b-[3px] border-[var(--color-black)]">
           <div className="absolute left-0 top-0 bottom-0 w-[2px]" />
