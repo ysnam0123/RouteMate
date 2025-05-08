@@ -1,10 +1,9 @@
-import Sidebar from "./components/Sidebar";
-// import Sidebar from "./components/Sidebar2";
+import Profile from "./pages/Profile";
 
 export default function App() {
   return (
     <>
-      <Sidebar />
+      <Profile />
     </>
   );
 }
