@@ -82,18 +82,20 @@ function Sidebar(): React.ReactElement {
   // let sidebarWidth = isExpanded ? "w-[500px] border-r-0" : "w-[70px]";
   let shouldShrinkSidebar =
     highlightedItemId === "search" || highlightedItemId === "notice";
-  let menuPanelWidth = shouldShrinkSidebar ? "w-[70px]" : "w-[200px]";
+  let menuPanelWidth = shouldShrinkSidebar ? "w-[70px]" : "w-[235px]";
 
   return (
-    <nav className="h-screen bg-white flex transition-all duration-300">
+    <nav className="h-screen bg-white flex transition-all duration-300 pt-4">
       <div
-        className={`p-4 overflow-y-auto bg-sky-100 transition-all duration-300 ease-in-out ${menuPanelWidth}`}
+        className={`p-4 overflow-y-auto bg-[var(--color-sideBody)] transition-all duration-300 ease-in-out ${menuPanelWidth}`}
       >
         <ul className="items-start justify-start text-left">
           {menuItems.map((item) => {
             let isItemActive = item.id === highlightedItemId;
             let iconContainerClasses = `p-2 mb-2 rounded-md cursor-pointer transition duration-150 ease-in-out group flex items-center justify-center ${
-              isItemActive ? "bg-orange-500 shadow-md" : "hover:bg-gray-200"
+              isItemActive
+                ? "bg-[var(--color-selected)]"
+                : "bg-[var(--color-sideBody)]"
             }`;
             return (
               <li
@@ -110,9 +112,11 @@ function Sidebar(): React.ReactElement {
                   {item.icon}
                 </span>
                 <span
-                  className={`text-sm ${
-                    isItemActive ? "text-white" : "text-gray-800"
-                  } ${shouldShrinkSidebar ? "hidden" : ""}`}
+                  className="text-sm"
+                  style={{
+                    color: isItemActive ? "white" : "var(--color-notSelected)",
+                    display: shouldShrinkSidebar ? "none" : "inline",
+                  }}
                 >
                   {item.text}
                 </span>
