@@ -1,8 +1,8 @@
 import testsignInImg from "../assets/images/프로필사진.png";
 import testSearch from "../assets/icons/free-icon-south-korea-9105510 2.png";
 import testSetting from "../assets/icons/Star.png";
-import testLike from "../assets/icons/like.svg";
-import testFoot from "../assets/icons/footPrintBlack.svg";
+import testLike from "../assets/icons/Heart.png";
+import testFoot from "../assets/icons/footprintWhite.png";
 // 임시 프로필,아이콘 사진
 import Button from "../components/button";
 
