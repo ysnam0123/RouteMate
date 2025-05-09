@@ -24,42 +24,20 @@ axiosInstance.interceptors.request.use(
     }
 );
 
-let retry = false;
-
 // 응답 인터셉터
 axiosInstance.interceptors.response.use(
-    (response) => response, // 응답이 성공하면 그대로 반환
+    (response) => response,
     async (error) => {
-        const originalRequest = error.config;
-        // 만약 403 에러가 발생하고 재시도한 적이 없으면
-        if (error.response?.status === 403 && !retry) {
-            retry = true;
-            console.log('토큰 실패, 새 토큰 발급 시도');
-
-            try {
-                // 리프레시 토큰을 사용해 새로운 액세스 토큰을 요청
-                const { data } = await axiosInstance.post('/token');
-
-                // 새로운 액세스 토큰을 상태에 저장
-                useAuthStore.setState({
-                    accessToken: data.accessToken,
-                    isLoggedIn: true,
-                });
-
-                retry = false;
-
-                // 원본 요청에 새로운 액세스 토큰을 헤더에 추가하고 재시도
-                originalRequest.headers['Authorization'] = `Bearer ${data.accessToken}`;
-                return axiosInstance(originalRequest);
-            } catch (refreshError) {
-                // 리프레시 토큰도 실패한 경우, 로그아웃 처리 또는 페이지 리디렉션
-                console.error('리프레시 토큰 실패:', refreshError);
-                useAuthStore.setState({ isLoggedIn: false, accessToken: '' });
-                // 리다이렉션 또는 로그아웃 처리
-                // 예: window.location.href = '/login';
-                return Promise.reject(refreshError);
-            }
+        if (error.response?.status === 403) {
+            console.error('403 에러 발생: 토큰 만료 또는 권한 없음');
+            // 자동 로그아웃 처리
+            useAuthStore.getState().logout();
+            // 로그인전 유저에게 알려주기
+            alert('세션이 만료되어 다시 로그인해주세요.');
+            // 로그인 페이지로 이동
+            window.location.href = '/login';
         }
+
         return Promise.reject(error);
     }
 );
