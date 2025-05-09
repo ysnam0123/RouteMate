@@ -7,26 +7,16 @@ interface SearchPanelProps {
 function SearchPanel({ onClose }: SearchPanelProps): React.ReactElement {
   return (
     <div
-<<<<<<< HEAD:src/components/sidebar/SearchPanel.tsx
-      className="px-4 flex flex-col text-sm bg-white rounded-lg shadow-md h-full w-80"
-      style={{ boxShadow: '4px 0 6px rgba(0, 0, 0, 0.15)' }}
-=======
       className="px-4 flex flex-col text-sm bg-white rounded-lg shadow-md h-full w-90"
-      style={{ boxShadow: "4px 0 6px rgba(0, 0, 0, 0.15)" }}
->>>>>>> origin/publish/sidebar:src/components/SearchPanel.tsx
+      style={{ boxShadow: '4px 0 6px rgba(0, 0, 0, 0.15)' }}
     >
       {/* 헤더: 제목, 라디오 버튼, 닫기 버튼을 한 줄에 배치 */}
       <div className="flex justify-between items-center mb-4 pt-4">
         {' '}
         {/* 헤더 영역 */}
         {/* 1. 제목 */}
-<<<<<<< HEAD:src/components/sidebar/SearchPanel.tsx
-        <h2 className="text-2xl font-semibold text-orange-500 flex-shrink-0 mr-19">
-          {' '}
-=======
         <h2 className="text-2xl font-semibold flex-shrink-0 mr-19">
-          {" "}
->>>>>>> origin/publish/sidebar:src/components/SearchPanel.tsx
+          {' '}
           {/* 너비 줄어들지 않게, 오른쪽 마진 추가 */}
           검색
         </h2>
@@ -85,9 +75,9 @@ function SearchPanel({ onClose }: SearchPanelProps): React.ReactElement {
           // 기존 input과 유사한 스타일 적용 + select 스타일링 위한 클래스 추가
           className="w-1/2 p-2 border border-gray-300 rounded focus:outline-none"
           style={{
-            borderColor: "var(--color-main-skyBlue-hover)",
-            boxShadow: "0 0 0 1px var(--color-lightGray-focus)", // ring 대체
-            appearance: "none",
+            borderColor: 'var(--color-main-skyBlue-hover)',
+            boxShadow: '0 0 0 1px var(--color-lightGray-focus)', // ring 대체
+            appearance: 'none',
           }}
           defaultValue="" // 플레이스홀더 역할을 하는 첫 옵션이 기본 선택되도록
           // onChange={(e) => { /* 선택 변경 시 처리 로직 */ }}

@@ -23,7 +23,7 @@ export default function Home() {
   };
   const video = useRandomVideo();
   return (
-    <div className="w-screen h-screen bg-cover">
+    <div className="w-screen h-screen bg-cover overflow-hidden fixed">
       <video
         autoPlay
         muted

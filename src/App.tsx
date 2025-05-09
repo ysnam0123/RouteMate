@@ -13,8 +13,8 @@ export default function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/" element={<Home />} />
         <Route element={<RootLayout />}>
-          <Route path="/" element={<Home />} />
           <Route path="/channel" element={<Channel />} />
         </Route>
         <Route path="*" element={<NotFound />} />

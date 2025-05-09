@@ -4,8 +4,7 @@ import { createRoot } from 'react-dom/client';
 import './css/index.css';
 import App from './App.tsx';
 import { BrowserRouter } from 'react-router-dom';
-import Channel from './pages/Channel.tsx';
-import Home from './pages/Home.tsx';
+import PoPr from './components/post/PoPr.tsx';
 // import NotFound from './pages/NotFound.tsx';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

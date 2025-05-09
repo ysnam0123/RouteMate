@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import like from '../assets/icons/like.svg';
-import liked from '../assets/icons/liked.svg';
-import footPrint from '../assets/icons/footPrint.svg';
+import like from '../../assets/icons/like.svg';
+import liked from '../../assets/icons/liked.svg';
+import footPrint from '../../assets/icons/footPrintBlack.svg';
 
 import { useLikeStore } from '../../stores/likeStore';
 
 export default function PostButton() {
-  const [isLiked, setIsLiked] = useState(false); // ✅ 상태 추가
+  const [isLiked, setIsLiked] = useState(false);
   const likes = useLikeStore((state) => state.likes);
 
   const handleLikeClick = () => {

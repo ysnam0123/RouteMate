@@ -9,61 +9,36 @@ interface NoticePanelProps {
 let notifications = [
   {
     id: 1,
-<<<<<<< HEAD:src/components/sidebar/NoticePanel.tsx
     avatar: '/src/assets/images/알림 프사.png',
-    text: 'namyoonseo 님의 발자국을 남겼습니다.',
-=======
-    avatar: "/src/assets/images/알림 프사.png",
-    text: "namyoonseo 님이 발자국을 남겼습니다.",
->>>>>>> origin/publish/sidebar:src/components/NoticePanel.tsx
+    text: 'namyoonseo 님이 발자국을 남겼습니다.',
     comment: ':"댓글"',
     time: '3분 전',
   },
   {
     id: 2,
-<<<<<<< HEAD:src/components/sidebar/NoticePanel.tsx
     avatar: '/src/assets/images/알림 프사.png',
-    text: 'namyoonseo 님의 회원님의 게시글을 좋아합니다.',
-=======
-    avatar: "/src/assets/images/알림 프사.png",
-    text: "namyoonseo 님이 회원님의 게시글을 좋아합니다.",
->>>>>>> origin/publish/sidebar:src/components/NoticePanel.tsx
+    text: 'namyoonseo 님이 회원님의 게시글을 좋아합니다.',
     comment: null,
     time: '3분 전',
   },
   {
     id: 3,
-<<<<<<< HEAD:src/components/sidebar/NoticePanel.tsx
     avatar: '/src/assets/images/알림 프사.png',
-    text: 'namyoonseo 님의 발자국을 남겼습니다.',
-=======
-    avatar: "/src/assets/images/알림 프사.png",
-    text: "namyoonseo 님이 발자국을 남겼습니다.",
->>>>>>> origin/publish/sidebar:src/components/NoticePanel.tsx
+    text: 'namyoonseo 님이 발자국을 남겼습니다.',
     comment: ':"댓글"',
     time: '3분 전',
   },
   {
     id: 4,
-<<<<<<< HEAD:src/components/sidebar/NoticePanel.tsx
     avatar: '/src/assets/images/알림 프사.png',
-    text: 'namyoonseo 님의 발자국을 남겼습니다.',
-=======
-    avatar: "/src/assets/images/알림 프사.png",
-    text: "namyoonseo 님이 발자국을 남겼습니다.",
->>>>>>> origin/publish/sidebar:src/components/NoticePanel.tsx
+    text: 'namyoonseo 님이 발자국을 남겼습니다.',
     comment: ':"댓글"',
     time: '3분 전',
   },
   {
     id: 5,
-<<<<<<< HEAD:src/components/sidebar/NoticePanel.tsx
     avatar: '/src/assets/images/알림 프사.png',
-    text: 'namyoonseo 님의 발자국을 남겼습니다.',
-=======
-    avatar: "/src/assets/images/알림 프사.png",
-    text: "namyoonseo 님이 발자국을 남겼습니다.",
->>>>>>> origin/publish/sidebar:src/components/NoticePanel.tsx
+    text: 'namyoonseo 님이 발자국을 남겼습니다.',
     comment: '"댓글"',
     time: '3분 전',
   },
@@ -73,13 +48,8 @@ function NoticePanel({ onClose }: NoticePanelProps): React.ReactElement {
   return (
     // 패널 전체 높이를 채우고 내부에서 스크롤되도록 설정
     <div
-<<<<<<< HEAD:src/components/sidebar/NoticePanel.tsx
-      className="px-4 flex flex-col text-sm bg-white rounded-lg shadow-md h-full w-80"
-      style={{ boxShadow: '4px 0 6px rgba(0, 0, 0, 0.15)' }}
-=======
       className="px-4 flex flex-col text-sm bg-white rounded-lg shadow-md h-full w-90"
-      style={{ boxShadow: "4px 0 6px rgba(0, 0, 0, 0.15)" }}
->>>>>>> origin/publish/sidebar:src/components/NoticePanel.tsx
+      style={{ boxShadow: '4px 0 6px rgba(0, 0, 0, 0.15)' }}
     >
       {/* 헤더 */}
       <div className="flex justify-between items-center mb-4 pt-4">

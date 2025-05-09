@@ -2,7 +2,7 @@ import React from 'react';
 import like from '../../assets/icons/like.svg';
 import footPrint from '../../assets/icons/footPrintBlack.svg';
 import whiteFootPrint from '../../assets/icons/footprintWhite.png';
-import userImage from '../../assets/images/알림 프사.png';
+import userImage from '../../assets/images/Ellipse 25.png';
 
 interface PostInteractionProps {
   likes: any[];
