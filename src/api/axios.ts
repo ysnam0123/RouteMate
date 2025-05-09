@@ -19,16 +19,16 @@ axiosInstance.interceptors.request.use(
         }
         return config;
     },
-    (error) => {
-        return Promise.reject(error);
+    (e) => {
+        return Promise.reject(e);
     }
 );
 
 // 응답 인터셉터
 axiosInstance.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-        if (error.response?.status === 403) {
+    (res) => res,
+    async (e) => {
+        if (e.response?.status === 403) {
             console.error('403 에러 발생: 토큰 만료 또는 권한 없음');
             // 자동 로그아웃 처리
             useAuthStore.getState().logout();
@@ -38,6 +38,6 @@ axiosInstance.interceptors.response.use(
             window.location.href = '/login';
         }
 
-        return Promise.reject(error);
+        return Promise.reject(e);
     }
 );
