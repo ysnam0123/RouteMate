@@ -42,47 +42,38 @@ export default function Register() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!fullName || !email || !password || password !== confirmPassword) {
-            alert('입력값을 확인해주세요.');
-            return;
-        }
+        const isValid = fullName && email && password && password === confirmPassword;
+        if (!isValid) return alert('입력값을 확인해주세요.');
 
         try {
-            await axiosInstance.post('/signup', {
-                email,
-                fullName,
-                password,
-            });
-
-            alert('회원가입 성공!');
+            await axiosInstance.post('/signup', { email, fullName, password });
             // 입력값 초기화
-            setFullName('');
-            setEmail('');
-            setPassword('');
-            setConfirmPassword('');
+            [setFullName, setEmail, setPassword, setConfirmPassword].forEach((fn) => fn(''));
             setIsEmailValid(false);
+            alert('회원가입 성공!');
+            // 완료되면 로그인페이지로 이동(이것도 임의로해둔거라 바꿔도됨)
             navigate('/login');
-        } catch (err: unknown) {
-            console.error('회원가입 에러:', err);
-            if (axios.isAxiosError(err)) {
-                const message = err.response?.data?.message || err.message;
-                alert(`회원가입 실패: ${message}`);
-            } else {
-                alert('회원가입 중 알 수 없는 오류가 발생했습니다.');
-            }
+        } catch (e) {
+            console.error('회원가입 에러:', e);
+
+            const message = axios.isAxiosError(e)
+                ? e.response?.data?.message || e.message
+                : '회원가입 중 알 수 없는 오류가 발생했습니다.';
+
+            alert(`회원가입 실패: ${message}`);
         }
     };
 
     return (
         <div className="w-screen h-screen flex items-center justify-center bg-[var(--color-darkNavy)]">
             <div className="w-[650px] h-[750px] bg-[var(--color-white)] rounded-[30px] flex flex-col">
-                {/* 상단 이미지 */}
+                {/* 상단 */}
                 <div className="w-[650px] h-[440px] flex items-center justify-center relative border-b-[3px] border-[var(--color-black)]">
                     <div className="absolute left-0 top-0 bottom-0 w-[2px]" />
                     <img src={passport} alt="여권정보 사진" className="w-[702px] h-[305px] object-contain z-10" />
                 </div>
 
-                {/* 회원가입 입력 영역 */}
+                {/* 회원가입 입력 */}
                 <div className="w-[650px] h-[365px] bg-[var(--color-white)] flex relative">
                     <div className="absolute top-2 left-1/2 transform -translate-x-1/2 flex items-center gap-4">
                         <div className="w-[205px] h-[15px] bg-[var(--color-main-navy)] rounded-[15px]" />
@@ -155,7 +146,7 @@ export default function Register() {
                             </div>
                         </div>
 
-                        {/* 제출 버튼 */}
+                        {/* 회원가입 버튼 */}
                         <Button type="submit" className="self-center mt-5 w-[200px] h-[50px]">
                             회원가입
                         </Button>

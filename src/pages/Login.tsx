@@ -16,26 +16,22 @@ export default function Login() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        try {
-            const response = await axiosInstance.post('/login', {
-                email,
-                password,
-            });
 
-            const data = response.data;
-            login(data.token); // zustand에 저장
-            setEmail('');
-            setPassword('');
+        try {
+            const { data } = await axiosInstance.post('/login', { email, password });
+
+            login(data.token, data.user._id); // 토큰과 id값을 zustand에 저장
+            [setEmail, setPassword].forEach((fn) => fn(''));
+            // 이거도 임시로 넣어둔것 뺴도됨
             alert('로그인 성공!');
+            // 완료되면 인증 페이지(임의로 한것이므로 바꿔도됨)로 이동
             navigate('/test');
-        } catch (err: unknown) {
-            console.error('로그인 에러:', err);
-            if (axios.isAxiosError(err)) {
-                const message = err.response?.data?.message || err.message;
-                alert(`로그인 실패: ${message}`);
-            } else {
-                alert(`에러 발생: ${err}`);
-            }
+        } catch (e) {
+            console.error('로그인 에러:', e);
+
+            const message = axios.isAxiosError(e) ? e.response?.data?.message || e.message : `에러 발생: ${e}`;
+
+            alert(`로그인 실패: ${message}`);
         }
     };
 
@@ -50,7 +46,7 @@ export default function Login() {
 
                 {/* 하단 */}
                 <div className="w-[650px] h-[365px] bg-[var(--color-white)] flex relative">
-                    {/* 로그인글씨 */}
+                    {/* 로그인 글씨 */}
                     <div className="absolute top-2 left-1/2 transform -translate-x-1/2 flex items-center gap-4">
                         <div className="w-[205px] h-[15px] bg-[var(--color-main-navy)] rounded-[15px]" />
                         <div className="w-[147px] h-[54px] text-[35px] text-center text-[var(--color-black)]">
@@ -59,7 +55,7 @@ export default function Login() {
                         <div className="w-[205px] h-[15px] bg-[var(--color-main-navy)] rounded-[15px]" />
                     </div>
 
-                    {/* 로고 영역 */}
+                    {/* 로고 */}
                     <div className="w-[450px] top-2 flex flex-col items-center justify-center pl-10 relative">
                         <div className="absolute left-0 top-0 bottom-0 w-[2px]" />
                         <div className="flex flex-col items-center">
@@ -76,7 +72,7 @@ export default function Login() {
                         </div>
                     </div>
 
-                    {/* 입력 영역 */}
+                    {/* 입력 */}
                     <form
                         onSubmit={handleSubmit}
                         className="w-[650px] top-9 px-10 flex flex-col justify-center relative"
@@ -111,7 +107,7 @@ export default function Login() {
                     </form>
                 </div>
 
-                {/* 하단 장식 */}
+                {/* 여권 하단 장식 */}
                 <div className="h-[75px] px-7 pt-3 bg-[var(--color-lightGray)] rounded-b-[30px]">
                     <div className="w-[630px] text-[14px] text-[var(--color-black)]">
                         {'<<< ROUTE <<< MATE <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<'}
