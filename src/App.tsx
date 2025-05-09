@@ -1,7 +1,10 @@
+import Profile from "./pages/Profile";
+// import Profile2 from "./pages/Profile2";
+
 export default function App() {
   return (
     <>
-      <h1 className="text-3xl underline">App Component</h1>
+      <Profile />
     </>
   );
 }

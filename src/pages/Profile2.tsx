@@ -61,9 +61,14 @@ export default function Profile() {
             </div>
           </div>
           <div className="flex mt-20">
-            <Button className="w-[273px] h-[45px] bg-[#59A9E3] text-white px-5 py-2 rounded-[10px] text-[15px] font-semibold">
-              내 정보 수정하기
-            </Button>
+            <div className="flex gap-2 pl-4">
+              <Button className="h-[45px] min-w-[125px] bg-[#26303A] text-white text-[15px] font-semibold flex items-center justify-center px-3 rounded-[10px]">
+                편지 쓰기
+              </Button>
+              <Button className="h-[45px] min-w-[125px] bg-[#75BFFF] text-white text-[15px] font-semibold flex items-center justify-center px-3 rounded-[10px]">
+                팔로우+
+              </Button>
+            </div>
           </div>
         </div>
       </div>
