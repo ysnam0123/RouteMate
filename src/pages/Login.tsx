@@ -23,11 +23,10 @@ export default function Login() {
             });
 
             const data = response.data;
-            console.log(data.token);
             login(data.token); // zustand에 저장
-            alert('로그인 성공!');
             setEmail('');
             setPassword('');
+            alert('로그인 성공!');
             navigate('/test');
         } catch (err: unknown) {
             console.error('로그인 에러:', err);
