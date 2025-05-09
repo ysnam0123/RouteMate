@@ -72,7 +72,7 @@ export default function Login() {
                         </div>
                     </div>
 
-                    {/* 입력 */}
+                    {/* 로그인 입력 */}
                     <form
                         onSubmit={handleSubmit}
                         className="w-[650px] top-9 px-10 flex flex-col justify-center relative"
