@@ -1,9 +1,45 @@
+import { useState } from 'react';
 import passport from '../assets/images/passportImg.svg';
 import loginlogo from '../assets/images/LogInLogo.svg';
 import Input from '../components/Input';
 import Button from '../components/button';
+import { useAuthStore } from '../stores/authStore';
+import { useNavigate } from 'react-router';
+import { axiosInstance } from '../api/axios';
+import axios from 'axios';
 
 export default function Login() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const login = useAuthStore((state) => state.login);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            const response = await axiosInstance.post('/login', {
+                email,
+                password,
+            });
+
+            const data = response.data;
+            console.log(data.token);
+            login(data.token); // zustand에 저장
+            alert('로그인 성공!');
+            setEmail('');
+            setPassword('');
+            navigate('/test');
+        } catch (err: unknown) {
+            console.error('로그인 에러:', err);
+            if (axios.isAxiosError(err)) {
+                const message = err.response?.data?.message || err.message;
+                alert(`로그인 실패: ${message}`);
+            } else {
+                alert(`에러 발생: ${err}`);
+            }
+        }
+    };
+
     return (
         <div className="w-screen h-screen flex items-center justify-center bg-[var(--color-darkNavy)]">
             <div className="w-[650px] h-[750px] bg-[var(--color-white)] rounded-[30px] flex flex-col">
@@ -17,15 +53,10 @@ export default function Login() {
                 <div className="w-[650px] h-[365px] bg-[var(--color-white)] flex relative">
                     {/* 로그인글씨 */}
                     <div className="absolute top-2 left-1/2 transform -translate-x-1/2 flex items-center gap-4">
-                        {/* 왼쪽 막대 */}
                         <div className="w-[205px] h-[15px] bg-[var(--color-main-navy)] rounded-[15px]" />
-
-                        {/* 텍스트 */}
                         <div className="w-[147px] h-[54px] text-[35px] text-center text-[var(--color-black)]">
                             Log In
                         </div>
-
-                        {/* 오른쪽 막대 */}
                         <div className="w-[205px] h-[15px] bg-[var(--color-main-navy)] rounded-[15px]" />
                     </div>
 
@@ -47,15 +78,18 @@ export default function Login() {
                     </div>
 
                     {/* 입력 영역 */}
-                    <form className="w-[650px] top-9 px-10 flex flex-col justify-center relative">
+                    <form
+                        onSubmit={handleSubmit}
+                        className="w-[650px] top-9 px-10 flex flex-col justify-center relative"
+                    >
                         <div className="absolute right-0 top-0 bottom-0 w-[2px]" />
 
-                        {/* 아이디 입력 */}
+                        {/* 이메일 입력 */}
                         <div className="mb-4">
                             <label htmlFor="email" className="text-[var(--color-black)]">
                                 Passanger email
                             </label>
-                            <Input id="email" type="email" />
+                            <Input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
                         </div>
 
                         {/* 비밀번호 입력 */}
@@ -63,7 +97,12 @@ export default function Login() {
                             <label htmlFor="password" className="text-[var(--color-black)]">
                                 Password
                             </label>
-                            <Input type="password" id="password" name="password" />
+                            <Input
+                                type="password"
+                                id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
                         </div>
 
                         {/* 로그인 버튼 */}
