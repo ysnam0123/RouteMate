@@ -6,64 +6,7 @@ import testFoot from "../assets/icons/footprintWhite.png";
 // 임시 프로필,아이콘 사진
 import Button from "../components/button";
 
-import { useEffect, useState } from "react";
-import axiosInstance from "../api/axios";
-// import { useAuthStore } from "../stores/authStore";
-
-interface UserProfile {
-  fullName: string;
-}
-
 export default function Profile() {
-  let [profile, setProfile] = useState<UserProfile | null>(null);
-
-  useEffect(() => {
-    let userId = "680b1c578a6096424103fabe";
-    let token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY4MGIxYzU3OGE2MDk2NDI0MTAzZmFiZSIsImVtYWlsIjoiZGJ3bHN0bGEwNDMwQG5hdmVyLmNvbSJ9LCJpYXQiOjE3NDU1Njg0MjV9.MOO-6vaX-SSYGGoza3KAg8iug77lM-3u_7d_TsEyYs8";
-
-    axiosInstance
-      .get(`/users/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        console.log("응답 데이터:", res.data);
-        setProfile(res.data); // 성공 시 프로필 저장
-      })
-      .catch((err) => {
-        console.error("프로필 불러오기 실패:", err);
-      });
-  }, []);
-
-  useEffect(() => {
-    let token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7Il9pZCI6IjY4MGIxYzU3OGE2MDk2NDI0MTAzZmFiZSIsImVtYWlsIjoiZGJ3bHN0bGEwNDMwQG5hdmVyLmNvbSJ9LCJpYXQiOjE3NDU1Njg0MjV9.MOO-6vaX-SSYGGoza3KAg8iug77lM-3u_7d_TsEyYs8";
-    let fetchPostsByAuthor = async () => {
-      try {
-        let response = await axiosInstance.get(
-          `/posts/author/680b1c578a6096424103fabe`, // 실제 userId로 대체
-          {
-            params: {
-              offset: 0,
-              limit: 10,
-            },
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log("작성자의 게시글:", response.data);
-        // 예: setMyPosts(response.data);
-      } catch (error) {
-        console.error("작성자의 게시글 불러오기 실패:", error);
-      }
-    };
-
-    fetchPostsByAuthor();
-  }, []);
-
   return (
     <div className="w-full max-w-[1000px] mx-auto p-4 mt-[55px]">
       {/* 상단 프로필 영역 */}
@@ -98,9 +41,7 @@ export default function Profile() {
             </Button>
           </div>
 
-          <h2 className="text-[35px] mb-2 pt-3.5 font-bold">
-            {profile?.fullName && <span>{profile.fullName}</span>}
-          </h2>
+          <h2 className="text-[35px] mb-2 pt-3.5 font-bold">김부산</h2>
           <p className="text-[20px] font-semibold">
             부산살고 있는 김부산입니다.
           </p>
@@ -120,9 +61,14 @@ export default function Profile() {
             </div>
           </div>
           <div className="flex mt-20">
-            <Button className="w-[273px] h-[45px] bg-[#59A9E3] text-white px-5 py-2 rounded-[10px] text-[15px] font-semibold">
-              내 정보 수정하기
-            </Button>
+            <div className="flex gap-2 pl-4">
+              <Button className="h-[45px] min-w-[125px] bg-[#26303A] text-white text-[15px] font-semibold flex items-center justify-center px-3 rounded-[10px]">
+                편지 쓰기
+              </Button>
+              <Button className="h-[45px] min-w-[125px] bg-[#75BFFF] text-white text-[15px] font-semibold flex items-center justify-center px-3 rounded-[10px]">
+                팔로우+
+              </Button>
+            </div>
           </div>
         </div>
       </div>
