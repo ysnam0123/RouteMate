@@ -21,6 +21,8 @@ export default function ProfileEdit() {
     username: string;
   } | null>(null);
   const [text, setText] = useState("");
+  const [editName, setEditName] = useState("");
+  // const [profileImgUrl, setProfileImgUrl] = useState(pv.image);
   const [profileImgFile, setProfileImgFile] = useState<File | null>(null);
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
@@ -38,6 +40,12 @@ export default function ProfileEdit() {
     getUser();
   }, []);
 
+  useEffect(() => {
+    if (user?.fullName) {
+      setEditName(user.fullName);
+    }
+  }, [user]);
+
   const rawUsername = user?.username ?? "";
 
   // 정규표현식으로 소개/칭호 분리
@@ -45,6 +53,12 @@ export default function ProfileEdit() {
 
   const introduction = match?.[1] ?? rawUsername;
   const titles = match?.[2]?.split(",").map((t) => t.trim()) ?? [];
+
+  useEffect(() => {
+    if (introduction) {
+      setText(introduction);
+    }
+  }, [introduction]);
 
   // 프로필 이미지 변경 함수
   const handleImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +94,19 @@ export default function ProfileEdit() {
     }
   };
 
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    // try {
+    //   const res = await axiosInstance.put(`/users/123`, {
+    //     fullName: editName,
+    //   });
+    //   console.log("성공", res.data);
+    // } catch (error) {
+    //   console.error("실패", error);
+    // }
+    // setUser((prev) => (prev ? { ...prev, fullName: editName } : null));
+    // if (!profileImgFile) return alert("이미지가 선택되지 않았습니다.");
+    // eidtPvImage({ id: pv.id, imageFile: profileImgFile });
+  };
 
   // 칭호 선택 함수
   const tagFields = [
@@ -156,6 +182,8 @@ export default function ProfileEdit() {
                     placeholder="사용자 이름"
                     type="text"
                     className="bg-white rounded-xl border-[#c2c2c2] border h-11 px-3 focus:outline"
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
                   />
                 </div>
 
