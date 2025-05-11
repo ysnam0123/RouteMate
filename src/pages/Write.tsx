@@ -23,12 +23,12 @@ export default function Write() {
   const [imgIndex, setImgIndex] = useState(0)
   const imageWidth = 216
   const handleLeftSlider = () => {
-    setImgIndex((prev) => Math.min(prev + imageWidth, 0))
+    setImgIndex((prev: number) => Math.min(prev + imageWidth, 0))
   }
   const handleRightSlider = () => {
     if (images.length > 3) {
       const maxIndex = -(imageWidth * (images.length + 1 - 4))
-      setImgIndex((prev) => Math.max(prev - imageWidth, maxIndex))
+      setImgIndex((prev: number) => Math.max(prev - imageWidth, maxIndex))
     }
   }
 
