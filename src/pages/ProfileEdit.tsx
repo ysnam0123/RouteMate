@@ -1,4 +1,4 @@
-// import profile from "../assets/images/LoginLogo.svg";
+import profile from "../assets/images/profile.svg";
 import Button from "../components/button";
 import Jeju from "../assets/achievementIcons/jeju.svg";
 import Cafe from "../assets/achievementIcons/cafe.svg";
@@ -10,7 +10,7 @@ import PowerJ from "../assets/achievementIcons/PowerJ.svg";
 import Star from "../assets/achievementIcons/Star.svg";
 import Train from "../assets/achievementIcons/train.svg";
 import Tag from "../components/Tag";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { axiosInstance } from "../api/axios";
 import Layout from "../layout/Layout";
 import PasswordInput from "../components/PaswordInput";
@@ -32,6 +32,7 @@ export default function ProfileEdit() {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [hasInitialized, setHasInitialized] = useState(false);
 
+  // 프로필 정보 업데이트 (이름, 소개, 칭호, 프로필 사진)
   const updateUser = async () => {
     try {
       const username =
@@ -66,6 +67,7 @@ export default function ProfileEdit() {
     }
   };
 
+  // 비밀번호 업데이트
   const updatePassword = async () => {
     if (!isPasswordConfirm) {
       return alert("비밀번호가 일치하지 않습니다!");
@@ -83,6 +85,12 @@ export default function ProfileEdit() {
     }
   };
 
+  // 비밀번호 변경됐는지 확인
+  useEffect(() => {
+    setIsPasswordChanged(false);
+  }, [newPassword, confirmPassword]);
+
+  // 서버에서 정보 받아오기
   useEffect(() => {
     const getUser = async () => {
       if (!userId) return;
@@ -106,6 +114,7 @@ export default function ProfileEdit() {
   const match = rawUsername.match(/^(.*)\s?\[(.*)\]$/);
 
   const introduction = match?.[1] ?? rawUsername;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const titles = match?.[2]?.split(",").map((t) => t.trim()) ?? [];
 
   // 소개 받아오기
@@ -125,35 +134,6 @@ export default function ProfileEdit() {
     }
   };
 
-  // 비밀번호
-  const handlePasswordConfirm = useCallback(
-    (passwordConfirm: string) => {
-      setConfirmPassword(passwordConfirm);
-
-      if (newPassword === passwordConfirm) {
-        setIsPasswordConfirm(true);
-      } else {
-        setIsPasswordConfirm(false);
-      }
-    },
-    [newPassword]
-  );
-
-  // 비밀번호 변경 버튼
-  const handlePasswordSubmit = () => {
-    updatePassword();
-  };
-
-  const handleSubmit = async () => {
-    const hasPasswordInput = newPassword.trim() || confirmPassword.trim();
-
-    if (hasPasswordInput && !isPasswordChanged) {
-      alert("비밀번호 변경 버튼을 눌러주세요!");
-      return;
-    }
-    updateUser();
-  };
-
   // 칭호 선택 함수
   const tagFields = [
     { label: "제주 중독", icon: Jeju },
@@ -168,13 +148,19 @@ export default function ProfileEdit() {
   ];
 
   const handleTagClick = (label: string) => {
-    setSelectedTags((prev) =>
-      prev.includes(label)
-        ? prev.filter((tag) => tag !== label)
-        : prev.length < 2
-        ? [...prev, label]
-        : prev
-    );
+    setSelectedTags((prev) => {
+      const lowerLabel = label.toLowerCase();
+
+      const alreadySelected = prev.some(
+        (tag) => tag.toLowerCase() === lowerLabel
+      );
+
+      if (alreadySelected) {
+        return prev.filter((tag) => tag.toLowerCase() !== lowerLabel);
+      } else {
+        return prev.length < 2 ? [...prev, label] : prev;
+      }
+    });
   };
 
   // 칭호 받아와서 기본선택 적용
@@ -184,6 +170,31 @@ export default function ProfileEdit() {
       setHasInitialized(true);
     }
   }, [titles, hasInitialized]);
+
+  // 비밀번호
+  useEffect(() => {
+    if (!newPassword && !confirmPassword) {
+      setIsPasswordConfirm(false);
+    } else {
+      setIsPasswordConfirm(newPassword === confirmPassword);
+    }
+  }, [newPassword, confirmPassword]);
+
+  // 비밀번호 변경 버튼
+  const handlePasswordSubmit = () => {
+    updatePassword();
+  };
+
+  // 저장하기 버튼
+  const handleSubmit = async () => {
+    const hasPasswordInput = newPassword.trim() || confirmPassword.trim();
+
+    if (hasPasswordInput && !isPasswordChanged) {
+      alert("비밀번호 변경 버튼을 눌러주세요!");
+      return;
+    }
+    updateUser();
+  };
 
   return (
     <>
@@ -198,6 +209,8 @@ export default function ProfileEdit() {
                     profileImgFile
                       ? URL.createObjectURL(profileImgFile)
                       : user?.image
+                      ? user.image
+                      : profile
                   }
                   alt="프로필 이미지"
                   className="w-[150px] h-[150px] rounded-full mr-4 flex-shrink-0"
@@ -283,7 +296,7 @@ export default function ProfileEdit() {
                   <PasswordInput
                     label="비밀번호 확인"
                     value={confirmPassword}
-                    onChange={handlePasswordConfirm}
+                    onChange={setConfirmPassword}
                   />
                   <div className="flex justify-end">
                     <Button
