@@ -14,7 +14,9 @@ import { useCallback, useEffect, useState } from "react";
 import { axiosInstance } from "../api/axios";
 import Layout from "../layout/Layout";
 import PasswordInput from "../components/PaswordInput";
+import { useAuthStore } from "../stores/authStore";
 export default function ProfileEdit() {
+  const userId = useAuthStore((state) => state.userId);
   const [user, setUser] = useState<{
     fullName: string;
     image: string;
@@ -26,20 +28,27 @@ export default function ProfileEdit() {
   const [profileImgFile, setProfileImgFile] = useState<File | null>(null);
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [isPasswordConfirm, setIsPasswordConfirm] = useState<boolean>(false);
+  const [isPasswordConfirm, setIsPasswordConfirm] = useState<boolean>(true);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [hasInitialized, setHasInitialized] = useState(false);
 
-  const getUser = async () => {
-    const { data } = await axiosInstance.get(`users/681c61eb983196128e4d92dc`);
-    console.log(data);
-    setUser(data);
-  };
+  // const updateUser = async () => {
+  //   const res = await axiosInstance.put(`/settings/update-user`, {
+  //       fullName: editName,
+  //       username: `${text} [${selectedTags.join(", ")}]`
+  //     });
 
   useEffect(() => {
+    const getUser = async () => {
+      if (!userId) return;
+      const { data } = await axiosInstance.get(`users/${userId}`);
+      console.log(data);
+      setUser(data);
+    };
     getUser();
-  }, []);
+  }, [userId]);
 
+  // 이름 받아오기
   useEffect(() => {
     if (user?.fullName) {
       setEditName(user.fullName);
@@ -54,6 +63,7 @@ export default function ProfileEdit() {
   const introduction = match?.[1] ?? rawUsername;
   const titles = match?.[2]?.split(",").map((t) => t.trim()) ?? [];
 
+  // 소개 받아오기
   useEffect(() => {
     if (introduction) {
       setText(introduction);
@@ -95,9 +105,15 @@ export default function ProfileEdit() {
   };
 
   const handleSubmit = async () => {
+    console.log(editName);
+    console.log(text);
+    console.log(selectedTags);
+    console.log(newPassword);
+
     // try {
     //   const res = await axiosInstance.put(`/users/123`, {
     //     fullName: editName,
+    // username: `${text} [${selectedTags.join(", ")}]`
     //   });
     //   console.log("성공", res.data);
     // } catch (error) {
@@ -211,7 +227,10 @@ export default function ProfileEdit() {
                         <Tag
                           icon={field.icon}
                           label={field.label}
-                          selected={selectedTags.includes(field.label)}
+                          selected={selectedTags.some(
+                            (tag) =>
+                              tag.toLowerCase() === field.label.toLowerCase()
+                          )}
                           onClick={() => handleTagClick(field.label)}
                         />
                       </div>
