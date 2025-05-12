@@ -1,37 +1,38 @@
 /* src/main.tsx 또는 src/index.tsx */
 :root {
-  --color-main-navy: #063579;
-  --color-main-skyBlue: #60b5ff;
-  --color-main-blue: #3b82f6;
-  --color-lightGray: #e4e4e4;
-  --color-darkGray: #434343;
-  --color-white: #ffffff;
-  --color-black: #000000;
-  --color-darkNavy: #202e48;
+    --color-main-navy: #063579;
+    --color-main-skyBlue: #60b5ff;
+    --color-main-blue: #3b82f6;
+    --color-lightGray: #e4e4e4;
+    --color-darkGray: #434343;
+    --color-white: #ffffff;
+    --color-black: #000000;
+    --color-darkNavy: #202e48;
 
-  /* focus */
-  --color-lightGray-focus: #60b5ff;
+    /* focus */
+    --color-lightGray-focus: #60b5ff;
 
-  /* hover */
-  --color-main-blue-hover: #063579;
-  --color-main-navy-hover: #0b4e9c;
-  --color-main-skyBlue-hover: #8ac8fb;
+    /* hover */
+    --color-main-blue-hover: #063579;
+    --color-main-navy-hover: #0b4e9c;
+    --color-main-skyBlue-hover: #8ac8fb;
 
-  /* active */
-  --color-main-navy-active: #001a40;
-  --color-main-skyBlue-active: #3a94dc;
+    /* active */
+    --color-main-navy-active: #001a40;
+    --color-main-skyBlue-active: #3a94dc;
 
-  /* 헤더 */
-  --color-header: #f9fafb;
+    /* 헤더 */
+    --color-header: #f9fafb;
 
-  /* 사이드바 */
-  --color-sideBody: #0f172a;
-  --color-notSelected: #989b9d;
-  --color-selected: #3b82f6;
+    /* 사이드바 */
+    --color-sideBody: #0f172a;
+    --color-notSelected: #989b9d;
+    --color-selected: #3b82f6;
 
-  /* 게시글 */
-  --color-theme: #2a728c;
+    /* 게시글 */
+    --color-theme: #2a728c;
 }
 
 /* .dark{
 
+} */
