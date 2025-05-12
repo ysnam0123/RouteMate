@@ -1,10 +1,11 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../api/axios";
 import LogoImg from "../assets/images/headerLogoImg.svg";
 import LogoText from "../assets/images/headerLogoText.svg";
 import { useAuthStore } from "../stores/authStore";
 export default function Header() {
   const logout = useAuthStore((state) => state.logout);
+  const isAuthenticated = useAuthStore((state) => state.isLoggedIn);
   const navigate = useNavigate();
   const logoutHandler = async () => {
     const { status } = await axiosInstance.post("/logout");
@@ -21,32 +22,56 @@ export default function Header() {
           <div className="flex justify-between h-full">
             <div className="flex">
               <div className="items-center gap-2.5 flex-shrink-0 flex">
-                <a>
+                <Link to="/">
                   <img
                     src={LogoImg}
                     alt="TravelMate 로고이미지"
                     className="h-11"
                   />
-                </a>
-                <a>
+                </Link>
+                <Link to="/">
                   <img
                     src={LogoText}
                     alt="TravelMate 로고텍스트"
                     className="h-11"
                   />
-                </a>
+                </Link>
               </div>
             </div>
             <ul className="hidden sm:flex gap-[30px] items-center">
-              <li
-                className="montserrat text-xl w-[89px] text-center font-semibold text-[var(--color-notSelected)] cursor-pointer hover:font-bold hover:text-[var(--color-main-blue)] hover:text-shadow-custom transition-all duration-200"
-                onClick={logoutHandler}
-              >
-                Log Out
-              </li>
-              <li className="montserrat text-xl w-[92px] text-center font-semibold text-[var(--color-notSelected)] cursor-pointer hover:font-bold hover:text-[var(--color-main-blue)] hover:text-shadow-custom transition-all duration-200">
-                My Page
-              </li>
+              {/* /로그인상태일때 */}
+              {isAuthenticated ? (
+                <>
+                  <li
+                    className="montserrat text-xl w-auto text-center font-semibold text-[var(--color-notSelected)] cursor-pointer hover:font-bold hover:text-[var(--color-main-blue)] hover:text-shadow-custom transition-all duration-200"
+                    onClick={logoutHandler}
+                  >
+                    Log Out
+                  </li>
+                  <Link
+                    to="/profile"
+                    className="montserrat text-xl w-auto text-center font-semibold text-[var(--color-notSelected)] cursor-pointer hover:font-bold hover:text-[var(--color-main-blue)] hover:text-shadow-custom transition-all duration-200"
+                  >
+                    My Page
+                  </Link>
+                </>
+              ) : (
+                //로그아웃 상태일때
+                <>
+                  <Link
+                    to="/login"
+                    className="montserrat text-xl w-auto text-center font-semibold text-[var(--color-notSelected)] cursor-pointer hover:font-bold hover:text-[var(--color-main-blue)] hover:text-shadow-custom transition-all duration-200"
+                  >
+                    Log In
+                  </Link>
+                  <Link
+                    to="/register"
+                    className="montserrat text-xl w-auto text-center font-semibold text-[var(--color-notSelected)] cursor-pointer hover:font-bold hover:text-[var(--color-main-blue)] hover:text-shadow-custom transition-all duration-200"
+                  >
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </ul>
           </div>
           <div className="flex items-center sm:hidden">
