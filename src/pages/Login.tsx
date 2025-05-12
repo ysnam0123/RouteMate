@@ -20,6 +20,16 @@ export default function Login() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (!email.trim()) {
+            alert('이메일을 입력해주세요.');
+            return;
+        }
+
+        if (!password.trim()) {
+            alert('비밀번호를 입력해주세요.');
+            return;
+        }
+
         try {
             const { data } = await axiosInstance.post('/login', { email, password });
 
@@ -30,11 +40,7 @@ export default function Login() {
             // 완료되면 인증 페이지(임의로 한것이므로 바꿔도됨)로 이동
             navigate('/profileedit');
         } catch (e) {
-            // console.error('로그인 에러:', e);
-
-            const message = axios.isAxiosError(e) ? e.response?.data?.message || e.message : `에러 발생: ${e}`;
-
-            alert(`로그인을 실패하였습니다. ${message}`);
+            alert(`로그인을 실패하였습니다.`);
         }
     };
 

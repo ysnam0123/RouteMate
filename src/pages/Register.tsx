@@ -83,13 +83,7 @@ export default function Register() {
             // 완료되면 로그인페이지로 이동(이것도 임의로해둔거라 바꿔도됨)
             navigate('/login');
         } catch (e) {
-            console.error('회원가입 에러:', e);
-
-            const message = axios.isAxiosError(e)
-                ? e.response?.data?.message || e.message
-                : '회원가입 중 알 수 없는 오류가 발생했습니다.';
-
-            alert(`회원가입 실패: ${message}`);
+            alert(`회원가입 실패하였습니다.`);
         }
     };
 
