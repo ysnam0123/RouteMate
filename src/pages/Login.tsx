@@ -3,6 +3,8 @@ import passport from '../assets/images/passportImg.svg';
 import loginlogo from '../assets/images/LogInLogo.svg';
 import Input from '../components/Input';
 import Button from '../components/button';
+import EyeOn from '../assets/icons/eyeOn.svg';
+import EyeOff from '../assets/icons/eyeOff.svg';
 import { useAuthStore } from '../stores/authStore';
 import { useNavigate } from 'react-router';
 import { axiosInstance } from '../api/axios';
@@ -11,6 +13,7 @@ import axios from 'axios';
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [hide, setHide] = useState(true); // true: 숨김, false: 보임
     const navigate = useNavigate();
     const login = useAuthStore((state) => state.login);
 
@@ -23,15 +26,15 @@ export default function Login() {
             login(data.token, data.user._id); // 토큰과 id값을 zustand에 저장
             [setEmail, setPassword].forEach((fn) => fn(''));
             // 이거도 임시로 넣어둔것 뺴도됨
-            alert('로그인 성공!');
+            alert('로그인 되었습니다.');
             // 완료되면 인증 페이지(임의로 한것이므로 바꿔도됨)로 이동
-            navigate('/test');
+            navigate('/profileedit');
         } catch (e) {
-            console.error('로그인 에러:', e);
+            // console.error('로그인 에러:', e);
 
             const message = axios.isAxiosError(e) ? e.response?.data?.message || e.message : `에러 발생: ${e}`;
 
-            alert(`로그인 실패: ${message}`);
+            alert(`로그인을 실패하였습니다. ${message}`);
         }
     };
 
@@ -92,12 +95,21 @@ export default function Login() {
                             <label htmlFor="password" className="text-[var(--color-black)]">
                                 Password
                             </label>
-                            <Input
-                                type="password"
-                                id="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
+                            <div className="relative">
+                                <Input
+                                    type={hide ? 'password' : 'text'}
+                                    id="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    className="pr-10" // 아이콘 위치 공간 확보
+                                />
+                                <img
+                                    src={hide ? EyeOff : EyeOn}
+                                    alt="비밀번호 보기 토글"
+                                    className="w-5 h-5 cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2"
+                                    onClick={() => setHide((prev) => !prev)}
+                                />
+                            </div>
                         </div>
 
                         {/* 로그인 버튼 */}
