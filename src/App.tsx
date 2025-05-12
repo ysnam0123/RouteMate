@@ -1,7 +1,10 @@
+import Sidebar from "./components/Sidebar";
+// import Sidebar from "./components/Sidebar2";
+
 export default function App() {
   return (
     <>
-      <h1 className="text-3xl underline">App Component</h1>
+      <Sidebar />
     </>
   );
 }
@@ -9,7 +12,7 @@ export default function App() {
 // import { twMerge } from 'tailwind-merge';
 
 // export default function App() {
-//   const islogin = true;
+//   let islogin = true;
 //   return (
 //     <>
 //       <h1
