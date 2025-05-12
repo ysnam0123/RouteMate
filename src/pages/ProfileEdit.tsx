@@ -12,15 +12,6 @@ import Train from "../assets/achievementIcons/train.svg";
 import Tag from "../components/Tag";
 import { useState } from "react";
 export default function ProfileEdit() {
-  // const getUser = async () => {
-  //   const { data } = await axiosInstance.get("/user");
-  //   console.log(data);
-  // };
-
-  // useEffect(() => {
-  //   getUser();
-  // }, []);
-
   // const [text, setText] = useState("");
 
   // 프로필 이미지 변경 함수
@@ -45,6 +36,8 @@ export default function ProfileEdit() {
   //   if (!profileImgFile) return alert("이미지가 선택되지 않았습니다.");
   //   eidtPvImage({ id: pv.id, imageFile: profileImgFile });
   // };
+
+  // 칭호 선택 함수
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const handleTagClick = (label: string) => {
     setSelectedTags((prev) =>
@@ -204,10 +197,10 @@ export default function ProfileEdit() {
 
             {/* 버튼 */}
             <div className="flex gap-3 justify-end">
-              <Button className="w-[91px] h-[31px] bg-white button-shadow-custom hover:button-shadow-custom transition-all duration-200 text-[#FA0000] text-[15px] font-semibold rounded-[10px]">
+              <Button className="w-[100px] h-[40px] bg-white text-[var(--color-main-navy)] text-base font-bold rounded-[10px] border border-[#d1d1d1]">
                 취소
               </Button>
-              <Button className="w-[91px] h-[31px] bg-white button-shadow-custom hover:button-shadow-custom transition-all duration-200 text-black text-[15px] font-semibold rounded-[10px]">
+              <Button className="w-[100px] h-[40px] bg-[var(--color-main-navy)]  text-white text-base font-bold rounded-[10px]">
                 저장
               </Button>
             </div>

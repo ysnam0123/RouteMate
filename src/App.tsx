@@ -1,17 +1,11 @@
-import Sidebar from "./components/Sidebar";
-
 export default function App() {
-  return (
-    <>
-      <Sidebar />
-    </>
-  );
+  return <></>
 }
 
 // import { twMerge } from 'tailwind-merge';
 
 // export default function App() {
-//   const islogin = true;
+//   let islogin = true;
 //   return (
 //     <>
 //       <h1

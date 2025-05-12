@@ -1,22 +1,22 @@
 import { MenuItem } from "../types/Sidebar";
-import newPostIcon from "../assets/icons/newPostIcon.svg";
+// import newPostIcon from "../assets/icons/newPostIcon.svg";
 import mate from "../assets/icons/homeIcon.svg";
 import search from "../assets/icons/Search.svg";
-import letter from "../assets/icons/letterIcon.svg";
-import notice from "../assets/icons/notificationIcon.svg";
-import history from "../assets/icons/profileIcon.svg";
+// import letter from "../assets/icons/letterIcon.svg";
+// import notice from "../assets/icons/notificationIcon.svg";
+// import history from "../assets/icons/profileIcon.svg";
 import settings from "../assets/icons/setting.svg";
 import { useState } from "react";
 import SearchPanel from "./SearchPanel";
 import NoticePanel from "./NoticePanel";
 
 let menuItems: MenuItem[] = [
-  {
-    id: "share",
-    icon: <img src={newPostIcon} />,
-    text: "여행 나누기",
-    path: "/share",
-  },
+  //   {
+  //     id: "share",
+  //     icon: <img src={newPostIcon} />,
+  //     text: "여행 나누기",
+  //     path: "/share",
+  //   },
   { id: "mate", icon: <img src={mate} />, text: "여행 이야기", path: "/mate" },
   {
     id: "search",
@@ -25,19 +25,19 @@ let menuItems: MenuItem[] = [
     path: "/search",
     isSearchTrigger: true,
   },
-  { id: "letter", icon: <img src={letter} />, text: "편지", path: "/letter" },
-  {
-    id: "notice",
-    icon: <img src={notice} />,
-    text: "여정 알림판",
-    path: "/notice",
-  },
-  {
-    id: "history",
-    icon: <img src={history} />,
-    text: "나의 여정 기록",
-    path: "/history",
-  },
+  //   { id: "letter", icon: <img src={letter} />, text: "편지", path: "/letter" },
+  //   {
+  //     id: "notice",
+  //     icon: <img src={notice} />,
+  //     text: "여정 알림판",
+  //     path: "/notice",
+  //   },
+  //   {
+  //     id: "history",
+  //     icon: <img src={history} />,
+  //     text: "나의 여정 기록",
+  //     path: "/history",
+  //   },
   {
     id: "settings",
     icon: <img src={settings} />,
