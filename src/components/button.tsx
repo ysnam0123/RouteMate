@@ -1,17 +1,17 @@
-import { twMerge } from "tailwind-merge";
+import { twMerge } from 'tailwind-merge'
 
-type ButtonProps = React.ComponentPropsWithoutRef<"button">;
+type ButtonProps = React.ComponentPropsWithoutRef<'button'>
 export default function Button(props: ButtonProps) {
-  let { children, className, ...rest } = props;
+  const { children, className, ...rest } = props
   return (
     <button
       className={twMerge(
-        "w-[77px] h-[44px] text-white rounded-[10px] text-sm cursor-pointer",
+        'w-[140px] h-[45px] bg-[var(--color-main-navy)] text-[var(--color-white)] rounded-[10px] text-base cursor-pointer',
         className
       )}
       {...rest}
     >
       {children}
     </button>
-  );
+  )
 }

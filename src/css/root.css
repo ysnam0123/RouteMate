@@ -1,3 +1,4 @@
+/* src/main.tsx 또는 src/index.tsx */
 :root {
   --color-main-navy: #063579;
   --color-main-skyBlue: #60b5ff;
@@ -33,5 +34,4 @@
 }
 
 /* .dark{
-  
-  } */
+

@@ -1,12 +1,5 @@
-import Sidebar from "./components/Sidebar";
-// import Sidebar from "./components/Sidebar2";
-
 export default function App() {
-  return (
-    <>
-      <Sidebar />
-    </>
-  );
+  return <></>
 }
 
 // import { twMerge } from 'tailwind-merge';
