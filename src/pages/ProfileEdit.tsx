@@ -24,19 +24,64 @@ export default function ProfileEdit() {
   } | null>(null);
   const [text, setText] = useState("");
   const [editName, setEditName] = useState("");
-  // const [profileImgUrl, setProfileImgUrl] = useState(pv.image);
   const [profileImgFile, setProfileImgFile] = useState<File | null>(null);
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-  const [isPasswordConfirm, setIsPasswordConfirm] = useState<boolean>(true);
+  const [isPasswordConfirm, setIsPasswordConfirm] = useState<boolean>(false);
+  const [isPasswordChanged, setIsPasswordChanged] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [hasInitialized, setHasInitialized] = useState(false);
 
-  // const updateUser = async () => {
-  //   const res = await axiosInstance.put(`/settings/update-user`, {
-  //       fullName: editName,
-  //       username: `${text} [${selectedTags.join(", ")}]`
-  //     });
+  const updateUser = async () => {
+    try {
+      const username =
+        selectedTags.length > 0
+          ? `${text.trim()} [${selectedTags.join(", ")}]`
+          : text.trim();
+
+      const res1 = await axiosInstance.put("/settings/update-user", {
+        fullName: editName.trim(),
+        username,
+      });
+
+      if (profileImgFile) {
+        const formData = new FormData();
+        formData.append("image", profileImgFile);
+        formData.append("isCover", "false");
+
+        const res2 = await axiosInstance.post("/users/upload-photo", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        console.log("프로필사진 업데이트 결과:", res2.data);
+      }
+      alert("정보가 성공적으로 변경되었습니다!");
+      console.log("업데이트 결과:", res1.data);
+      window.location.reload();
+    } catch (error) {
+      console.error("업데이트 실패:", error);
+      alert("정보 변경에 실패했습니다.");
+    }
+  };
+
+  const updatePassword = async () => {
+    if (!isPasswordConfirm) {
+      return alert("비밀번호가 일치하지 않습니다!");
+    }
+    try {
+      const res = await axiosInstance.put("/settings/update-password", {
+        password: newPassword.trim(),
+      });
+      alert("비밀번호가 변경되었습니다.");
+      console.log("업데이트 결과:", res.data);
+      setIsPasswordChanged(true);
+    } catch (error) {
+      console.error("업데이트 실패:", error);
+      alert("정보 변경에 실패했습니다.");
+    }
+  };
 
   useEffect(() => {
     const getUser = async () => {
@@ -76,7 +121,6 @@ export default function ProfileEdit() {
       const file = e.target.files[0];
       if (file) {
         setProfileImgFile(file);
-        // setProfileImgUrl(file);
       }
     }
   };
@@ -97,31 +141,17 @@ export default function ProfileEdit() {
 
   // 비밀번호 변경 버튼
   const handlePasswordSubmit = () => {
-    if (isPasswordConfirm) {
-      return alert("비밀번호가 변경되었습니다.");
-    } else {
-      return alert("비밀번호가 일치하지 않습니다!");
-    }
+    updatePassword();
   };
 
   const handleSubmit = async () => {
-    console.log(editName);
-    console.log(text);
-    console.log(selectedTags);
-    console.log(newPassword);
+    const hasPasswordInput = newPassword.trim() || confirmPassword.trim();
 
-    // try {
-    //   const res = await axiosInstance.put(`/users/123`, {
-    //     fullName: editName,
-    // username: `${text} [${selectedTags.join(", ")}]`
-    //   });
-    //   console.log("성공", res.data);
-    // } catch (error) {
-    //   console.error("실패", error);
-    // }
-    // setUser((prev) => (prev ? { ...prev, fullName: editName } : null));
-    // if (!profileImgFile) return alert("이미지가 선택되지 않았습니다.");
-    // eidtPvImage({ id: pv.id, imageFile: profileImgFile });
+    if (hasPasswordInput && !isPasswordChanged) {
+      alert("비밀번호 변경 버튼을 눌러주세요!");
+      return;
+    }
+    updateUser();
   };
 
   // 칭호 선택 함수
