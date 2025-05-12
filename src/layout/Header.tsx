@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../api/axios";
 import LogoImg from "../assets/images/headerLogoImg.svg";
 import LogoText from "../assets/images/headerLogoText.svg";
+import { useAuthStore } from "../stores/authStore";
 export default function Header() {
   const logout = useAuthStore((state) => state.logout);
   const isAuthenticated = useAuthStore((state) => state.isLoggedIn);
