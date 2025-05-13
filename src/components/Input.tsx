@@ -1,5 +1,4 @@
 import { twMerge } from "tailwind-merge";
-import { twMerge } from "tailwind-merge";
 
 type OnlyLiterals<T> = T extends string
   ? string extends T
@@ -25,7 +24,6 @@ type InputProps = Omit<React.ComponentPropsWithoutRef<"input">, "type"> & {
 };
 
 export default function Input(props: InputProps) {
-  let { className, type = "text", ...rest } = props;
   let { className, type = "text", ...rest } = props;
 
   return (
