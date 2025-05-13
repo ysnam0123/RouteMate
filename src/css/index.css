@@ -1,5 +1,5 @@
-@import "./root.css";
 @import "./tailwind.css";
+@import "./root.css";
 
 @font-face {
   font-family: "Montserrat";
