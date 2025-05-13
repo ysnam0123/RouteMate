@@ -11,17 +11,6 @@ type ReactInputType = OnlyLiterals<
 type InputProps = Omit<React.ComponentPropsWithoutRef<"input">, "type"> & {
   type?: Exclude<ReactInputType, "radio" | "checkbox" | "range">;
 };
-type OnlyLiterals<T> = T extends string
-  ? string extends T
-    ? never
-    : T
-  : never;
-type ReactInputType = OnlyLiterals<
-  React.InputHTMLAttributes<HTMLInputElement>["type"]
->;
-type InputProps = Omit<React.ComponentPropsWithoutRef<"input">, "type"> & {
-  type?: Exclude<ReactInputType, "radio" | "checkbox" | "range">;
-};
 
 export default function Input(props: InputProps) {
   let { className, type = "text", ...rest } = props;
