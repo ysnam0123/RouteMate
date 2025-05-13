@@ -53,7 +53,7 @@ export default function Write() {
     }
   }
 
-  const [locatoins, setLocations] = useState<string[]>([])
+  const [locations, setLocations] = useState<string[]>([])
   const handleLocationsChange = (newTags: string[]) => {
     setLocations(newTags)
   }
@@ -104,7 +104,7 @@ export default function Write() {
       JSON.stringify({
         writtenTitle,
         tags,
-        locatoins,
+        locations,
         hotels,
         cost,
         context,
