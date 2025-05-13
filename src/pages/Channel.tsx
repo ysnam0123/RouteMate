@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ChannelNav from '../components/channel/ChannelNav';
-import Header from '../components/layout/Header';
 import Sidebar from '../components/sidebar/Sidebar';
 
 interface Channel {
