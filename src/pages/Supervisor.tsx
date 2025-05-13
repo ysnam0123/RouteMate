@@ -1,5 +1,4 @@
 import Layout from '../layout/Layout'
-import Supervisor from './Supervisor'
 
 export default function Supervisor() {
   return (
