@@ -5,6 +5,7 @@ export default function App() {
   return (
     <>
       <Profile />
+      <Profile />
     </>
   );
 }
@@ -12,6 +13,7 @@ export default function App() {
 // import { twMerge } from 'tailwind-merge';
 
 // export default function App() {
+//   let islogin = true;
 //   let islogin = true;
 //   return (
 //     <>
