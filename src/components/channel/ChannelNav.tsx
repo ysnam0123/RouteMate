@@ -1,8 +1,9 @@
 import axios from 'axios';
 import { useState } from 'react';
 import ChannelList from './ChannelList';
-
+import { AxiosInstance } from 'axios';
 import Post from './Post';
+import { axiosInstance } from '../../api/axios';
 interface Channel {
   _id: string;
   name: string;
@@ -32,8 +33,8 @@ export default function ChannelNav({ channels }: ChannelNavProps) {
 
   const showChannel = async (channelId: string) => {
     try {
-      const res = await axios.get<Post[]>(
-        `http://13.125.208.179:5001/posts/channel/${channelId}`
+      const res = await axiosInstance.get<Post[]>(
+        `/posts/channel/${channelId}`
       );
       setPosts(res.data);
       // 선택된 채널 ID 저장하기

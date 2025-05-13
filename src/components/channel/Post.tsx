@@ -1,18 +1,16 @@
 import React from 'react';
-import like from '../../assets/icons/like.svg';
-import liked from '../../assets/icons/liked.svg';
-import footPrint from '../../assets/icons/footPrintBlack.svg';
-import whiteFootPrint from '../../assets/icons/footprintWhite.png';
 import userImage from '../../assets/images/Ellipse 25.png';
 import bedIcon from '../../assets/icons/bedIcon.svg';
 import ImageSlider from './ImageSlider';
 import PostInteraction from './PostInteraction';
+import PostComments from './PostComments';
 interface PostProps {
   post: {
     _id: string;
     title: string;
     createdAt: string;
-    likes: any[];
+    // likes: any[];
+    likes: likesObj[];
     comments: any[];
     author: {
       fullName: string;
@@ -20,7 +18,12 @@ interface PostProps {
     image: string;
   };
 }
-
+interface likesObj {
+  _id: string;
+  user: string;
+  post: string;
+  createdAt: string;
+}
 export default function Post({ post }: PostProps) {
   const parsedTitle = JSON.parse(post.title);
 
@@ -32,10 +35,10 @@ export default function Post({ post }: PostProps) {
           {parsedTitle.auther || post.author.fullName}
         </div>
         <div className="flex gap-3">
-          <div className="bg-[#F0B643] text-white w-[50px] h-[30px] rounded-xl text-[15px] flex justify-center items-center">
+          <div className="bg-[#2A728C] text-white w-[65px] h-[35px] rounded-xl text-[15px] flex justify-center items-center">
             카페
           </div>
-          <div className="bg-[#2A728C] text-white w-[50px] h-[30px] rounded-xl text-[15px] flex justify-center items-center">
+          <div className="bg-[#2A728C] text-white w-[65px] h-[35px] rounded-xl text-[15px] flex justify-center items-center">
             해운대
           </div>
         </div>
@@ -54,10 +57,13 @@ export default function Post({ post }: PostProps) {
             </div>
           </div>
 
-          <div className="flex gap-3 text-[14px] text-[var(--color-subtext)] border-b-2 border-[var(--color-lightGray)] mb-[10px] ">
-            <p>부산 해운대</p>
-            <p>부산 광안리</p>
-            <p>부산 대학교</p>
+          <div className="flex gap-3 text-[14px] text-[var(--color-subtext)] border-b-2 border-[var(--color-lightGray)] mb-[10px] w-[100%] ">
+            <div className="flex gap-3">
+              <p>부산 해운대</p>
+              <p>부산 광안리</p>
+              <p>부산 대학교</p>
+            </div>
+            <div className="ml-auto">총 비용: 200,000 ₩</div>
           </div>
 
           <div className="border-b-2 border-[var(--color-lightGray)] flex gap-2 mb-[10px]">
@@ -81,8 +87,15 @@ export default function Post({ post }: PostProps) {
             </p>
           </div>
         </div>
+        <div className="w-[330px] h-full border-[var(--color-black)] border-1 py-[15px] px-[25px] rounded-xl flex flex-col ">
+          <PostInteraction
+            postId={post._id}
+            likes={post.likes}
+            comments={post.comments}
+          />
 
-        <PostInteraction likes={post.likes} comments={post.comments} />
+          <PostComments postId={post._id} comments={post.comments} />
+        </div>
       </div>
     </div>
   );

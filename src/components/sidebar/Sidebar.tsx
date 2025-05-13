@@ -85,7 +85,7 @@ function Sidebar(): React.ReactElement {
   let menuPanelWidth = shouldShrinkSidebar ? 'w-[70px]' : 'w-[235px]';
 
   return (
-    <nav className="h-auto min-h-screen bg-white flex transition-all duration-300 pt-4">
+    <nav className="h-auto min-h-screen bg-white flex transition-all duration-300">
       <div
         className={`p-4 overflow-y-auto bg-[var(--color-sideBody)] transition-all duration-300 ease-in-out ${menuPanelWidth}`}
       >

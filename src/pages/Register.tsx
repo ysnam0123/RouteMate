@@ -7,13 +7,18 @@ import emailOk from '../assets/icons/emailOk.png';
 import passwordNot from '../assets/icons/passwordNotOk.svg';
 import passwordOk from '../assets/icons/passwordOk.svg';
 import useRandomVideo from '../hook/RandomVideo';
+import { useNavigate } from 'react-router';
+import { axiosInstance } from '../api/axios';
+import axios from 'axios';
 
 export default function Register() {
+  const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const video = useRandomVideo();
+  const navigate = useNavigate();
 
   // 이메일 올바르게 쳤나 확인
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,16 +29,53 @@ export default function Register() {
     setIsEmailValid(emailRegex.test(value));
   };
 
-  // 패스워드 입력할떄 상태 업데이트
+  const handleFullnameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFullName(e.target.value);
+  };
+
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
   };
 
-  // 패스워드 확인 입력할때 상태 업데이트
   const handleConfirmPasswordChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setConfirmPassword(e.target.value);
+  };
+
+  // 회원가입 요청
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!fullName || !email || !password || password !== confirmPassword) {
+      alert('입력값을 확인해주세요.');
+      return;
+    }
+
+    try {
+      await axiosInstance.post('/signup', {
+        email,
+        fullName,
+        password,
+      });
+
+      alert('회원가입 성공!');
+      // 입력값 초기화
+      setFullName('');
+      setEmail('');
+      setPassword('');
+      setConfirmPassword('');
+      setIsEmailValid(false);
+      navigate('/login');
+    } catch (err: unknown) {
+      console.error('회원가입 에러:', err);
+      if (axios.isAxiosError(err)) {
+        const message = err.response?.data?.message || err.message;
+        alert(`회원가입 실패: ${message}`);
+      } else {
+        alert('회원가입 중 알 수 없는 오류가 발생했습니다.');
+      }
+    }
   };
 
   return (
@@ -73,18 +115,24 @@ export default function Register() {
             <div className="w-[205px] h-[15px] bg-[var(--color-main-navy)] rounded-[15px]" />
           </div>
 
-          {/* 회원가입 영역 */}
-          <form className="w-[650px] pt-15 px-10 flex flex-col justify-center items-center relative mb-2">
+          <form
+            onSubmit={handleSubmit}
+            className="w-[650px] pt-15 px-10 flex flex-col justify-center items-center relative mb-2"
+          >
             <div className="absolute left-0 top-0 bottom-0 w-[2px]" />
 
-            {/* 2열 입력 필드 레이아웃 */}
             <div className="grid grid-cols-2 gap-4 w-full">
-              {/* 이름 or 닉네임 */}
+              {/* 이름 */}
               <div className="flex flex-col">
-                <label htmlFor="fullname" className="text-[var(--color-black)]">
-                  Fullname
+                <label htmlFor="fullName" className="text-[var(--color-black)]">
+                  fullName
                 </label>
-                <Input id="fullname" name="fullname" />
+                <Input
+                  id="fullName"
+                  name="fullName"
+                  value={fullName}
+                  onChange={handleFullnameChange}
+                />
               </div>
 
               {/* 이메일 */}
@@ -151,7 +199,8 @@ export default function Register() {
                 />
               </div>
             </div>
-            {/* 회원가입 버튼 */}
+
+            {/* 제출 버튼 */}
             <Button
               type="submit"
               className="self-center mt-5 w-[200px] h-[50px]"
@@ -161,7 +210,7 @@ export default function Register() {
           </form>
         </div>
 
-        {/* 하단 장식 */}
+        {/* 여권 하단 장식 */}
         <div className="h-[75px] px-7 pt-3 bg-[var(--color-lightGray)] rounded-b-[30px]">
           <div className="w-[630px] text-[14px] text-[var(--color-black)]">
             {
