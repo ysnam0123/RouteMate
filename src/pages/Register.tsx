@@ -8,7 +8,6 @@ import passwordNot from '../assets/icons/passwordNotOk.svg';
 import passwordOk from '../assets/icons/passwordOk.svg';
 import { useNavigate } from 'react-router';
 import { axiosInstance } from '../api/axios';
-import axios from 'axios';
 
 export default function Register() {
     const [fullName, setFullName] = useState('');
