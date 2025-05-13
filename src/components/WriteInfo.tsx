@@ -1,14 +1,24 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import WriteInfoMenu from './WriteInfoMenu'
+import { axiosInstance } from '../api/axios'
+
+interface Channel {
+  id: string
+  name: string
+}
 
 export default function WriteInfo({
   iconSrc,
   tagName,
   type,
+  onSelectChange,
+  onTagChange,
 }: {
   iconSrc: string
   tagName: string
   type?: string
+  onSelectChange?: (selectedId: string) => void
+  onTagChange?: (tags: string[]) => void
 }) {
   const [tags, setTags] = useState<string[]>([])
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -21,9 +31,37 @@ export default function WriteInfo({
         : selectRef.current?.value.trim()
 
       if (value) {
-        setTags([...tags, value])
+        const newTags = [...tags, value]
+        setTags(newTags)
+        if (onTagChange) {
+          onTagChange(newTags)
+        }
         if (type && inputRef.current) inputRef.current.value = ''
       }
+    }
+  }
+
+  //채널 목록 불러오기
+  const [channels, setChannels] = useState<Channel[]>([])
+
+  useEffect(() => {
+    const getChannel = async () => {
+      const { data } = await axiosInstance.get(`channels`)
+      //필요한 id,name 추출
+      const simplified = data.map((channel: { _id: string; name: string }) => ({
+        id: channel._id,
+        name: channel.name,
+      }))
+      setChannels(simplified)
+    }
+    getChannel()
+  }, [])
+
+  //Write.tsx에 channelId 전달
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedId = e.target.value
+    if (onSelectChange) {
+      onSelectChange(selectedId)
     }
   }
 
@@ -44,20 +82,16 @@ export default function WriteInfo({
           ) : (
             <select
               ref={selectRef}
+              onChange={handleSelectChange}
               className="border border-[#AFB1B6] w-[440px] rounded-md px-2 py-1 active:outline-[#60b5ff] focus:outline-[#60b5ff]"
               defaultValue=""
               name="channelSelect"
             >
-              <option
-                value=""
-                disabled
-                hidden
-                color="AFB1B6"
-                className="text-sm"
-              >
-                채널API연결~
-              </option>
-              {/* 나중에 채널 API와 연결하기 */}
+              {channels.map((channel) => (
+                <option key={channel.id} value={channel.id}>
+                  {channel.name}
+                </option>
+              ))}
             </select>
           )}
           {/* 입력한 정보 추가 영역*/}

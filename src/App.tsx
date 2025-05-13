@@ -1,5 +1,5 @@
 export default function App() {
-  return <></>
+  return <></>;
 }
 
 // import { twMerge } from 'tailwind-merge';

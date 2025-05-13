@@ -1,12 +1,12 @@
-import testsignInImg from "../assets/images/프로필사진.png";
-import testSearch from "../assets/icons/free-icon-south-korea-9105510 2.png";
-import testSetting from "../assets/icons/Star.png";
-import testLike from "../assets/icons/Heart.png";
-import testFoot from "../assets/icons/footprintWhite.png";
+import testsignInImg from '../assets/images/프로필사진.png'
+import testSearch from '../assets/icons/free-icon-south-korea-9105510 2.png'
+import testSetting from '../assets/icons/Star.png'
+import testLike from '../assets/icons/Heart.png'
+import testFoot from '../assets/icons/footprintWhite.png'
 // 임시 프로필,아이콘 사진
-import Button from "../components/button";
+import Button from '../components/button'
 
-export default function Profile() {
+export default function ProfileIsNotLogged() {
   return (
     <div className="w-full max-w-[1000px] mx-auto p-4 mt-[55px]">
       {/* 상단 프로필 영역 */}
@@ -61,9 +61,14 @@ export default function Profile() {
             </div>
           </div>
           <div className="flex mt-20">
-            <Button className="w-[273px] h-[45px] bg-[#59A9E3] text-white px-5 py-2 rounded-[10px] text-[15px] font-semibold">
-              내 정보 수정하기
-            </Button>
+            <div className="flex gap-2 pl-4">
+              <Button className="h-[45px] min-w-[125px] bg-[#26303A] text-white text-[15px] font-semibold flex items-center justify-center px-3 rounded-[10px]">
+                편지 쓰기
+              </Button>
+              <Button className="h-[45px] min-w-[125px] bg-[#75BFFF] text-white text-[15px] font-semibold flex items-center justify-center px-3 rounded-[10px]">
+                팔로우+
+              </Button>
+            </div>
           </div>
         </div>
       </div>
@@ -218,5 +223,5 @@ export default function Profile() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -8,7 +8,6 @@ import passwordNot from '../assets/icons/passwordNotOk.svg';
 import passwordOk from '../assets/icons/passwordOk.svg';
 import { useNavigate } from 'react-router';
 import { axiosInstance } from '../api/axios';
-import axios from 'axios';
 
 export default function Register() {
     const [fullName, setFullName] = useState('');
@@ -42,25 +41,48 @@ export default function Register() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const isValid = fullName && email && password && password === confirmPassword;
-        if (!isValid) return alert('입력값을 확인해주세요.');
+        // 유효성 검사
+        if (!fullName) {
+            alert('이름을 입력해주세요.');
+            return;
+        }
+
+        if (!email) {
+            alert('이메일을 입력해주세요.');
+            return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert('올바른 이메일 형식을 입력해주세요.');
+            return;
+        }
+
+        if (!password) {
+            alert('비밀번호를 입력해주세요.');
+            return;
+        }
+
+        if (!confirmPassword) {
+            alert('비밀번호 확인을 입력해주세요.');
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            alert('비밀번호가 일치하지 않습니다.');
+            return;
+        }
 
         try {
             await axiosInstance.post('/signup', { email, fullName, password });
             // 입력값 초기화
             [setFullName, setEmail, setPassword, setConfirmPassword].forEach((fn) => fn(''));
             setIsEmailValid(false);
-            alert('회원가입 성공!');
+            alert('회원가입 되었습니다.');
             // 완료되면 로그인페이지로 이동(이것도 임의로해둔거라 바꿔도됨)
             navigate('/login');
         } catch (e) {
-            console.error('회원가입 에러:', e);
-
-            const message = axios.isAxiosError(e)
-                ? e.response?.data?.message || e.message
-                : '회원가입 중 알 수 없는 오류가 발생했습니다.';
-
-            alert(`회원가입 실패: ${message}`);
+            alert(`회원가입 실패하였습니다.`);
         }
     };
 
@@ -130,6 +152,7 @@ export default function Register() {
                                     value={confirmPassword}
                                     onChange={handleConfirmPasswordChange}
                                 />
+
                                 <img
                                     src={
                                         password !== '' && confirmPassword !== '' && password === confirmPassword
