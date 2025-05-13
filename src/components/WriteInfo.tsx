@@ -11,10 +11,14 @@ export default function WriteInfo({
   iconSrc,
   tagName,
   type,
+  onSelectChange,
+  onTagChange,
 }: {
   iconSrc: string
   tagName: string
   type?: string
+  onSelectChange?: (selectedId: string) => void
+  onTagChange?: (tags: string[]) => void
 }) {
   const [tags, setTags] = useState<string[]>([])
   const inputRef = useRef<HTMLInputElement | null>(null)
@@ -27,7 +31,11 @@ export default function WriteInfo({
         : selectRef.current?.value.trim()
 
       if (value) {
-        setTags([...tags, value])
+        const newTags = [...tags, value]
+        setTags(newTags)
+        if (onTagChange) {
+          onTagChange(newTags)
+        }
         if (type && inputRef.current) inputRef.current.value = ''
       }
     }
@@ -49,6 +57,14 @@ export default function WriteInfo({
     getChannel()
   }, [])
 
+  //Write.tsx에 channelId 전달
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedId = e.target.value
+    if (onSelectChange) {
+      onSelectChange(selectedId)
+    }
+  }
+
   return (
     <>
       <div className="h-[50px] flex">
@@ -66,6 +82,7 @@ export default function WriteInfo({
           ) : (
             <select
               ref={selectRef}
+              onChange={handleSelectChange}
               className="border border-[#AFB1B6] w-[440px] rounded-md px-2 py-1 active:outline-[#60b5ff] focus:outline-[#60b5ff]"
               defaultValue=""
               name="channelSelect"
