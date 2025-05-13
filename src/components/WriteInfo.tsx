@@ -1,5 +1,11 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import WriteInfoMenu from './WriteInfoMenu'
+import { axiosInstance } from '../api/axios'
+
+interface Channel {
+  id: string
+  name: string
+}
 
 export default function WriteInfo({
   iconSrc,
@@ -27,6 +33,22 @@ export default function WriteInfo({
     }
   }
 
+  //채널 목록 불러오기
+  const [channels, setChannels] = useState<Channel[]>([])
+
+  useEffect(() => {
+    const getChannel = async () => {
+      const { data } = await axiosInstance.get(`channels`)
+      //필요한 id,name 추출
+      const simplified = data.map((channel: { _id: string; name: string }) => ({
+        id: channel._id,
+        name: channel.name,
+      }))
+      setChannels(simplified)
+    }
+    getChannel()
+  }, [])
+
   return (
     <>
       <div className="h-[50px] flex">
@@ -48,16 +70,11 @@ export default function WriteInfo({
               defaultValue=""
               name="channelSelect"
             >
-              <option
-                value=""
-                disabled
-                hidden
-                color="AFB1B6"
-                className="text-sm"
-              >
-                채널API연결~
-              </option>
-              {/* 나중에 채널 API와 연결하기 */}
+              {channels.map((channel) => (
+                <option key={channel.id} value={channel.id}>
+                  {channel.name}
+                </option>
+              ))}
             </select>
           )}
           {/* 입력한 정보 추가 영역*/}

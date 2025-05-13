@@ -7,9 +7,11 @@ import rightArrowNavy from '../assets/icons/rightArrowNavy.png'
 import pin from '../assets/icons/pin.svg'
 import bedIcon from '../assets/icons/bedIcon.svg'
 import plus from '../assets/icons/plus.svg'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { axiosInstance } from '../api/axios'
 
 export default function Write() {
+  //이미지 등록
   const [images, setImages] = useState<string[]>([])
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -20,6 +22,7 @@ export default function Write() {
     }
   }
 
+  //이미지 슬라이더
   const [imgIndex, setImgIndex] = useState(0)
   const imageWidth = 216
   const handleLeftSlider = () => {
@@ -32,6 +35,7 @@ export default function Write() {
     }
   }
 
+  //tag 등록
   const [tags, setTags] = useState<string[]>([])
   const inputRef = useRef<HTMLInputElement | null>(null)
   const addTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
