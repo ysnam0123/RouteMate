@@ -8,7 +8,6 @@ import EyeOff from '../assets/icons/eyeOff.svg';
 import { useAuthStore } from '../stores/authStore';
 import { useNavigate } from 'react-router';
 import { axiosInstance } from '../api/axios';
-import axios from 'axios';
 
 export default function Login() {
     const [email, setEmail] = useState('');
