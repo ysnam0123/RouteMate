@@ -12,7 +12,10 @@ import { axiosInstance } from '../api/axios';
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [hide, setHide] = useState(true); // true: 숨김, false: 보임
+    const [isLoading, setIsLoading] = useState(false);
+    // 로그인 요청중 상태 -> 로그인할때 버튼 비활성화해준다.
+    const [hide, setHide] = useState(true);
+    // 비밀번호 가리는 상태 -> true이면 숨겨주고 false이면 보여준다.
     const navigate = useNavigate();
     const login = useAuthStore((state) => state.login);
 
@@ -30,16 +33,18 @@ export default function Login() {
         }
 
         try {
+            setIsLoading(true);
             const { data } = await axiosInstance.post('/login', { email, password });
-
-            login(data.token, data.user._id); // 토큰과 id값을 zustand에 저장
+            login(data.token, data.user._id);
+            // 토큰과 id값을 zustand에 저장
             [setEmail, setPassword].forEach((fn) => fn(''));
-            // 이거도 임시로 넣어둔것 뺴도됨
             alert('로그인 되었습니다.');
             // 완료되면 인증 페이지(임의로 한것이므로 바꿔도됨)로 이동
-            navigate('/profileedit');
+            navigate('/');
         } catch (e) {
             alert(`로그인을 실패하였습니다.`);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -106,7 +111,7 @@ export default function Login() {
                                     id="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="pr-10" // 아이콘 위치 공간 확보
+                                    className="pr-10"
                                 />
                                 <img
                                     src={hide ? EyeOff : EyeOn}
@@ -118,7 +123,7 @@ export default function Login() {
                         </div>
 
                         {/* 로그인 버튼 */}
-                        <Button type="submit" className="px-5 py-2 self-end">
+                        <Button type="submit" className="px-5 py-2 self-end" disabled={isLoading}>
                             로그인
                         </Button>
                     </form>
