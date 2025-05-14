@@ -6,7 +6,7 @@ import testFoot from '../assets/icons/footprintWhite.png'
 // 임시 프로필,아이콘 사진
 import Button from '../components/button'
 
-export default function ProfileIsNotLogged() {
+export default function UserProfile() {
   return (
     <div className="w-full max-w-[1000px] mx-auto p-4 mt-[55px]">
       {/* 상단 프로필 영역 */}

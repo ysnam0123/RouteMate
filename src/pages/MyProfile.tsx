@@ -39,7 +39,7 @@ interface UserData {
   updatedAt: string
 }
 
-export default function ProfileIsLooged() {
+export default function MyProfile() {
   const userId = useAuthStore((state) => state.userId)
   const [user, setUser] = useState<UserData | null>(null)
 
