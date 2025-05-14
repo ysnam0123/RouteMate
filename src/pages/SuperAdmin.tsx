@@ -1,7 +1,29 @@
 import Layout from '../layout/Layout'
 import deleteIcon from '../assets/icons/deleteIcon.png'
+import { useEffect, useState } from 'react'
+import { axiosInstance } from '../api/axios'
+
+interface Channel {
+  id: string
+  name: string
+}
 
 export default function SuperAdmin() {
+  //채널 목록 불러오기
+  const [channels, setChannels] = useState<Channel[]>([])
+
+  useEffect(() => {
+    const getChannel = async () => {
+      const { data } = await axiosInstance.get(`channels`)
+      //필요한 id,name 추출
+      const simplified = data.map((channel: { _id: string; name: string }) => ({
+        id: channel._id,
+        name: channel.name,
+      }))
+      setChannels(simplified)
+    }
+    getChannel()
+  }, [])
   return (
     <>
       <Layout>
@@ -10,46 +32,17 @@ export default function SuperAdmin() {
             <section className="mb-[100px]">
               <h1 className="font-bold text-[32px] mb-[40px]">채널 관리</h1>
               <div className="flex">
-                <div className="w-[150px] h-[55px] border rounded-[10px] border-[#0F172A] text-[15px] font-semibold  items-center flex justify-center mr-[10px] relative">
-                  1박 2일
-                  <img
-                    src={deleteIcon}
-                    alt="deleteIcon"
-                    className="absolute right-[-10px] top-[-10px] bg-[#fff]"
-                  />
-                </div>
-                <div className="w-[150px] h-[55px] border rounded-[10px] border-[#0F172A] text-[15px] font-semibold  items-center flex justify-center mr-[10px] relative">
-                  1박 2일
-                  <img
-                    src={deleteIcon}
-                    alt="deleteIcon"
-                    className="absolute right-[-10px] top-[-10px] bg-[#fff]"
-                  />
-                </div>
-                <div className="w-[150px] h-[55px] border rounded-[10px] border-[#0F172A] text-[15px] font-semibold  items-center flex justify-center mr-[10px] relative">
-                  1박 2일
-                  <img
-                    src={deleteIcon}
-                    alt="deleteIcon"
-                    className="absolute right-[-10px] top-[-10px] bg-[#fff]"
-                  />
-                </div>
-                <div className="w-[150px] h-[55px] border rounded-[10px] border-[#0F172A] text-[15px] font-semibold  items-center flex justify-center mr-[10px] relative">
-                  1박 2일
-                  <img
-                    src={deleteIcon}
-                    alt="deleteIcon"
-                    className="absolute right-[-10px] top-[-10px] bg-[#fff]"
-                  />
-                </div>
-                <div className="w-[150px] h-[55px] border rounded-[10px] border-[#0F172A] text-[15px] font-semibold  items-center flex justify-center mr-[10px] relative">
-                  1박 2일
-                  <img
-                    src={deleteIcon}
-                    alt="deleteIcon"
-                    className="absolute right-[-10px] top-[-10px] bg-[#fff]"
-                  />
-                </div>
+                {channels.map((channel) => (
+                  <div className="w-[150px] h-[55px] border rounded-[10px] border-[#0F172A] text-[15px] font-semibold  items-center flex justify-center mr-[10px] relative">
+                    {channel.name}
+                    <img
+                      src={deleteIcon}
+                      alt="deleteIcon"
+                      className="absolute right-[-10px] top-[-10px] bg-[#fff]"
+                    />
+                  </div>
+                ))}
+
                 <div className="w-[150px] h-[55px] border rounded-[10px] border-[#60B5FF] bg-[#60B5FF] text-[#FCFDFF] text-[15px] font-semibold items-center flex justify-center mr-[10px]">
                   채널 생성
                 </div>
