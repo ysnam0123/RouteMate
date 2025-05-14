@@ -53,6 +53,7 @@ export default function Register() {
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
         if (!emailRegex.test(email)) {
             alert('올바른 이메일 형식을 입력해주세요.');
             return;
@@ -170,7 +171,11 @@ export default function Register() {
                         </div>
 
                         {/* 회원가입 버튼 */}
-                        <Button type="submit" className="self-center mt-5 w-[200px] h-[50px]">
+                        <Button
+                            type="submit"
+                            className="self-center mt-5 w-[200px] h-[50px]"
+                            disabled={!isEmailValid || !fullName || !password || password !== confirmPassword}
+                        >
                             회원가입
                         </Button>
                     </form>
