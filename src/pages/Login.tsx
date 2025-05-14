@@ -6,9 +6,7 @@ import Button from '../components/button';
 import EyeOn from '../assets/icons/eyeOn.svg';
 import EyeOff from '../assets/icons/eyeOff.svg';
 import useRandomVideo from '../hook/RandomVideo';
-
 import { useAuthStore } from '../stores/authStore';
-import { useNavigate } from 'react-router';
 import { axiosInstance } from '../api/axios';
 
 export default function Login() {
@@ -18,7 +16,6 @@ export default function Login() {
     const [isLoading, setIsLoading] = useState(false);
     // 로그인 요청중 상태 -> 로그인할때 버튼 비활성화해준다.
     const [hide, setHide] = useState(true); // true: 숨김, false: 보임
-    const navigate = useNavigate();
     const login = useAuthStore((state) => state.login);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -42,7 +39,6 @@ export default function Login() {
             [setEmail, setPassword].forEach((fn) => fn(''));
             alert('로그인 되었습니다.');
             // 완료되면 인증 페이지(임의로 한것이므로 바꿔도됨)로 이동
-            navigate('/');
         } catch (e) {
             alert(`로그인을 실패하였습니다.`);
         } finally {
