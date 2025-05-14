@@ -35,8 +35,8 @@ export default function Login() {
         try {
             setIsLoading(true);
             const { data } = await axiosInstance.post('/login', { email, password });
-            login(data.token, data.user._id);
-            // 토큰과 id값을 zustand에 저장
+            login(data.token, data.user._id, data.user.role);
+            // 토큰과 id값, 역활을 zustand에 저장
             [setEmail, setPassword].forEach((fn) => fn(''));
             alert('로그인 되었습니다.');
             // 완료되면 인증 페이지(임의로 한것이므로 바꿔도됨)로 이동
