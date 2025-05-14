@@ -12,14 +12,12 @@ import ProfileIsNotLogged from './pages/ProfileIsNotLogged';
 import ProfileIsLogged from './pages/ProfileIsLogged';
 import Write from './pages/Write';
 import UserList from './pages/UserList';
+import SuperAdmin from './pages/SuperAdmin';
+import AdminRouter from './components/routers/AdminRouter';
 export default function App() {
     return (
         <>
             <Routes>
-                {/* 임시로 둔곳 */}
-                <Route path="/profile" element={<ProfileIsNotLogged />} />
-                <Route path="/userlist" element={<UserList />} />
-
                 {/* 인증없이 사용가능한 라우터 */}
                 <Route element={<PublicRouter />}>
                     <Route path="/" element={<Home />} />
@@ -29,15 +27,28 @@ export default function App() {
 
                 {/* 인증(로그인)이 있어야 사용가능한 라우터 */}
                 <Route element={<ProtectedRouter />}>
-                    <Route path="/profileedit" element={<ProfileEdit />} />
-                    <Route path="/profile2" element={<ProfileIsLogged />} />
-                    <Route path="/write" element={<Write />} />
+                    <Route element={<RootLayout />}>
+                        <Route path="/profileedit" element={<ProfileEdit />} />
+                        <Route path="/profile2" element={<ProfileIsLogged />} />
+                        <Route path="/write" element={<Write />} />
+                    </Route>
                 </Route>
 
+                {/* SuperAdmin만 접근 가능한 관리자 페이지 */}
+                <Route path="/superadmin" element={<AdminRouter />}>
+                    <Route element={<RootLayout />}>
+                        <Route index element={<SuperAdmin />} />
+                    </Route>
+                </Route>
+
+                {/* 임시로 둔곳 */}
                 <Route element={<RootLayout />}>
                     <Route path="/channel" element={<Channel />} />
+                    <Route path="/profile" element={<ProfileIsNotLogged />} />
+                    <Route path="/userlist" element={<UserList />} />
                 </Route>
 
+                {/* 없는 라우터면 NotFound */}
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </>

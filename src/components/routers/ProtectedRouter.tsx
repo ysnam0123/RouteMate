@@ -10,7 +10,7 @@ export default function ProtectedRouter() {
     // 상태관리에서 로그인 상태 확인 가져온다.
 
     useEffect(() => {
-        // 로그인 상태가아니라면 홈화면으로 이동
+        // 로그인 상태가 아니라면 홈화면으로 이동
         if (!isLoggedIn) {
             navigate('/');
             return;
