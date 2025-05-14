@@ -1,9 +1,22 @@
+// import Button from "../components/button";
+// import profile from '../assets/images/profile.svg'
+import Jeju from '../assets/achievementIcons/jeju.svg'
+import Cafe from '../assets/achievementIcons/cafe.svg'
+import Hiking from '../assets/achievementIcons/hiking.svg'
+import Alone from '../assets/achievementIcons/alone.svg'
+import House from '../assets/achievementIcons/house.svg'
+import KoreaPin from '../assets/achievementIcons/koreaPin.svg'
+import PowerJ from '../assets/achievementIcons/PowerJ.svg'
+import Star from '../assets/achievementIcons/Star.svg'
+import Train from '../assets/achievementIcons/train.svg'
+// import Tag from '../components/Tag'
 import testLike from '../assets/icons/Heart.png'
 import testFoot from '../assets/icons/footprintWhite.png'
 import Button from '../components/button'
 import { useAuthStore } from '../stores/authStore'
 import { useEffect, useState } from 'react'
 import { axiosInstance } from '../api/axios'
+// import { useParams } from 'react-router-dom'
 
 interface Post {
   _id: string
@@ -37,11 +50,14 @@ interface UserData {
   messages: any[]
   createdAt: string
   updatedAt: string
+  username: string
 }
 
 export default function MyProfile() {
   const userId = useAuthStore((state) => state.userId)
   const [user, setUser] = useState<UserData | null>(null)
+  const [introduction, setIntroduction] = useState('')
+  const [titles, setTitles] = useState<string[]>([])
 
   useEffect(() => {
     if (!userId) return
@@ -58,7 +74,30 @@ export default function MyProfile() {
     fetchUser()
   }, [userId])
 
+  useEffect(() => {
+    if (user?.username) {
+      const match = user.username.match(/^(.*)\s?\[(.*)\]$/)
+      const intro = match?.[1] ?? user.username
+      const parsedTitles = match?.[2]?.split(',').map((t) => t.trim()) ?? []
+
+      setIntroduction(intro)
+      setTitles(parsedTitles.slice(0, 2)) // 최대 2개만 사용한다고 가정
+    }
+  }, [user])
+
   if (!user) return <div>로딩 중...</div>
+
+  const tagFields = [
+    { label: '제주 중독', icon: Jeju },
+    { label: '밥보단 커피', icon: Cafe },
+    { label: '김정호..?', icon: KoreaPin },
+    { label: '1박 2일 애호가', icon: Star },
+    { label: '낭만가', icon: Train },
+    { label: 'Power J', icon: PowerJ },
+    { label: '산타아저씨', icon: Hiking },
+    { label: '혼자서도 잘해요', icon: Alone },
+    { label: '한달살이 경험자', icon: House },
+  ]
 
   return (
     <div className="w-full max-w-[1000px] mx-auto p-4 mt-[55px]">
@@ -76,32 +115,29 @@ export default function MyProfile() {
         {/* 태그, 소개글 */}
         <div className="w-[365px] pl-10">
           <div className="flex items-center gap-3 mb-8">
-            {/* <Button className="w-[174px] h-[31px] text-black px-3 py-1 rounded-[19px] text-sm relative font-bold border-1 border-[#434343] bg-white">
-              <img
-                src={testSearch}
-                alt="아이콘"
-                className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2"
-              />
-              김정호 ..?
-            </Button> */}
-            {/* <Button className="w-[174px] h-[31px] text-black px-3 py-1 rounded-[19px] text-sm relative font-bold border-1 border-[#434343] bg-white">
-              <img
-                src={testSetting}
-                alt="아이콘"
-                className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2"
-              />
-              1박 2일 애호가
-            </Button> */}
+            {titles.map((title, index) => {
+              const tag = tagFields.find((tag) => tag.label === title)
+
+              return (
+                <Button
+                  key={index}
+                  className="w-[174px] h-[31px] text-black px-3 py-1 rounded-[19px] text-sm relative font-bold border border-[#434343] bg-white"
+                >
+                  {tag?.icon && (
+                    <img
+                      src={tag.icon}
+                      alt={`${title} 아이콘`}
+                      className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2"
+                    />
+                  )}
+                  <span className="ml-5">{title}</span>
+                </Button>
+              )
+            })}
           </div>
 
           <h2 className="text-[35px] mb-2 pt-3.5 font-bold">{user.fullName}</h2>
-          <p className="text-[20px] font-semibold">
-            {/* {user.posts.map((post) => (
-              <div key={post._id}>
-                <p>{post.title}</p>
-              </div>
-            ))} */}
-          </p>
+          <p className="text-[20px] font-semibold">{introduction}</p>
         </div>
 
         {/* 팔로워숫자 및 내 정보 수정 */}
