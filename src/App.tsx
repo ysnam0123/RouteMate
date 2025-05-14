@@ -11,12 +11,14 @@ import Home from './pages/Home';
 import ProfileIsNotLogged from './pages/ProfileIsNotLogged';
 import ProfileIsLogged from './pages/ProfileIsLogged';
 import Write from './pages/Write';
+import UserList from './pages/UserList';
 export default function App() {
     return (
         <>
             <Routes>
                 {/* 임시로 둔곳 */}
                 <Route path="/profile" element={<ProfileIsNotLogged />} />
+                <Route path="/userlist" element={<UserList />} />
 
                 {/* 인증없이 사용가능한 라우터 */}
                 <Route element={<PublicRouter />}>
