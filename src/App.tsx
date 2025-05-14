@@ -29,7 +29,7 @@ export default function App() {
         <Route element={<ProtectedRouter />}>
           <Route element={<RootLayout />}>
             <Route path="/profileedit" element={<ProfileEdit />} />
-            <Route path="/profile2" element={<MyProfile />} />
+            <Route path="/myprofile" element={<MyProfile />} />
             <Route path="/write" element={<Write />} />
           </Route>
         </Route>
@@ -44,7 +44,7 @@ export default function App() {
         {/* 임시로 둔곳 */}
         <Route element={<RootLayout />}>
           <Route path="/channel" element={<Channel />} />
-          <Route path="/profile" element={<UserProfile />} />
+          <Route path="/userprofile" element={<UserProfile />} />
           <Route path="/userlist" element={<UserList />} />
         </Route>
 
