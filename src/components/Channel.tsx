@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ChannelNav from '../components/channel/ChannelNav';
+import Layout from '../layout/Layout';
 // import Sidebar from '../components/sidebar/Sidebar';
 
 interface Channel {
@@ -30,12 +31,14 @@ export default function Channel() {
 
   return (
     <>
-      <div className="flex">
-        {/* <Sidebar /> */}
-        <div className="flex flex-col  items-center w-full">
-          <ChannelNav channels={channels} />
+      <Layout>
+        <div className="flex">
+          {/* <Sidebar /> */}
+          <div className="flex flex-col  items-center max-w-[1200px] w-[full]">
+            <ChannelNav channels={channels} />
+          </div>
         </div>
-      </div>
+      </Layout>
     </>
   );
 }
