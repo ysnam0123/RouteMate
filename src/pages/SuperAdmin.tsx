@@ -24,6 +24,21 @@ export default function SuperAdmin() {
     }
     getChannel()
   }, [])
+  const deleteChannel = async (channelId: String) => {
+    try {
+      const res = await axiosInstance.delete('/channels/delete', {
+        data: {
+          id: channelId,
+        },
+      })
+      console.log('채널 삭제 성공:', res.data)
+      alert('채널 삭제 완료')
+    } catch (error) {
+      console.log('채널 삭제 실패:', error)
+      alert('채널 삭제 실패')
+    }
+  }
+
   return (
     <>
       <Layout>
@@ -39,6 +54,7 @@ export default function SuperAdmin() {
                       src={deleteIcon}
                       alt="deleteIcon"
                       className="absolute right-[-10px] top-[-10px] bg-[#fff]"
+                      onClick={() => deleteChannel(channel.id)}
                     />
                   </div>
                 ))}
