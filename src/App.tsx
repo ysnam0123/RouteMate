@@ -44,7 +44,7 @@ export default function App() {
         {/* 임시로 둔곳 */}
         <Route element={<RootLayout />}>
           <Route path="/channel" element={<Channel />} />
-          <Route path="/userprofile" element={<UserProfile />} />
+          <Route path="/userprofile/:userId" element={<UserProfile />} />
           <Route path="/userlist" element={<UserList />} />
         </Route>
 
