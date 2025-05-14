@@ -65,6 +65,9 @@ export default function PostInteraction({
       setLiked(true);
       // 해당 좋아요 ID를 저장하기 (취소를 위해)
       setLikeId(myLike.user);
+    } else {
+      setLiked(false);
+      setLikeId(null);
     }
   }, [likes, userId]);
 
