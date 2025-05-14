@@ -26,25 +26,27 @@ export default function Login() {
       alert('이메일을 입력해주세요.');
       return;
     }
-
+    
     if (!password.trim()) {
       alert('비밀번호를 입력해주세요.');
       return;
     }
-
+    
     try {
-      const { data } = await axiosInstance.post('/login', { email, password });
-
-      login(data.token, data.user._id); // 토큰과 id값을 zustand에 저장
-      [setEmail, setPassword].forEach((fn) => fn(''));
-      // 이거도 임시로 넣어둔것 뺴도됨
-      alert('로그인 되었습니다.');
-      // 완료되면 채널로 이동
-      navigate('/channel');
-    } catch (e) {
-      alert(`로그인을 실패하였습니다.`);
-    }
-  };
+           setIsLoading(true);
+           const { data } = await axiosInstance.post('/login', { email, password });
+           login(data.token, data.user._id, data.user.role);
+           // 토큰과 id값, 역활을 zustand에 저장
+           [setEmail, setPassword].forEach((fn) => fn(''));
+           alert('로그인 되었습니다.');
+           // 완료되면 인증 페이지(임의로 한것이므로 바꿔도됨)로 이동
+           navigate('/');
+        } catch (e) {
+           alert(`로그인을 실패하였습니다.`);
+        } finally {
+           setIsLoading(false);
+        }
+    };
 
   return (
     <div
