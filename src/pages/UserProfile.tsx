@@ -18,7 +18,6 @@ import { useEffect, useState } from 'react';
 import { axiosInstance } from '../api/axios';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router';
-import Layout from '../layout/Layout';
 
 interface Post {
     _id: string;

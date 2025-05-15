@@ -9,7 +9,6 @@ import bedIcon from '../assets/icons/bedIcon.svg';
 import plus from '../assets/icons/plus.svg';
 import { useRef, useState } from 'react';
 import Button from '../components/button';
-import Layout from '../layout/Layout';
 import { axiosInstance } from '../api/axios';
 
 export default function Write() {

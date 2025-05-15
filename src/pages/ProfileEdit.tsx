@@ -13,7 +13,6 @@ import Train from '../assets/achievementIcons/train.svg';
 import Tag from '../components/Tag';
 import { useEffect, useState } from 'react';
 import { axiosInstance } from '../api/axios';
-import Layout from '../layout/Layout';
 import PasswordInput from '../components/PaswordInput';
 import { useAuthStore } from '../stores/authStore';
 import { useNavigate } from 'react-router-dom';

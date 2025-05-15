@@ -1,4 +1,3 @@
-import Layout from '../layout/Layout';
 import deleteIcon from '../assets/icons/deleteIcon.png';
 import { useEffect, useState } from 'react';
 import { axiosInstance } from '../api/axios';
@@ -71,7 +70,10 @@ export default function SuperAdmin() {
                         <h1 className="font-bold text-[32px] mb-[40px]">채널 관리</h1>
                         <div className="flex">
                             {channels.map((channel) => (
-                                <div className="w-[150px] h-[55px] border rounded-[10px] border-[#0F172A] text-[15px] font-semibold  items-center flex justify-center mr-[10px] relative">
+                                <div
+                                    key={channel.id}
+                                    className="w-[150px] h-[55px] border rounded-[10px] border-[#0F172A] text-[15px] font-semibold  items-center flex justify-center mr-[10px] relative"
+                                >
                                     {channel.name}
                                     <img
                                         src={deleteIcon}
