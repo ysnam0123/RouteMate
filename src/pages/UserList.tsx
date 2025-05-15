@@ -1,17 +1,22 @@
-import profile from "../assets/images/profile.svg";
-import search from "../assets/icons/Search.svg";
-import { useEffect, useState } from "react";
-import Layout from "../layout/Layout";
+import profile from '../assets/images/profile.svg';
+import fly from '../assets/icons/fly.svg';
+import online from '../assets/icons/onLine.svg';
+import offline from '../assets/icons/offLine.svg';
+import search from '../assets/icons/Search.svg';
+import { useEffect, useState } from 'react';
+import Layout from '../layout/Layout';
 // import { useAuthStore } from "../stores/authStore";
-import { axiosInstance } from "../api/axios";
-import { useAuthStore } from "../stores/authStore";
-import { useNavigate } from "react-router";
+import { axiosInstance } from '../api/axios';
+import { useAuthStore } from '../stores/authStore';
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 
 interface User {
   _id: string;
   fullName: string;
   image: string;
   followers: string[];
+  isOnline: boolean;
 }
 
 // 각 유저 정보부분
@@ -45,15 +50,15 @@ const UserItem = ({ user }: { user: User }) => {
   // 팔로잉 시
   const followUser = async () => {
     try {
-      const res = await axiosInstance.post("/follow/create", {
+      const res = await axiosInstance.post('/follow/create', {
         userId: user._id,
       });
       alert(`${user.fullName}님을 팔로우합니다.`);
-      console.log("팔로우 결과:", res.data);
+      console.log('팔로우 결과:', res.data);
       setIsFollowing(true);
       window.location.reload();
     } catch (error) {
-      console.error("팔로우 실패:", error);
+      console.error('팔로우 실패:', error);
       alert(`${user.fullName}님 팔로우 실패.`);
     }
   };
@@ -67,17 +72,17 @@ const UserItem = ({ user }: { user: User }) => {
       console.log(commonId);
 
       if (commonId) {
-        const res = await axiosInstance.delete("/follow/delete", {
+        const res = await axiosInstance.delete('/follow/delete', {
           data: { id: commonId },
         });
         alert(`${user.fullName}님을 언팔로우합니다.`);
-        console.log("언팔로우 결과:", res.data);
+        console.log('언팔로우 결과:', res.data);
         setIsFollowing(false);
       } else {
-        alert("팔로우 관계가 없습니다.");
+        alert('팔로우 관계가 없습니다.');
       }
     } catch (error) {
-      console.error("언팔로우 실패:", error);
+      console.error('언팔로우 실패:', error);
       alert(`${user.fullName}님 언팔로우 실패.`);
     }
   };
@@ -91,27 +96,28 @@ const UserItem = ({ user }: { user: User }) => {
         await followUser();
       }
     } else {
-      alert("로그인을 진행해주세요");
-      navigate("/login");
+      alert('로그인을 진행해주세요');
+      navigate('/login');
     }
   };
 
   return (
-    <div className="border w-full flex h-14 px-2 py-2.5 items-center overflow-hidden">
-      <div className="flex gap-1.5 items-center">
+    <div className="border-y border-[var(--color-notSelected)] w-full flex h-16 px-4 py-2.5 items-center overflow-hidden">
+      <div className="flex gap-2 items-center font-mono text-[18px]">
         <img
           src={user.image || profile}
           alt="프로필 이미지"
           className="w-8 h-8 border-gray-400 border rounded-full flex-shrink-0 bg-gray-100"
         />
-        <a>{user.fullName}</a>
+        <Link to={`/userprofile/${user._id}`}>{user.fullName}</Link>
+        <img src={user.isOnline ? online : offline} className="w-5 h-5 py-0" />
       </div>
       <button
-        className="ml-auto cursor-pointer transition-all duration-200 hover:font-bold hover:text-[var(--color-main-blue)] "
+        className="ml-auto cursor-pointer transition-all duration-200 text-[17px] hover:font-bold hover:text-[var(--color-main-blue)] montserrat"
         onClick={handleFollow}
         // disabled={!authUser}
       >
-        {isFollowing ? "UnFollow" : "Follow"}{" "}
+        {isFollowing ? 'UnFollow' : 'Follow'}{' '}
       </button>
     </div>
   );
@@ -124,10 +130,11 @@ export default function UserList() {
       image: string;
       fullName: string;
       followers: string[];
+      isOnline: boolean;
     }[]
   >([]);
   const [loading, setLoading] = useState(true);
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState('');
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
 
   const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -145,10 +152,10 @@ export default function UserList() {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await axiosInstance.get("/users/get-users", {});
+        const res = await axiosInstance.get('/users/get-users', {});
         setUsers(res.data);
       } catch (error) {
-        console.error("사용자 목록을 가져오는데 실패했습니다.", error);
+        console.error('사용자 목록을 가져오는데 실패했습니다.', error);
       } finally {
         setLoading(false);
       }
@@ -163,11 +170,14 @@ export default function UserList() {
   return (
     <>
       <Layout>
-        <div className="flex-grow py-15 w-full ">
-          <div className="mx-auto w-md h-auto sm:px-5 sm:py-5 py-5 bg-[var(--color-white)] border rounded-[10px]">
+        <div className="flex-grow py-6 w-full">
+          <div className="mx-auto min-w-[600px] max-w-[900px] w-[55vw] sm:px-10 sm:py-10 py-4 box-shadow-custom bg-[var(--color-white)] rounded-[10px]">
             <div className="flex flex-col gap-3.5">
-              <span>여행중</span>
-              <div className="flex items-center rounded-[7px] border border-[#c2c2c2] p-2 mb-5 w-96 mx-auto focus-within:outline">
+              <div className="flex gap-1.5 items-center">
+                <span className="text-[18px] h-full">여행중</span>
+                <img src={online} className="w-5 h-5 py-0" />
+              </div>
+              <div className="flex items-center rounded-[7px] border border-[#c2c2c2] p-2 mb-5 w-11/12 mx-auto h-13 focus-within:outline">
                 <input
                   type="text"
                   className="flex-1 bg-transparent outline-none"
@@ -178,7 +188,7 @@ export default function UserList() {
                 <img src={search} alt="돋보기 버튼" className="ml-2 w-5 h-5" />
               </div>
             </div>
-            <div className="p-2 border rounded-[8px] flex flex-col h-auto">
+            <div className="p-4 border rounded-[8px] flex flex-col h-auto">
               {filteredUsers.map((user) => (
                 <UserItem key={user._id} user={user} />
               ))}
