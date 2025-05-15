@@ -1,55 +1,50 @@
 // src/components/NoticePanel.tsx (예시 경로)
-import React from "react";
+import React from 'react'
 
 interface NoticePanelProps {
-  onClose: () => void;
+  onClose: () => void
 }
 
 // 임시 알림 데이터 (실제로는 상태나 props로 받아야 함)
 let notifications = [
   {
     id: 1,
-    avatar: "/src/assets/images/알림 프사.png",
-    text: "namyoonseo 님이 발자국을 남겼습니다.",
+    avatar: '/src/assets/images/알림 프사.png',
+    text: 'namyoonseo 님이 발자국을 남겼습니다.',
     comment: ':"댓글"',
-    time: "3분 전",
   },
   {
     id: 2,
-    avatar: "/src/assets/images/알림 프사.png",
-    text: "namyoonseo 님이 회원님의 게시글을 좋아합니다.",
+    avatar: '/src/assets/images/알림 프사.png',
+    text: 'namyoonseo 님이 회원님의 게시글을 좋아합니다.',
     comment: null,
-    time: "3분 전",
   },
   {
     id: 3,
-    avatar: "/src/assets/images/알림 프사.png",
-    text: "namyoonseo 님이 발자국을 남겼습니다.",
+    avatar: '/src/assets/images/알림 프사.png',
+    text: 'namyoonseo 님이 발자국을 남겼습니다.',
     comment: ':"댓글"',
-    time: "3분 전",
   },
   {
     id: 4,
-    avatar: "/src/assets/images/알림 프사.png",
-    text: "namyoonseo 님이 발자국을 남겼습니다.",
+    avatar: '/src/assets/images/알림 프사.png',
+    text: 'namyoonseo 님이 발자국을 남겼습니다.',
     comment: ':"댓글"',
-    time: "3분 전",
   },
   {
     id: 5,
-    avatar: "/src/assets/images/알림 프사.png",
-    text: "namyoonseo 님이 발자국을 남겼습니다.",
+    avatar: '/src/assets/images/알림 프사.png',
+    text: 'namyoonseo 님이 발자국을 남겼습니다.',
     comment: '"댓글"',
-    time: "3분 전",
   },
-];
+]
 
 function NoticePanel({ onClose }: NoticePanelProps): React.ReactElement {
   return (
     // 패널 전체 높이를 채우고 내부에서 스크롤되도록 설정
     <div
       className="px-4 flex flex-col text-sm bg-white rounded-lg shadow-md h-full w-90"
-      style={{ boxShadow: "4px 0 6px rgba(0, 0, 0, 0.15)" }}
+      style={{ boxShadow: '4px 0 6px rgba(0, 0, 0, 0.15)' }}
     >
       {/* 헤더 */}
       <div className="flex justify-between items-center mb-4 pt-4">
@@ -82,10 +77,6 @@ function NoticePanel({ onClose }: NoticePanelProps): React.ReactElement {
                 <p className="text-gray-800 font-bold">{notice.comment}</p>
               )}
             </div>
-            {/* 시간 */}
-            <span className="text-xs text-gray-500 flex-shrink-0 mt-1">
-              {notice.time}
-            </span>
           </li>
         ))}
         {notifications.length === 0 && (
@@ -93,7 +84,7 @@ function NoticePanel({ onClose }: NoticePanelProps): React.ReactElement {
         )}
       </ul>
     </div>
-  );
+  )
 }
 
-export default NoticePanel;
+export default NoticePanel
