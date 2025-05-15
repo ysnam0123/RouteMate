@@ -7,11 +7,17 @@ interface Channel {
   id: string
   name: string
 }
+interface User {
+  _id: string
+  fullName: string
+  image: string
+}
 
 export default function SuperAdmin() {
   //채널 목록 불러오기
   const [channels, setChannels] = useState<Channel[]>([])
-
+  const [users, setUsers] = useState<User[]>([])
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
     const getChannel = async () => {
       const { data } = await axiosInstance.get(`channels`)
@@ -22,8 +28,26 @@ export default function SuperAdmin() {
       }))
       setChannels(simplified)
     }
+
+    const getUser = async () => {
+      try {
+        const res = await axiosInstance.get('/users/get-users', {})
+        setUsers(res.data)
+      } catch (error) {
+        console.error('사용자 목록을 가져오는데 실패했습니다.', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
     getChannel()
+    getUser()
   }, [])
+
+  if (loading) {
+    return <p>로딩 중...</p>
+  }
+
   const deleteChannel = async (channelId: String) => {
     try {
       const res = await axiosInstance.delete('/channels/delete', {
@@ -71,16 +95,18 @@ export default function SuperAdmin() {
                 type="text"
                 id="text"
                 placeholder="사용자 검색"
-                className="border border-[#E8E8E8] rounded-[10px] text-[20px] focus:outline-[#60B5FF] content-center inline-block w-[347px] h-[51px] p-[10px] mb-[30px]"
+                className="border border-[#E8E8E8] rounded-[10px] text-[20px] focus:outline-[#60B5FF] content-center inline-block w-[370px] h-[51px] p-[10px] mb-[30px]"
               />
 
-              <div className="justify-between w-[365px] h-[56px] flex  content-center">
-                <div className="flex gap-[14px] items-center">
-                  <span className="bg-[#D9D9D9] rounded-full size-[40px]"></span>
-                  <span>사용자 이름</span>
-                </div>
-                <div className="content-center">
-                  <img src={deleteIcon} alt="deleteIcon" />
+              <div className="w-[370px] h-[360px] border  border-[#E8E8E8] rounded-[10px] p-[2px] overflow-y-auto overflow-x-hidden">
+                <div className="justify-between w-[365px] h-[56px] flex content-center px-[10px]">
+                  <div className="flex gap-[14px] items-center">
+                    <span className="bg-[#D9D9D9] rounded-full size-[40px]"></span>
+                    <span>사용자 이름</span>
+                  </div>
+                  <div className="content-center">
+                    <img src={deleteIcon} alt="deleteIcon" />
+                  </div>
                 </div>
               </div>
             </section>
