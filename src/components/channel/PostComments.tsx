@@ -17,9 +17,14 @@ interface commentsObj {
 
 export default function PostComments({ postId, comments }: PostCommentsProps) {
   const userId = useAuthStore((state) => state.userId); // 로그인된 사용자 id
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState(''); // 댓글의 내용
   const [commentList, setCommentList] = useState<commentsObj[]>(comments); // 기본값은 API에서 받아오는 댓글 목록
-  const [userFullname, setUserFullname] = useState('');
+  const [userFullname, setUserFullname] = useState(''); // 풀네임
+
+  // 댓글창에 입력되고있는 댓글
+  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setComment(e.target.value);
+  };
 
   // 유저 정보 불러오기
   const fetchUserFullname = async (userId: string) => {
@@ -31,17 +36,11 @@ export default function PostComments({ postId, comments }: PostCommentsProps) {
     }
   };
 
-  // useEffect(() => {
-  //   if (userId) {
-  //     fetchUserFullname(userId); // 사용자 fullname 불러오기
-  //     console.log(userFullname);
-  //   }
-  // }, [userId]);
-
-  // 댓글창에 입력되고있는 댓글
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setComment(e.target.value);
-  };
+  useEffect(() => {
+    if (userId) {
+      fetchUserFullname(userId); // 사용자 fullname 미리 받아오기
+    }
+  }, [userId]);
 
   // 댓글 등록 버튼
   const commentHandler = async () => {
@@ -49,6 +48,7 @@ export default function PostComments({ postId, comments }: PostCommentsProps) {
 
     // 낙관적 업데이트 -> 임시 댓글 객체
     const fakeComment: commentsObj = {
+      // id값 수정 필요
       _id: 'temp-' + Date.now(),
       comment: comment,
       author: {
@@ -63,14 +63,15 @@ export default function PostComments({ postId, comments }: PostCommentsProps) {
     setComment('');
 
     try {
-      // 댓글 달기
+      // 서버에 진짜 댓글 달기
       const response = await axiosInstance.post('/comments/create', {
         postId,
         comment,
       });
       const realComment: commentsObj = response.data.comment;
-      // console.log(response.data);
+      console.log('진짜댓글:', response.data);
       // 성공 시 → 임시 댓글을 진짜 댓글로 교체
+      // 근데 이것도 문제임
       setCommentList((prev) =>
         prev.map((c) => (c._id === fakeComment._id ? realComment : c))
       );
@@ -88,6 +89,7 @@ export default function PostComments({ postId, comments }: PostCommentsProps) {
     <>
       <div className="overflow-scroll">
         {commentList.map((comment) => (
+          // 여기 Key값이 문제
           <div key={comment._id} className="flex gap-4 items-center mb-[10px]">
             <img src={userImage} alt="user" className="w-[50px] h-[50px]" />
             <div className="flex flex-col">
