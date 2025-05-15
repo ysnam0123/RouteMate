@@ -30,6 +30,7 @@ export default function Channel() {
 
   return (
     <>
+      {/* 게시글 윗부분 */}
       <div className="flex justify-center">
         <div className="flex flex-col  max-w-[1200px] w-[full]">
           <ChannelNav channels={channels} />

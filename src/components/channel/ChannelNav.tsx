@@ -27,16 +27,19 @@ interface Post {
 
 export default function ChannelNav({ channels }: ChannelNavProps) {
   const [posts, setPosts] = useState<Post[]>([]);
+
   // 선택된 채널의 ID를 저장해야하기 때문에 string | null 로 타입을 정해준다.
   // 어떤 채널이 선택됬는지 알아야하기 때문에 true/false 로 구분하면 안된다!
   const [selectedChannel, setSelectedChannel] = useState<string | null>(null);
 
+  // 채널 게시글 불러오기
   const showChannel = async (channelId: string) => {
     try {
       const res = await axiosInstance.get<Post[]>(
         `/posts/channel/${channelId}`
       );
       setPosts(res.data);
+      console.log('res.data: ', res.data);
       // 선택된 채널 ID 저장하기
       setSelectedChannel(channelId);
     } catch (error) {
