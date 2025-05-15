@@ -12,7 +12,7 @@ export default function AdminRouter() {
     useEffect(() => {
         // 로그인 안 되어 있거나, 권한이 SuperAdmin이 아니면 채널 페이지로 이동
         if (!isLoggedIn || userRole !== 'SuperAdmin') {
-            navigate('/channel');
+            navigate('/layout');
             return;
         }
 
