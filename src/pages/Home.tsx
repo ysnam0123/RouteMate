@@ -18,7 +18,7 @@ export default function Home() {
     };
 
     const goToChannel = () => {
-        navigate('/Channel');
+        navigate('/layout');
     };
     const video = useRandomVideo();
     return (
@@ -41,7 +41,7 @@ export default function Home() {
                             onClick={goToChannel}
                         >
                             <img src={homeButtonIcon} alt="homeButtonIcon" />
-                            <span className="mt-[4px] "> 여행 이야기</span>
+                            <span className="mt-[4px] text-lg"> 여행 이야기</span>
                         </Button>
                         {/* <Button
                             className="flex gap-2 items-center justify-center bg-[white] w-[155px] h-[50px] text-black

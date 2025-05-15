@@ -219,144 +219,138 @@ export default function ProfileEdit() {
 
     return (
         <>
-            <Layout>
-                <div className="sm:px-28 pt-5 pb-4 montserrat">
-                    <div className="mx-auto min-w-[600px] max-w-[900px] w-[55vw] sm:px-32 sm:py-10 py-4 box-shadow-custom bg-[var(--color-white)] rounded-[10px]">
-                        <div className="">
-                            {/* 프로필이미지 */}
-                            <div className="flex items-center">
-                                <div
-                                    className="relative w-[150px] h-[150px] rounded-full overflow-hidden group mr-4 flex-shrink-0 cursor-pointer"
-                                    onClick={handleImgDelete}
-                                >
-                                    {/* 이미지 */}
-                                    <img
-                                        src={
-                                            profileImgFile !== null
-                                                ? URL.createObjectURL(profileImgFile)
-                                                : isImageDeleted
-                                                ? profile
-                                                : user?.image || profile
-                                        }
-                                        alt="프로필 이미지"
-                                        className="w-full h-full object-cover"
-                                    />
+            <div className="sm:px-28 pt-5 pb-4 montserrat">
+                <div className="mx-auto min-w-[600px] max-w-[900px] w-[55vw] sm:px-32 sm:py-10 py-4 box-shadow-custom bg-[var(--color-white)] rounded-[10px]">
+                    <div className="">
+                        {/* 프로필이미지 */}
+                        <div className="flex items-center">
+                            <div
+                                className="relative w-[150px] h-[150px] rounded-full overflow-hidden group mr-4 flex-shrink-0 cursor-pointer"
+                                onClick={handleImgDelete}
+                            >
+                                {/* 이미지 */}
+                                <img
+                                    src={
+                                        profileImgFile !== null
+                                            ? URL.createObjectURL(profileImgFile)
+                                            : isImageDeleted
+                                            ? profile
+                                            : user?.image || profile
+                                    }
+                                    alt="프로필 이미지"
+                                    className="w-full h-full object-cover"
+                                />
 
-                                    {!isImageDeleted && (
-                                        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-full">
-                                            <img src={minus} className="w-11" />
-                                        </div>
-                                    )}
-                                </div>
-                                <div className="custom-flex-between items-center w-full">
-                                    <div className="flex flex-col mr-1">
-                                        <span className="text-2xl font-bold">{user?.fullName}</span>
-                                        <span className="text-base font-medium overflow-hidden truncate max-w-[290px]">
-                                            {introduction}
-                                        </span>
+                                {!isImageDeleted && (
+                                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-full">
+                                        <img src={minus} className="w-11" />
                                     </div>
-                                    <label
-                                        htmlFor="profileImg"
-                                        className="ml-auto text-white text-[13px] font-semibold w-[113px] h-[33px] bg-[var(--color-main-skyBlue)] rounded-md flex items-center justify-center cursor-pointer"
+                                )}
+                            </div>
+                            <div className="custom-flex-between items-center w-full">
+                                <div className="flex flex-col mr-1">
+                                    <span className="text-2xl font-bold">{user?.fullName}</span>
+                                    <span className="text-base font-medium overflow-hidden truncate max-w-[290px]">
+                                        {introduction}
+                                    </span>
+                                </div>
+                                <label
+                                    htmlFor="profileImg"
+                                    className="ml-auto text-white text-[13px] font-semibold w-[113px] h-[33px] bg-[var(--color-main-skyBlue)] rounded-md flex items-center justify-center cursor-pointer"
+                                >
+                                    프로필 사진 변경
+                                </label>
+                            </div>
+                            <input id="profileImg" type="file" className="hidden" onChange={handleImgChange} />
+                        </div>
+
+                        <div className="my-8">
+                            {/* 이름 */}
+                            <div className="flex flex-col gap-1.5 mb-7">
+                                <p>이름</p>
+                                <input
+                                    placeholder="사용자 이름"
+                                    type="text"
+                                    className="bg-white rounded-xl border-[#c2c2c2] border h-11 px-3 focus:outline"
+                                    value={editName}
+                                    maxLength={15}
+                                    onChange={(e) => setEditName(e.target.value)}
+                                />
+                            </div>
+
+                            {/* 소개 */}
+                            <div className="flex flex-col mb-5 gap-1.5">
+                                <p>소개 (200자 이내)</p>
+                                <textarea
+                                    value={text}
+                                    onChange={(e) => setText(e.target.value)}
+                                    placeholder="사용자 소개"
+                                    maxLength={200}
+                                    className="bg-white rounded-xl border-[#c2c2c2] border h-24 px-3 py-3 resize-none focus:outline focus:outline-[#60B5FF]"
+                                />
+                                <div className="text-right text-sm text-gray-500 mt-1 montserrat">
+                                    {text.length} / 200
+                                </div>
+                            </div>
+
+                            {/* 칭호관리 */}
+                            <div className="flex flex-col gap-1.5">
+                                <p>칭호 관리 (최대 2개 선택 가능)</p>
+                                <div className="bg-white px-1.5 pt-4 pb-2 rounded-xl border-[#c2c2c2] border flex flex-wrap justify-center">
+                                    {tagFields.map((field) => (
+                                        <div>
+                                            <Tag
+                                                icon={field.icon}
+                                                label={field.label}
+                                                selected={selectedTags.some(
+                                                    (tag) => tag.toLowerCase() === field.label.toLowerCase()
+                                                )}
+                                                onClick={() => handleTagClick(field.label)}
+                                            />
+                                        </div>
+                                    ))}
+                                    <div className="w-full flex justify-end mt-2 px-1.5">
+                                        <div className="text-sm text-gray-500 montserrat">
+                                            {selectedTags.length} / 2
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 비밀번호 변경*/}
+                            <div className="flex flex-col mt-9 mb-10 gap-1.5">
+                                <PasswordInput label="새로운 비밀번호" value={newPassword} onChange={setNewPassword} />
+                                <PasswordInput
+                                    label="비밀번호 확인"
+                                    value={confirmPassword}
+                                    onChange={setConfirmPassword}
+                                />
+                                <div className="flex justify-end">
+                                    <Button
+                                        className="text-white font-semibold w-[113px] h-[33px] bg-[var(--color-main-skyBlue)] rounded-md mt-6"
+                                        onClick={handlePasswordSubmit}
                                     >
-                                        프로필 사진 변경
-                                    </label>
-                                </div>
-                                <input id="profileImg" type="file" className="hidden" onChange={handleImgChange} />
-                            </div>
-
-                            <div className="my-8">
-                                {/* 이름 */}
-                                <div className="flex flex-col gap-1.5 mb-7">
-                                    <p>이름</p>
-                                    <input
-                                        placeholder="사용자 이름"
-                                        type="text"
-                                        className="bg-white rounded-xl border-[#c2c2c2] border h-11 px-3 focus:outline"
-                                        value={editName}
-                                        maxLength={15}
-                                        onChange={(e) => setEditName(e.target.value)}
-                                    />
-                                </div>
-
-                                {/* 소개 */}
-                                <div className="flex flex-col mb-5 gap-1.5">
-                                    <p>소개 (200자 이내)</p>
-                                    <textarea
-                                        value={text}
-                                        onChange={(e) => setText(e.target.value)}
-                                        placeholder="사용자 소개"
-                                        maxLength={200}
-                                        className="bg-white rounded-xl border-[#c2c2c2] border h-24 px-3 py-3 resize-none focus:outline focus:outline-[#60B5FF]"
-                                    />
-                                    <div className="text-right text-sm text-gray-500 mt-1 montserrat">
-                                        {text.length} / 200
-                                    </div>
-                                </div>
-
-                                {/* 칭호관리 */}
-                                <div className="flex flex-col gap-1.5">
-                                    <p>칭호 관리 (최대 2개 선택 가능)</p>
-                                    <div className="bg-white px-1.5 pt-4 pb-2 rounded-xl border-[#c2c2c2] border flex flex-wrap justify-center">
-                                        {tagFields.map((field) => (
-                                            <div>
-                                                <Tag
-                                                    icon={field.icon}
-                                                    label={field.label}
-                                                    selected={selectedTags.some(
-                                                        (tag) => tag.toLowerCase() === field.label.toLowerCase()
-                                                    )}
-                                                    onClick={() => handleTagClick(field.label)}
-                                                />
-                                            </div>
-                                        ))}
-                                        <div className="w-full flex justify-end mt-2 px-1.5">
-                                            <div className="text-sm text-gray-500 montserrat">
-                                                {selectedTags.length} / 2
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* 비밀번호 변경*/}
-                                <div className="flex flex-col mt-9 mb-10 gap-1.5">
-                                    <PasswordInput
-                                        label="새로운 비밀번호"
-                                        value={newPassword}
-                                        onChange={setNewPassword}
-                                    />
-                                    <PasswordInput
-                                        label="비밀번호 확인"
-                                        value={confirmPassword}
-                                        onChange={setConfirmPassword}
-                                    />
-                                    <div className="flex justify-end">
-                                        <Button
-                                            className="text-white font-semibold w-[113px] h-[33px] bg-[var(--color-main-skyBlue)] rounded-md mt-6"
-                                            onClick={handlePasswordSubmit}
-                                        >
-                                            변경하기
-                                        </Button>
-                                    </div>
+                                        변경하기
+                                    </Button>
                                 </div>
                             </div>
+                        </div>
 
-                            {/* 버튼 */}
-                            <div className="flex gap-3 justify-end">
-                                <Button className="w-[100px] h-[40px] bg-white text-[var(--color-main-navy)] text-base font-bold rounded-[10px] border border-[#d1d1d1]">
-                                    취소
-                                </Button>
-                                <Button
-                                    className="w-[100px] h-[40px] bg-[var(--color-main-navy)]  text-white text-base font-bold rounded-[10px]"
-                                    onClick={handleSubmit}
-                                >
-                                    저장
-                                </Button>
-                            </div>
+                        {/* 버튼 */}
+                        <div className="flex gap-3 justify-end">
+                            <Button className="w-[100px] h-[40px] bg-white text-[var(--color-main-navy)] text-base font-bold rounded-[10px] border border-[#d1d1d1]">
+                                취소
+                            </Button>
+                            <Button
+                                className="w-[100px] h-[40px] bg-[var(--color-main-navy)]  text-white text-base font-bold rounded-[10px]"
+                                onClick={handleSubmit}
+                            >
+                                저장
+                            </Button>
                         </div>
                     </div>
                 </div>
-            </Layout>
+            </div>
         </>
     );
 }
