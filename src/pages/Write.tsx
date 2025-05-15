@@ -23,6 +23,7 @@ export default function Write() {
       const imgUrls = fileArray.map((file) => URL.createObjectURL(file))
       setImages(imgUrls)
       setImageFiles(fileArray)
+      console.log('선택된 파일들:', fileArray)
     }
   }
 
@@ -97,11 +98,27 @@ export default function Write() {
 
   //API POST
   const handleSubmit = async () => {
+    if (!writtenTitle) {
+      alert('제목을 입력하세요.')
+      return
+    }
+
+    if (!selectedChannelId) {
+      alert('채널을 선택하세요.')
+      return
+    }
+
+    if (imageFiles.length === 0) {
+      alert('이미지를 하나 이상 선택해주세요.')
+      return // 이미지가 없으면 더 이상 진행하지 않음
+    }
+
     const formData = new FormData()
 
     formData.append(
       'title',
       JSON.stringify({
+        images,
         writtenTitle,
         tags,
         locations,
@@ -111,9 +128,8 @@ export default function Write() {
       })
     )
 
-    imageFiles.forEach((file) => {
-      formData.append('image', file)
-    })
+    //이미지 필드에는 썸네일용 첫번째 이미지만 넣기
+    formData.append('image', imageFiles[0])
 
     formData.append('channelId', selectedChannelId)
 
