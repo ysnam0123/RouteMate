@@ -1,20 +1,20 @@
-import { Link, useNavigate } from "react-router-dom";
-import { axiosInstance } from "../api/axios";
-import LogoImg from "../assets/images/headerLogoImg.svg";
-import LogoText from "../assets/images/headerLogoText.svg";
-import { useAuthStore } from "../stores/authStore";
+import { Link, useNavigate } from 'react-router-dom'
+import { axiosInstance } from '../api/axios'
+import LogoImg from '../assets/images/headerLogoImg.svg'
+import LogoText from '../assets/images/headerLogoText.svg'
+import { useAuthStore } from '../stores/authStore'
 export default function Header() {
-  const logout = useAuthStore((state) => state.logout);
-  const isAuthenticated = useAuthStore((state) => state.isLoggedIn);
-  const navigate = useNavigate();
+  const logout = useAuthStore((state) => state.logout)
+  const isAuthenticated = useAuthStore((state) => state.isLoggedIn)
+  const navigate = useNavigate()
   const logoutHandler = async () => {
-    const { status } = await axiosInstance.post("/logout");
+    const { status } = await axiosInstance.post('/logout')
     if (status === 200) {
-      console.log("logout");
-      logout();
-      navigate("/");
+      console.log('logout')
+      logout()
+      navigate('/')
     }
-  };
+  }
   return (
     <>
       <header className="bg-[var(--color-header)] h-[85px]">
@@ -49,7 +49,7 @@ export default function Header() {
                     Log Out
                   </li>
                   <Link
-                    to="/profile"
+                    to="/myprofile"
                     className="montserrat text-xl w-auto text-center font-semibold text-[var(--color-notSelected)] cursor-pointer hover:font-bold hover:text-[var(--color-main-blue)] hover:text-shadow-custom transition-all duration-200"
                   >
                     My Page
@@ -75,7 +75,7 @@ export default function Header() {
             </ul>
           </div>
           <div className="flex items-center sm:hidden">
-            {" "}
+            {' '}
             <button className="inline-flex items-center justify-center">
               <span className="sr-only">Open main menu</span>
             </button>
@@ -83,5 +83,5 @@ export default function Header() {
         </div>
       </header>
     </>
-  );
+  )
 }
