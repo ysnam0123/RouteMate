@@ -164,9 +164,6 @@ export default function SuperAdmin() {
                                         />
                                         <span>{user.fullName}</span>
                                     </div>
-                                    <div className="content-center">
-                                        <img src={deleteIcon} alt="deleteIcon" className="cursor-pointer" />
-                                    </div>
                                 </div>
                             ))}
                         </div>
