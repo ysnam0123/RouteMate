@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import profile from '../../assets/images/profile.svg';
 import whiteFootPrint from '../../assets/icons/footprintWhite.png';
 import { axiosInstance } from '../../api/axios';
 import { useAuthStore } from '../../stores/authStore';
