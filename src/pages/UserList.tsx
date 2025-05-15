@@ -1,10 +1,8 @@
 import profile from '../assets/images/profile.svg';
-import fly from '../assets/icons/fly.svg';
 import online from '../assets/icons/onLine.svg';
 import offline from '../assets/icons/offLine.svg';
 import search from '../assets/icons/Search.svg';
 import { useEffect, useState } from 'react';
-import Layout from '../layout/Layout';
 // import { useAuthStore } from "../stores/authStore";
 import { axiosInstance } from '../api/axios';
 import { useAuthStore } from '../stores/authStore';
@@ -136,17 +134,26 @@ export default function UserList() {
   const [loading, setLoading] = useState(true);
   const [searchInput, setSearchInput] = useState('');
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
 
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+  const handleSearchClick = async () => {
+    if (searchInput.trim() === '') {
+      setFilteredUsers([]);
+      setIsSearching(false);
+      return;
+    }
+    try {
+      const res = await axiosInstance.get(`/search/users/${searchInput}`);
+      setFilteredUsers(res.data);
+      setIsSearching(true);
+    } catch (error) {
+      console.error('검색 실패:', error);
+    }
+  };
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchInput(e.target.value);
-
-  // 유저 검색 부분
-  useEffect(() => {
-    const filtered = users.filter((user) =>
-      user.fullName.toLowerCase().includes(searchInput.toLowerCase())
-    );
-    setFilteredUsers(filtered);
-  }, [searchInput, users]);
+  };
 
   // 사용자 목록 가져오기
   useEffect(() => {
@@ -169,33 +176,39 @@ export default function UserList() {
 
   return (
     <>
-      <Layout>
-        <div className="flex-grow py-6 w-full">
-          <div className="mx-auto min-w-[600px] max-w-[900px] w-[55vw] sm:px-10 sm:py-10 py-4 box-shadow-custom bg-[var(--color-white)] rounded-[10px]">
-            <div className="flex flex-col gap-3.5">
-              <div className="flex gap-1.5 items-center">
-                <span className="text-[18px] h-full">여행중</span>
-                <img src={online} className="w-5 h-5 py-0" />
-              </div>
-              <div className="flex items-center rounded-[7px] border border-[#c2c2c2] p-2 mb-5 w-11/12 mx-auto h-13 focus-within:outline">
-                <input
-                  type="text"
-                  className="flex-1 bg-transparent outline-none"
-                  placeholder="유저를 검색하세요"
-                  value={searchInput}
-                  onChange={handleSearchInputChange}
-                />
-                <img src={search} alt="돋보기 버튼" className="ml-2 w-5 h-5" />
-              </div>
+      <div className="flex-grow py-6 w-full">
+        <div className="mx-auto min-w-[600px] max-w-[900px] w-[55vw] sm:px-10 sm:py-10 py-4 box-shadow-custom bg-[var(--color-white)] rounded-[10px]">
+          <div className="flex flex-col gap-3.5">
+            <div className="flex gap-1.5 items-center">
+              <span className="text-[18px] h-full">여행중</span>
+              <img src={online} className="w-5 h-5 py-0" />
             </div>
-            <div className="p-4 border rounded-[8px] flex flex-col h-auto">
-              {filteredUsers.map((user) => (
-                <UserItem key={user._id} user={user} />
-              ))}
+            <div className="flex items-center rounded-[7px] border border-[#c2c2c2] p-2 mb-5 w-11/12 mx-auto h-13 focus-within:outline">
+              <input
+                type="text"
+                className="flex-1 bg-transparent outline-none"
+                placeholder="유저를 검색하세요"
+                value={searchInput}
+                onChange={handleSearchInputChange}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSearchClick();
+                }}
+              />
+              <img
+                src={search}
+                alt="돋보기 버튼"
+                className="ml-2 w-5 h-5 cursor-pointer"
+                onClick={handleSearchClick}
+              />
             </div>
           </div>
+          <div className="p-4 border rounded-[8px] flex flex-col h-auto">
+            {(isSearching ? filteredUsers : users).map((user) => (
+              <UserItem key={user._id} user={user} />
+            ))}
+          </div>
         </div>
-      </Layout>
+      </div>
     </>
   );
 }
