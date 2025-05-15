@@ -34,7 +34,7 @@ export default function ChannelList({
                 className={`border-[1px] rounded-xl py-[15px] px-[40px] text-[15px] cursor-pointer transition-all duration-75 ease-in-out
               ${
                 isSelected
-                  ? 'bg-[#EFF8FF] text-[var(--color-channel-selected)] scale-[1.15] border-[3px]'
+                  ? 'bg-[#EFF8FF] text-[var(--color-main-blue)] scale-[1.15] border-[3px] border-[var(--color-main-blue)]'
                   : 'text-[#8F8F8F] hover:scale-[1.15]'
               }`}
               >

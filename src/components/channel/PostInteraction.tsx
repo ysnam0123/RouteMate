@@ -64,7 +64,7 @@ export default function PostInteraction({
       // 이미 눌렀다면 liked 상태를 true로
       setLiked(true);
       // 해당 좋아요 ID를 저장하기 (취소를 위해)
-      setLikeId(myLike.user);
+      setLikeId(myLike._id);
     } else {
       setLiked(false);
       setLikeId(null);
@@ -82,33 +82,37 @@ export default function PostInteraction({
   };
 
   const toggleLike = async () => {
-    // 예비 복구용
     const prevLiked = liked;
     const prevLikeId = likeId;
     const prevCount = likeCount;
 
     // 낙관적 업데이트
-    // 현재 liked 가 false면 true로 바꾸고, 좋아요 수 1 증가.
     setLiked(!liked);
     setLikeCount(!liked ? likeCount + 1 : likeCount - 1);
 
     try {
       if (!liked) {
+        // 좋아요 생성
         const likePost = await axiosInstance.post('/likes/create', { postId });
-        // 서버에서 받은 좋아요 ID 설정
         setLikeId(likePost.data._id);
         console.log(likePost.data);
       } else {
-        await axiosInstance.delete(`/likes/delete/`, {
-          data: { likeId },
+        if (!likeId) throw new Error('likeId가 없습니다');
+
+        // 좋아요 취소 (Request Body에 id를 포함해야 함)
+        await axiosInstance.delete('/likes/delete', {
+          data: {
+            id: likeId,
+          },
         });
-        // 좋아요 취소 후 ID 초기화
+
         setLikeId(null);
       }
     } catch (error) {
-      // 실패 시 이전 상태로 복구하기
+      console.error('좋아요 토글 실패:', error);
       setLiked(prevLiked);
       setLikeCount(prevCount);
+      setLikeId(prevLikeId);
     }
   };
 
