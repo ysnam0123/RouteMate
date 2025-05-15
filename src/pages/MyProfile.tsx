@@ -18,7 +18,6 @@ import { useAuthStore } from '../stores/authStore';
 import { useEffect, useState } from 'react';
 import { axiosInstance } from '../api/axios';
 import { useNavigate } from 'react-router-dom';
-import Layout from '../layout/Layout';
 // import { useParams } from 'react-router-dom'
 
 interface Post {

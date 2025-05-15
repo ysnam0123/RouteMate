@@ -1,10 +1,8 @@
 import profile from '../assets/images/profile.svg';
-import fly from '../assets/icons/fly.svg';
 import online from '../assets/icons/onLine.svg';
 import offline from '../assets/icons/offLine.svg';
 import search from '../assets/icons/Search.svg';
 import { useEffect, useState } from 'react';
-import Layout from '../layout/Layout';
 // import { useAuthStore } from "../stores/authStore";
 import { axiosInstance } from '../api/axios';
 import { useAuthStore } from '../stores/authStore';

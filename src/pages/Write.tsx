@@ -1,16 +1,15 @@
-import WriteInfo from '../components/WriteInfo'
-import channelIcon from '../assets/icons/channelIcon.svg'
-import leftArrowGray from '../assets/icons/leftArrowGray.svg'
-import leftArrowNavy from '../assets/icons/leftArrowNavy.png'
-import rightArrowGray from '../assets/icons/rightArrowGray.svg'
-import rightArrowNavy from '../assets/icons/rightArrowNavy.png'
-import pin from '../assets/icons/pin.svg'
-import bedIcon from '../assets/icons/bedIcon.svg'
-import plus from '../assets/icons/plus.svg'
-import { useEffect, useRef, useState } from 'react'
-import Button from '../components/button'
-import Layout from '../layout/Layout'
-import { axiosInstance } from '../api/axios'
+import WriteInfo from '../components/WriteInfo';
+import channelIcon from '../assets/icons/channelIcon.svg';
+import leftArrowGray from '../assets/icons/leftArrowGray.svg';
+import leftArrowNavy from '../assets/icons/leftArrowNavy.png';
+import rightArrowGray from '../assets/icons/rightArrowGray.svg';
+import rightArrowNavy from '../assets/icons/rightArrowNavy.png';
+import pin from '../assets/icons/pin.svg';
+import bedIcon from '../assets/icons/bedIcon.svg';
+import plus from '../assets/icons/plus.svg';
+import { useRef, useState } from 'react';
+import Button from '../components/button';
+import { axiosInstance } from '../api/axios';
 
 export default function Write() {
   //이미지 등록
