@@ -80,7 +80,6 @@ export default function ProfileEdit() {
 
   // 비밀번호 업데이트
   const updatePassword = async () => {
-    setLoading(true);
     if (!isPasswordConfirm) {
       return alert('비밀번호가 일치하지 않습니다!');
     }
@@ -94,8 +93,6 @@ export default function ProfileEdit() {
     } catch (error) {
       console.error('업데이트 실패:', error);
       alert('정보 변경에 실패했습니다.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -251,16 +248,20 @@ export default function ProfileEdit() {
                     </div>
                   )}
                 </div>
-                <div className="flex flex-col mr-1">
-                  <span className="text-2xl font-bold">{user?.fullName}</span>
-                  <span className="text-base font-medium">{introduction}</span>
+                <div className="custom-flex-between items-center w-full">
+                  <div className="flex flex-col mr-1">
+                    <span className="text-2xl font-bold">{user?.fullName}</span>
+                    <span className="text-base font-medium overflow-hidden truncate max-w-[290px]">
+                      {introduction}
+                    </span>
+                  </div>
+                  <label
+                    htmlFor="profileImg"
+                    className="ml-auto text-white text-[13px] font-semibold w-[113px] h-[33px] bg-[var(--color-main-skyBlue)] rounded-md flex items-center justify-center cursor-pointer"
+                  >
+                    프로필 사진 변경
+                  </label>
                 </div>
-                <label
-                  htmlFor="profileImg"
-                  className="ml-auto text-white text-[13px] font-semibold w-[113px] h-[33px] bg-[var(--color-main-skyBlue)] rounded-md flex items-center justify-center cursor-pointer"
-                >
-                  프로필 사진 변경
-                </label>
                 <input
                   id="profileImg"
                   type="file"
@@ -278,6 +279,7 @@ export default function ProfileEdit() {
                     type="text"
                     className="bg-white rounded-xl border-[#c2c2c2] border h-11 px-3 focus:outline"
                     value={editName}
+                    maxLength={15}
                     onChange={(e) => setEditName(e.target.value)}
                   />
                 </div>
