@@ -23,7 +23,6 @@ export default function Write() {
       const imgUrls = fileArray.map((file) => URL.createObjectURL(file))
       setImages(imgUrls)
       setImageFiles(fileArray)
-      console.log('선택된 파일들:', fileArray)
     }
   }
 
@@ -134,7 +133,11 @@ export default function Write() {
     formData.append('channelId', selectedChannelId)
 
     try {
-      const res = await axiosInstance.post('/posts/create', formData)
+      const res = await axiosInstance.post('/posts/create', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
       console.log('post 성공:', res.data)
       alert('게시 완료')
     } catch (error) {
