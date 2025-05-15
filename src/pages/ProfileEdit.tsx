@@ -1,20 +1,21 @@
-import profile from "../assets/images/profile.svg";
-import Button from "../components/button";
-import Jeju from "../assets/achievementIcons/jeju.svg";
-import Cafe from "../assets/achievementIcons/cafe.svg";
-import Hiking from "../assets/achievementIcons/hiking.svg";
-import Alone from "../assets/achievementIcons/alone.svg";
-import House from "../assets/achievementIcons/house.svg";
-import KoreaPin from "../assets/achievementIcons/koreaPin.svg";
-import PowerJ from "../assets/achievementIcons/PowerJ.svg";
-import Star from "../assets/achievementIcons/Star.svg";
-import Train from "../assets/achievementIcons/train.svg";
-import Tag from "../components/Tag";
-import { useEffect, useState } from "react";
-import { axiosInstance } from "../api/axios";
-import Layout from "../layout/Layout";
-import PasswordInput from "../components/PaswordInput";
-import { useAuthStore } from "../stores/authStore";
+import profile from '../assets/images/profile.svg';
+import minus from '../assets/icons/minus.svg';
+import Button from '../components/button';
+import Jeju from '../assets/achievementIcons/jeju.svg';
+import Cafe from '../assets/achievementIcons/cafe.svg';
+import Hiking from '../assets/achievementIcons/hiking.svg';
+import Alone from '../assets/achievementIcons/alone.svg';
+import House from '../assets/achievementIcons/house.svg';
+import KoreaPin from '../assets/achievementIcons/koreaPin.svg';
+import PowerJ from '../assets/achievementIcons/PowerJ.svg';
+import Star from '../assets/achievementIcons/Star.svg';
+import Train from '../assets/achievementIcons/train.svg';
+import Tag from '../components/Tag';
+import { useEffect, useState } from 'react';
+import { axiosInstance } from '../api/axios';
+import Layout from '../layout/Layout';
+import PasswordInput from '../components/PaswordInput';
+import { useAuthStore } from '../stores/authStore';
 export default function ProfileEdit() {
   const userId = useAuthStore((state) => state.userId);
   const [user, setUser] = useState<{
@@ -22,66 +23,79 @@ export default function ProfileEdit() {
     image: string;
     username: string;
   } | null>(null);
-  const [text, setText] = useState("");
-  const [editName, setEditName] = useState("");
+  const [text, setText] = useState('');
+  const [editName, setEditName] = useState('');
   const [profileImgFile, setProfileImgFile] = useState<File | null>(null);
-  const [newPassword, setNewPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [isPasswordConfirm, setIsPasswordConfirm] = useState<boolean>(false);
   const [isPasswordChanged, setIsPasswordChanged] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [hasInitialized, setHasInitialized] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isImageDeleted, setIsImageDeleted] = useState(false);
 
   // 프로필 정보 업데이트 (이름, 소개, 칭호, 프로필 사진)
   const updateUser = async () => {
+    setLoading(true);
     try {
       const username =
         selectedTags.length > 0
-          ? `${text.trim()} [${selectedTags.join(", ")}]`
+          ? `${text.trim()} [${selectedTags.join(', ')}]`
           : text.trim();
 
-      const res1 = await axiosInstance.put("/settings/update-user", {
+      const res1 = await axiosInstance.put('/settings/update-user', {
         fullName: editName.trim(),
         username,
       });
 
-      if (profileImgFile) {
+      if (profileImgFile && !isImageDeleted) {
         const formData = new FormData();
-        formData.append("image", profileImgFile);
-        formData.append("isCover", "false");
+        formData.append('image', profileImgFile);
+        formData.append('isCover', 'false');
 
-        const res2 = await axiosInstance.post("/users/upload-photo", formData, {
+        const res2 = await axiosInstance.post('/users/upload-photo', formData, {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
           },
         });
 
-        console.log("프로필사진 업데이트 결과:", res2.data);
+        console.log('프로필사진 업데이트 결과:', res2.data);
+      } else if (isImageDeleted) {
+        const res3 = await axiosInstance.delete('/users/delete-photo', {
+          data: { isCover: false },
+        });
+        console.log('프로필사진 업데이트 결과:', res3.data);
       }
-      alert("정보가 성공적으로 변경되었습니다!");
-      console.log("업데이트 결과:", res1.data);
+      alert('정보가 성공적으로 변경되었습니다!');
+      console.log('업데이트 결과:', res1.data);
       window.location.reload();
     } catch (error) {
-      console.error("업데이트 실패:", error);
-      alert("정보 변경에 실패했습니다.");
+      console.error('업데이트 실패:', error);
+      alert('정보 변경에 실패했습니다.');
+    } finally {
+      setLoading(false);
     }
   };
 
   // 비밀번호 업데이트
   const updatePassword = async () => {
+    setLoading(true);
     if (!isPasswordConfirm) {
-      return alert("비밀번호가 일치하지 않습니다!");
+      return alert('비밀번호가 일치하지 않습니다!');
     }
     try {
-      const res = await axiosInstance.put("/settings/update-password", {
+      const res = await axiosInstance.put('/settings/update-password', {
         password: newPassword.trim(),
       });
-      alert("비밀번호가 변경되었습니다.");
-      console.log("업데이트 결과:", res.data);
+      alert('비밀번호가 변경되었습니다.');
+      console.log('업데이트 결과:', res.data);
       setIsPasswordChanged(true);
     } catch (error) {
-      console.error("업데이트 실패:", error);
-      alert("정보 변경에 실패했습니다.");
+      console.error('업데이트 실패:', error);
+      alert('정보 변경에 실패했습니다.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -108,14 +122,14 @@ export default function ProfileEdit() {
     }
   }, [user]);
 
-  const rawUsername = user?.username ?? "";
+  const rawUsername = user?.username ?? '';
 
   // 정규표현식으로 소개/칭호 분리
   const match = rawUsername.match(/^(.*)\s?\[(.*)\]$/);
 
   const introduction = match?.[1] ?? rawUsername;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const titles = match?.[2]?.split(",").map((t) => t.trim()) ?? [];
+  const titles = match?.[2]?.split(',').map((t) => t.trim()) ?? [];
 
   // 소개 받아오기
   useEffect(() => {
@@ -130,21 +144,27 @@ export default function ProfileEdit() {
       const file = e.target.files[0];
       if (file) {
         setProfileImgFile(file);
+        setIsImageDeleted(false);
       }
     }
   };
 
+  const handleImgDelete = () => {
+    setProfileImgFile(null);
+    setIsImageDeleted(true);
+  };
+
   // 칭호 선택 함수
   const tagFields = [
-    { label: "제주 중독", icon: Jeju },
-    { label: "밥보단 커피", icon: Cafe },
-    { label: "김정호..?", icon: KoreaPin },
-    { label: "1박 2일 애호가", icon: Star },
-    { label: "낭만가", icon: Train },
-    { label: "Power J", icon: PowerJ },
-    { label: "산타아저씨", icon: Hiking },
-    { label: "혼자서도 잘해요", icon: Alone },
-    { label: "한달살이 경험자", icon: House },
+    { label: '제주 중독', icon: Jeju },
+    { label: '밥보단 커피', icon: Cafe },
+    { label: '김정호..?', icon: KoreaPin },
+    { label: '1박 2일 애호가', icon: Star },
+    { label: '낭만가', icon: Train },
+    { label: 'Power J', icon: PowerJ },
+    { label: '산타아저씨', icon: Hiking },
+    { label: '혼자서도 잘해요', icon: Alone },
+    { label: '한달살이 경험자', icon: House },
   ];
 
   const handleTagClick = (label: string) => {
@@ -190,31 +210,47 @@ export default function ProfileEdit() {
     const hasPasswordInput = newPassword.trim() || confirmPassword.trim();
 
     if (hasPasswordInput && !isPasswordChanged) {
-      alert("비밀번호 변경 버튼을 눌러주세요!");
+      alert('비밀번호 변경 버튼을 눌러주세요!');
       return;
     }
     updateUser();
   };
 
+  if (loading) {
+    return <p className="montserrat text-[20px]">로딩 중...</p>;
+  }
+
   return (
     <>
       <Layout>
-        <div className="sm:px-28 py-15 ">
+        <div className="sm:px-28 pt-5 pb-4 montserrat">
           <div className="mx-auto min-w-[600px] max-w-[900px] w-[55vw] sm:px-32 sm:py-10 py-4 box-shadow-custom bg-[var(--color-white)] rounded-[10px]">
             <div className="">
               {/* 프로필이미지 */}
               <div className="flex items-center">
-                <img
-                  src={
-                    profileImgFile
-                      ? URL.createObjectURL(profileImgFile)
-                      : user?.image
-                      ? user.image
-                      : profile
-                  }
-                  alt="프로필 이미지"
-                  className="w-[150px] h-[150px] rounded-full mr-4 flex-shrink-0"
-                />
+                <div
+                  className="relative w-[150px] h-[150px] rounded-full overflow-hidden group mr-4 flex-shrink-0 cursor-pointer"
+                  onClick={handleImgDelete}
+                >
+                  {/* 이미지 */}
+                  <img
+                    src={
+                      profileImgFile !== null
+                        ? URL.createObjectURL(profileImgFile)
+                        : isImageDeleted
+                        ? profile
+                        : user?.image || profile
+                    }
+                    alt="프로필 이미지"
+                    className="w-full h-full object-cover"
+                  />
+
+                  {!isImageDeleted && (
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center rounded-full">
+                      <img src={minus} className="w-11" />
+                    </div>
+                  )}
+                </div>
                 <div className="flex flex-col mr-1">
                   <span className="text-2xl font-bold">{user?.fullName}</span>
                   <span className="text-base font-medium">{introduction}</span>
