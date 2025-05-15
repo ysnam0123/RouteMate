@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ChannelList from './ChannelList';
 import { AxiosInstance } from 'axios';
 import Post from './Post';
@@ -44,6 +44,18 @@ export default function ChannelNav({ channels }: ChannelNavProps) {
     }
   };
 
+  // ⭐ 처음 렌더링될 때 1박2일 채널 자동 선택
+  useEffect(() => {
+    if (channels.length > 0) {
+      const defaultChannel = channels.find(
+        (channel) => channel.name === '1박2일'
+      );
+      if (defaultChannel) {
+        showChannel(defaultChannel._id);
+      }
+    }
+  }, [channels]); // 채널 목록이 들어왔을 때 실행
+
   return (
     <>
       {/* 채널 선택 버튼 */}
@@ -52,11 +64,10 @@ export default function ChannelNav({ channels }: ChannelNavProps) {
         onSelect={showChannel}
         // 선택된 채널ID 전달하기
         selectedChannelId={selectedChannel}
-        className=""
+        className="flex"
       />
       {/* 게시글 */}
-      <div className="">
-        {posts.length === 0 && <p>채널을 선택해주세요.</p>}
+      <div className="flex-col items-center justify-center">
         {posts.map((post) => (
           <Post key={post._id} post={post} />
         ))}

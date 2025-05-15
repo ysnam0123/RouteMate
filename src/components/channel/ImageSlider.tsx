@@ -27,7 +27,7 @@ export default function ImageSlider({
   const arrowToggleHandler = () => [setArrowColor((arrowColor) => !arrowColor)];
 
   return (
-    <div className="flex justify-center items-center gap-4 w-[100%] relative">
+    <div className="flex justify-center items-center gap-4 w-[100%] relative mb-[30px]">
       {/* 왼쪽 화살표 */}
       <div className="absolute left-0">
         <button onClick={showPrev} disabled={currentIndex === 0}>
@@ -45,7 +45,7 @@ export default function ImageSlider({
         <img
           src={images[currentIndex]}
           alt={alt}
-          className="h-[310px] w-[310px] mb-[20px] object-cover rounded-lg"
+          className="h-[200px] w-[200px] mb-[20px] object-cover rounded-lg"
         />
       </div>
       {/* 오른쪽 화살표 */}

@@ -101,16 +101,16 @@ export default function PostComments({ postId, comments }: PostCommentsProps) {
         ))}
       </div>
 
-      <div className="flex gap-4 mt-auto">
+      <div className="flex gap-2 mt-auto">
         <input
           type="text"
-          className="border-[var(--color-main-skyBlue)] border-2 rounded-xl w-[220px] px-[10px]"
+          className="border-[var(--color-main-skyBlue)] border-2 rounded-xl w-[240px] px-[10px]"
           placeholder="발자국 남기기"
           value={comment}
           onChange={changeHandler}
         />
         <button
-          className="bg-[var(--color-main-skyBlue)] w-[50px] h-[50px] flex justify-center items-center rounded-xl hover:bg-[var(--color-main-skyBlue-hover)] active:bg-[var(--color-main-skyBlue-active)]"
+          className="bg-[var(--color-main-skyBlue)] w-[60px] h-[50px] flex justify-center items-center rounded-xl hover:bg-[var(--color-main-skyBlue-hover)] active:bg-[var(--color-main-skyBlue-active)]"
           onClick={commentHandler}
         >
           <img
