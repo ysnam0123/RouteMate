@@ -7,24 +7,49 @@ import rightArrowNavy from '../assets/icons/rightArrowNavy.png'
 import pin from '../assets/icons/pin.svg'
 import bedIcon from '../assets/icons/bedIcon.svg'
 import plus from '../assets/icons/plus.svg'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Button from '../components/button'
 import Layout from '../layout/Layout'
 import { axiosInstance } from '../api/axios'
 
 export default function Write() {
   //이미지 등록
-  const [images, setImages] = useState<string[]>([])
-  const [imageFiles, setImageFiles] = useState<File[]>([])
+  const [images, setImages] = useState<string[]>([]) //미리보기용
+  const [imageFiles, setImageFiles] = useState<File[]>([]) //image 필드용
+  const [Base64s, setBase64s] = useState<{ url: string }[]>([]) //title에 들어가는 image용
+
+  //이미지 파일 Base64로 인코딩하는 함수
+  const encodeFileToBase64 = (image: File) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.readAsDataURL(image)
+      reader.onload = (event: any) => resolve(event.target.result)
+      reader.onerror = (error) => reject(error)
+    })
+  }
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (files) {
       const fileArray = Array.from(files)
       const imgUrls = fileArray.map((file) => URL.createObjectURL(file))
+
       setImages(imgUrls)
       setImageFiles(fileArray)
     }
   }
+
+  useEffect(() => {
+    if (imageFiles.length > 0) {
+      setBase64s([])
+      imageFiles.forEach((image) => {
+        encodeFileToBase64(image).then((data) =>
+          setBase64s((prev) => [...prev, { url: data as string }])
+        )
+      })
+    }
+  }, [imageFiles])
+  console.log(Base64s)
 
   //이미지 슬라이더
   const [imgIndex, setImgIndex] = useState(0)
@@ -117,7 +142,7 @@ export default function Write() {
     formData.append(
       'title',
       JSON.stringify({
-        images,
+        Base64s,
         writtenTitle,
         tags,
         locations,
