@@ -1,7 +1,6 @@
 import useRandomVideo from '../hook/RandomVideo';
 import Button from '../components/button';
 import homeButtonIcon from '../assets/icons/homeIcon.svg';
-import searchIcon from '../assets/icons/Search.svg';
 import homeLogo from '../assets/images/homeLogo.svg';
 import Footer from '../layout/Footer';
 import { useNavigate } from 'react-router-dom';
