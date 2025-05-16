@@ -14,21 +14,20 @@ interface PostInteractionProps {
   // 게시물 댓글 배열
   comments: commentsObj[];
   className?: string;
-  post: {
-    _id: string;
-    title: string;
-    createdAt: string;
-    // likes: any[];
-    likes: likesObj[];
-    comments: any[];
-    author: {
-      fullName: string;
-    };
-    image: string;
-    Base64s: Base64Image;
-  };
+  // post: {
+  //   _id: string;
+  //   title: string;
+  //   createdAt: string;
+  //   // likes: any[];
+  //   likes: likesObj[];
+  //   comments: any[];
+  //   author: {
+  //     fullName: string;
+  //   };
+  //   image: string;
+  //   Base64s: Base64Image;
+  // };
 }
-type Base64Image = { url: string }[];
 
 interface commentsObj {
   _id: string;
@@ -47,7 +46,6 @@ export default function PostInteraction({
   // 이 컴포넌트가 props로 받는 3가지
   postId,
   likes,
-  comments,
 }: PostInteractionProps) {
   // console.log('comments from postInteraction.tsx:', comments);
   // 좋아요를 눌렀는지 안눌렀는지
