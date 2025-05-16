@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import WriteInfoMenu from './WriteInfoMenu'
 import { axiosInstance } from '../api/axios'
+import deleteTagsGray from '../assets/icons/deleteTagsGray.png'
 
 interface Channel {
   id: string
@@ -41,6 +42,10 @@ export default function WriteInfo({
     }
   }
 
+  const deleteTag = (indexToDelete: number) => {
+    setTags(tags.filter((_, index) => index !== indexToDelete))
+  }
+
   //채널 목록 불러오기
   const [channels, setChannels] = useState<Channel[]>([])
 
@@ -76,7 +81,7 @@ export default function WriteInfo({
               type={type}
               onKeyDown={addTag}
               ref={inputRef}
-              className="border border-[#AFB1B6] rounded-md py-1 w-[238px] text-[15px] focus:outline-[#60b5ff]"
+              className="border border-[#AFB1B6] rounded-md py-1 px-2 w-[238px] text-[15px] focus:outline-[#60b5ff]"
               placeholder={tagName + ' 추가'}
             />
           ) : (
@@ -96,14 +101,20 @@ export default function WriteInfo({
           )}
           {/* 입력한 정보 추가 영역*/}
           <div className="flex items-center">
-            <ul className="p-2 h-1/2 flex items-center">
+            <ul className="p-2 h-1/2 flex items-center divide-x-1 divide-[#777777]">
               {tags.map((tag, index) => (
                 <li>
                   <span
                     key={index}
-                    className="text-[15px] text-[#777777] pr-[10px] pl-[10px] border-r border-[#777777]"
+                    onClick={() => deleteTag(index)}
+                    className="flex items-center justify-center gap-[10px] text-[15px] text-[#777777] pr-[10px] pl-[10px] cursor-pointer"
                   >
                     {tag}
+                    <img
+                      src={deleteTagsGray}
+                      alt="deleteTagIcon"
+                      className="h-[10px]"
+                    />
                   </span>
                 </li>
               ))}

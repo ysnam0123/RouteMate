@@ -1,3 +1,4 @@
+
 import WriteInfo from '../components/WriteInfo';
 import channelIcon from '../assets/icons/channelIcon.svg';
 import leftArrowGray from '../assets/icons/leftArrowGray.svg';
@@ -7,6 +8,7 @@ import rightArrowNavy from '../assets/icons/rightArrowNavy.png';
 import pin from '../assets/icons/pin.svg';
 import bedIcon from '../assets/icons/bedIcon.svg';
 import plus from '../assets/icons/plus.svg';
+import deleteTags from '../assets/icons/deleteTags.png'
 import { useEffect, useRef, useState } from 'react';
 import Button from '../components/button';
 import { axiosInstance } from '../api/axios';
@@ -114,8 +116,9 @@ export default function Write() {
   };
 
   //tag 등록
-  const [tags, setTags] = useState<string[]>([]);
-  const inputRef = useRef<HTMLInputElement | null>(null);
+  const [tags, setTags] = useState<string[]>([])
+  const inputRef = useRef<HTMLInputElement | null>(null)
+
   const addTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       const value = inputRef.current?.value.trim();
@@ -124,7 +127,13 @@ export default function Write() {
         if (inputRef.current) inputRef.current.value = '';
       }
     }
-  };
+  }
+  
+  //tag 삭제
+  const deleteTag = (indexToDelete: number) => {
+    setTags(tags.filter((_, index) => index !== indexToDelete))
+  }
+
 
   //API POST
   const handleSubmit = async () => {
@@ -272,9 +281,11 @@ export default function Write() {
                 {tags.map((tag, index) => (
                   <li
                     key={index}
-                    className="flex items-center justify-center text-[10px] text-[#ffff] w-[46px] h-[22px] rounded-[15px] bg-[#2A728C] mr-[5px]"
+                    onClick={() => deleteTag(index)}
+                    className="flex gap-[5px] items-center justify-center text-[10px] text-[#ffff] w-auto h-[22px] rounded-[15px] bg-[#2A728C] mr-[5px] px-[10px] cursor-pointer"
                   >
                     {tag}
+                    <img src={deleteTags} alt="deleteTagsIcon" />
                   </li>
                 ))}
               </ul>
