@@ -1,50 +1,183 @@
-import React from 'react'; // Import React
-import { useState } from 'react';
-import profile from '../assets/images/profile.svg';
+import React, { useEffect } from 'react' // Import React
+import { useState } from 'react'
+import profile from '../assets/images/profile.svg'
 // import { useAuthStore } from "../stores/authStore";
-import { axiosInstance } from '../api/axios';
-import Loading from './Loading';
+import { axiosInstance } from '../api/axios'
+import { useNavigate } from 'react-router-dom'
+import Channel from './Channel'
 
 interface SearchPanelProps {
-  onClose: () => void;
+  onClose: () => void
 }
 
 interface User {
-  _id: string;
-  image: string;
-  fullName: string;
-  followers: string[];
-  isOnline: boolean;
+  _id: string
+  image: string
+  fullName: string
+  followers: string[]
+  isOnline: boolean
+}
+
+interface Channel {
+  _id: string
+  name: string
+}
+
+interface Post {
+  _id: string
+  title: string
+  author: {
+    _id: string
+    fullName: string
+    image: string
+  }
 }
 
 function SearchPanel({ onClose }: SearchPanelProps): React.ReactElement {
-  const [searchType, setSearchType] = useState<'post' | 'user'>('post');
-  const [searchInput, setSearchInput] = useState('');
-  const [searchResults, setSearchResults] = useState<User[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState<User[]>([])
+  const [searchInput, setSearchInput] = useState('')
+  const [filteredUsers, setFilteredUsers] = useState<User[]>([])
+  const [loading, setLoading] = useState(true)
+  const [searchType, setSearchType] = useState<'user' | 'post'>('post')
 
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchInput(e.target.value);
-  };
+  const [recentSearches, setRecentSearches] = useState<User[]>([])
+  const [selectedChannelId, setSelectedChannelId] = useState<string | null>(
+    null
+  )
+  const [channels, setChannels] = useState<Channel[]>([])
+  const [posts, setPosts] = useState<Post[]>([])
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([])
+  const [recentPostSearches, setRecentPostSearches] = useState<Post[]>([])
 
-  const handleSearch = async () => {
-    if (searchInput.trim() === '') {
-      setSearchResults([]);
-      return;
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (searchType === 'post') {
+      if (searchInput.trim() === '') {
+        setFilteredPosts([])
+        return
+      }
+      const filtered = posts.filter(
+        (post) =>
+          post.title &&
+          post.title.trim() !== '' &&
+          post.title.toLowerCase().includes(searchInput.toLowerCase())
+      )
+      setFilteredPosts(filtered)
     }
+  }, [searchInput, posts, searchType])
 
-    if (searchType === 'user') {
-      setLoading(true);
+  useEffect(() => {
+    const fetchChannels = async () => {
       try {
-        const res = await axiosInstance.get(`/search/users/${searchInput}`);
-        setSearchResults(res.data);
-      } catch (err) {
-        console.error('사용자 검색 실패:', err);
-      } finally {
-        setLoading(false);
+        const res = await axiosInstance.get(
+          'http://13.125.208.179:5001/channels'
+        )
+        setChannels(res.data)
+      } catch (error) {
+        console.error('채널 불러오기 실패:', error)
       }
     }
-  };
+
+    fetchChannels()
+  }, [])
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      if (!selectedChannelId) return
+      try {
+        const res = await axiosInstance.get(
+          `/posts/channel/${selectedChannelId}`
+        )
+        console.log(
+          `게시물 API 응답 (/posts/channel/${selectedChannelId}):`,
+          res.data
+        )
+        setPosts(res.data)
+      } catch (err) {
+        console.error('게시글 목록을 가져오는 데 실패했습니다:', err)
+      }
+    }
+
+    if (searchType === 'post') {
+      fetchPosts()
+    } else {
+      setPosts([])
+      setFilteredPosts([])
+    }
+  }, [searchType, selectedChannelId])
+
+  // 사용자 목록 불러오기
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await axiosInstance.get('/users/get-users')
+        setUsers(res.data)
+      } catch (err) {
+        console.error('사용자 목록을 가져오는 데 실패했습니다:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUsers()
+  }, [])
+
+  // 실시간 검색 필터링
+  useEffect(() => {
+    if (searchInput.trim() === '') {
+      setFilteredUsers([])
+      return
+    }
+    const filtered = users.filter((user) =>
+      user.fullName.toLowerCase().includes(searchInput.toLowerCase())
+    )
+    setFilteredUsers(filtered)
+  }, [searchInput, users])
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput(e.target.value)
+  }
+
+  const handleSearch = () => {
+    console.log('검색 실행:', searchInput)
+  }
+
+  const handleUserClick = (user: User) => {
+    // 프로필 이동 & 최근 검색 기록 업뎃
+    navigate(`/profile/${user._id}`)
+    setRecentSearches((prev) => {
+      const filtered = prev.filter((u) => u._id !== user._id)
+      return [user, ...filtered].slice(0, 5) //최대 5개
+    })
+  }
+
+  const handleDeleteRecent = (userId: string) => {
+    setRecentSearches((prev) => prev.filter((user) => user._id !== userId))
+  }
+
+  const handlePostClick = (post: Post) => {
+    if (post.author && post.author._id) {
+      navigate(`/profile/${post.author._id}`)
+      setRecentPostSearches((prev) => {
+        const filtered = prev.filter((p) => p._id !== post._id)
+        return [post, ...filtered].slice(0, 5)
+      })
+    } else {
+      console.warn('작성자 정보가 없어 프로필로 이동할 수 없습니다:', post)
+    }
+  }
+
+  const handleDeleteRecentPost = (postId: string) => {
+    setRecentPostSearches((prev) => prev.filter((post) => post._id !== postId))
+  }
+
+  if (loading) {
+    return <p>로딩 중...</p>
+  }
+
+  console.log(filteredPosts.map((post) => post.title))
+
   return (
     <div
       className="px-4 flex flex-col text-sm bg-white rounded-lg shadow-md h-full w-90"
@@ -86,34 +219,42 @@ function SearchPanel({ onClose }: SearchPanelProps): React.ReactElement {
           ✕
         </button>
       </div>{' '}
-      <div className="relative mb-4 flex justify-end">
-        <select
-          className="w-1/2 p-2 border border-gray-300 rounded focus:outline-none"
-          style={{
-            borderColor: 'var(--color-main-skyBlue-hover)',
-            boxShadow: '0 0 0 1px var(--color-lightGray-focus)', // ring 대체
-            appearance: 'none',
-          }}
-          defaultValue=""
-        >
-          <option value="" disabled>
-            채널 선택
-          </option>
-
-          <option value="channel_id_1">채널 1</option>
-          <option value="channel_id_2">채널 2</option>
-          <option value="channel_id_3">채널 3</option>
-        </select>
-        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-          <svg
-            className="fill-current h-4 w-4"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
+      {searchType === 'post' && (
+        <div className="relative mb-4 flex justify-end">
+          <select
+            value={selectedChannelId || ''}
+            onChange={(e) => {
+              setSelectedChannelId(e.target.value || null)
+              setSearchInput('')
+            }}
+            className="w-1/2 p-2 border border-gray-300 rounded focus:outline-none"
+            style={{
+              borderColor: 'var(--color-main-skyBlue-hover)',
+              boxShadow: '0 0 0 1px var(--color-lightGray-focus)',
+              appearance: 'none',
+            }}
+            defaultValue=""
           >
-            <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-          </svg>
+            <option value="" disabled={!selectedChannelId}>
+              채널 선택
+            </option>
+            {channels.map((channel) => (
+              <option key={channel._id} value={channel._id}>
+                {channel.name}
+              </option>
+            ))}
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg
+              className="fill-current h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+            </svg>
+          </div>
         </div>
-      </div>
+      )}
       {/* 검색 입력창 */}
       <div className="relative mb-4">
         {' '}
@@ -123,90 +264,152 @@ function SearchPanel({ onClose }: SearchPanelProps): React.ReactElement {
           value={searchInput}
           onChange={handleSearchInputChange}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') handleSearch();
+            if (e.key === 'Enter') handleSearch()
           }}
         />
       </div>
       <div className="flex-grow overflow-y-auto border-t border-gray-200 pt-3 pb-4">
         {/* 검색 결과 */}
-        <div className="flex-grow overflow-y-auto border-t border-gray-200 pt-3 pb-4">
+        <div className="flex-grow overflow-y-auto border-gray-200 pt-3 pb-4">
           {loading ? (
-            <Loading />
+            <p className="text-center text-gray-500">로딩 중...</p>
           ) : searchType === 'user' ? (
             <>
               <h3 className="text-base font-bold mb-2 text-black-700">
                 검색 결과
               </h3>
-              <ul>
-                {searchResults.map((user) => (
-                  <li
-                    key={user._id}
-                    className="flex justify-between items-center py-1.5 mb-1 group"
-                  >
-                    <div className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
-                      <img
-                        src={user.image || profile}
-                        alt="프로필"
-                        className="w-8 h-8 rounded-full mr-1 object-cover"
-                      />
-                      <span className="text-gray-800">{user.fullName}</span>
-                    </div>
-                    {/* 즐겨찾기 또는 삭제 버튼 등 옵션 가능 */}
-                  </li>
-                ))}
-              </ul>
+              {filteredUsers.length > 0 ? (
+                <ul>
+                  {filteredUsers.map((user) => (
+                    <li
+                      key={user._id}
+                      className="flex justify-between items-center py-1.5 mb-1 group cursor-pointer"
+                      onClick={() => handleUserClick(user)}
+                    >
+                      <div className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
+                        <img
+                          src={user.image || profile}
+                          alt="프로필"
+                          className="w-8 h-8 rounded-full mr-1 object-cover"
+                        />
+                        <span className="text-gray-800">{user.fullName}</span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-gray-500 text-center">
+                  일치하는 사용자가 없습니다.
+                </p>
+              )}
             </>
           ) : (
-            <p className="text-sm text-gray-500">
-              게시글 검색은 아직 구현되지 않았습니다.
-            </p>
+            <>
+              <h3 className="text-base font-bold mb-2 text-black-700">
+                검색 결과
+              </h3>
+              {Array.isArray(filteredPosts) && filteredPosts.length > 0 ? (
+                <ul>
+                  {filteredPosts.map((post) => (
+                    <li
+                      key={post._id}
+                      className="flex justify-between items-center py-1.5 mb-1 group cursor-pointer"
+                      onClick={() => handlePostClick(post)}
+                    >
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={post.author?.image || profile}
+                          alt={post.author?.fullName || '작성자'}
+                          className="w-8 h-8 rounded-full object-cover"
+                        />
+                        <div>
+                          <span className="text-gray-800 group-hover:text-blue-600 block font-medium">
+                            {post.title}
+                          </span>
+                          {post.author?.fullName && (
+                            <span className="text-xs text-gray-500 group-hover:text-blue-500">
+                              작성자: {post.author.fullName}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm text-gray-500 text-center">
+                  일치하는 게시글이 없습니다.
+                </p>
+              )}
+            </>
           )}
         </div>
-        <h3 className="text-base font-bold mb-2 text-black-700">
-          최근 검색 항목
-        </h3>
-        <ul>
-          <li className="flex justify-between items-center py-1.5 mb-1 group">
-            <div className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
-              <img
-                src="/src/assets/images/Ellipse 25.png"
-                alt="프로필"
-                className="w-8 h-8 rounded-full mr-1"
-              />
-              <span className="text-gray-800">채널 주인 1</span>
-            </div>
-            <button aria-label="Remove search item">✕</button>
-          </li>
-          <li className="flex justify-between items-center py-1.5 mb-1 group">
-            <div className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
-              <img
-                src="/src/assets/images/Ellipse 25.png"
-                alt="프로필"
-                className="w-8 h-8 rounded-full mr-1"
-              />
-              <span className="text-gray-800 cursor-pointer hover:text-blue-600">
-                채널 주인 2
-              </span>
-            </div>
-            <button aria-label="Remove search item">✕</button>
-          </li>
-          <li className="flex justify-between items-center py-1.5 mb-1 group">
-            <div className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
-              <img
-                src="/src/assets/images/Ellipse 25.png"
-                alt="프로필"
-                className="w-8 h-8 rounded-full mr-1"
-              />
-              <span className="text-gray-800 cursor-pointer hover:text-blue-600">
-                채널 주인 3
-              </span>
-            </div>
-            <button aria-label="Remove search item">✕</button>
-          </li>
-        </ul>
+
+        {recentSearches.length > 0 && (
+          <div className="mt-6">
+            <h4 className="font-semibold mb-2">최근 검색 항목</h4>
+            <ul>
+              {recentSearches.map((user) => (
+                <li
+                  key={user._id}
+                  className="flex justify-between items-center py-1.5 mb-1 group cursor-pointer"
+                  onClick={() => handleUserClick(user)}
+                >
+                  <div className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
+                    <img
+                      src={user.image || profile}
+                      alt="프로필"
+                      className="w-8 h-8 rounded-full mr-1 object-cover"
+                    />
+                    <span className="text-gray-800">{user.fullName}</span>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleDeleteRecent(user._id)
+                    }}
+                    className="text-gray-400 hover:text-red-500 text-sm"
+                  >
+                    ✕
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {searchType === 'post' && recentPostSearches.length > 0 && (
+          <div className="mt-6">
+            <h4 className="font-semibold mb-2">최근 검색 항목</h4>
+            <ul>
+              {recentPostSearches.map((post) => (
+                <li
+                  key={post._id}
+                  className="flex justify-between items-center py-1.5 mb-1 group cursor-pointer"
+                  onClick={() => handlePostClick(post)}
+                >
+                  <div className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
+                    <span className="text-gray-800">
+                      {post.title || '제목 없음'}
+                    </span>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleDeleteRecentPost(post._id)
+                    }}
+                    className="text-gray-400 hover:text-red-500 text-sm"
+                  >
+                    ✕
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
-  );
+  )
 }
 
-export default SearchPanel;
+export default SearchPanel
