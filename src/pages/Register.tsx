@@ -9,6 +9,7 @@ import passwordOk from '../assets/icons/passwordOk.svg';
 import useRandomVideo from '../hook/RandomVideo';
 import { useNavigate } from 'react-router';
 import { axiosInstance } from '../api/axios';
+import { toast } from 'react-toastify';
 
 export default function Register() {
   const [fullName, setFullName] = useState('');
@@ -47,33 +48,33 @@ export default function Register() {
 
     // 유효성 검사
     if (!fullName) {
-      alert('이름을 입력해주세요.');
+      toast('이름을 입력해주세요.');
       return;
     }
 
     if (!email) {
-      alert('이메일을 입력해주세요.');
+      toast('이메일을 입력해주세요.');
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      alert('올바른 이메일 형식을 입력해주세요.');
+      toast('올바른 이메일 형식을 입력해주세요.');
       return;
     }
 
     if (!password) {
-      alert('비밀번호를 입력해주세요.');
+      toast('비밀번호를 입력해주세요.');
       return;
     }
 
     if (!confirmPassword) {
-      alert('비밀번호 확인을 입력해주세요.');
+      toast('비밀번호 확인을 입력해주세요.');
       return;
     }
 
     if (password !== confirmPassword) {
-      alert('비밀번호가 일치하지 않습니다.');
+      toast('비밀번호가 일치하지 않습니다.');
       return;
     }
 
@@ -84,11 +85,11 @@ export default function Register() {
         fn('')
       );
       setIsEmailValid(false);
-      alert('회원가입 되었습니다.');
+      toast.success('회원가입 되었습니다.');
       // 완료되면 로그인페이지로 이동(이것도 임의로해둔거라 바꿔도됨)
       navigate('/login');
     } catch (e) {
-      alert(`회원가입 실패하였습니다.`);
+      toast.error(`회원가입 실패하였습니다.`);
     }
   };
 

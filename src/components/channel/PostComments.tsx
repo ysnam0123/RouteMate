@@ -4,6 +4,7 @@ import whiteFootPrint from '../../assets/icons/footprintWhite.png';
 import { axiosInstance } from '../../api/axios';
 import { useAuthStore } from '../../stores/authStore';
 import userImage from '../../assets/images/Ellipse 25.png';
+import { toast } from 'react-toastify';
 
 interface PostCommentsProps {
   postId: string; // 게시물 id
@@ -100,7 +101,7 @@ export default function PostComments({
       // 실패 시 → 임시 댓글 제거
       setCommentList((prev) => prev.filter((c) => c._id !== fakeComment._id));
 
-      alert('댓글 작성에 실패했어요. 다시 시도해 주세요.');
+      toast('댓글 작성에 실패했어요. 다시 시도해 주세요.');
     }
   };
 

@@ -8,6 +8,7 @@ import EyeOff from '../assets/icons/eyeOff.svg';
 import useRandomVideo from '../hook/RandomVideo';
 import { useAuthStore } from '../stores/authStore';
 import { axiosInstance } from '../api/axios';
+import { toast } from 'react-toastify';
 
 export default function Login() {
   const video = useRandomVideo();
@@ -22,12 +23,12 @@ export default function Login() {
     e.preventDefault();
 
     if (!email.trim()) {
-      alert('이메일을 입력해주세요.');
+      toast('이메일을 입력해주세요.');
       return;
     }
 
     if (!password.trim()) {
-      alert('비밀번호를 입력해주세요.');
+      toast('비밀번호를 입력해주세요.');
       return;
     }
 
@@ -37,10 +38,10 @@ export default function Login() {
       login(data.token, data.user._id, data.user.role);
       // 토큰과 id값, 역활을 zustand에 저장
       [setEmail, setPassword].forEach((fn) => fn(''));
-      alert('로그인 되었습니다.');
+      toast('로그인 되었습니다.');
       // 완료되면 인증 페이지(임의로 한것이므로 바꿔도됨)로 이동
     } catch (e) {
-      alert(`로그인을 실패하였습니다.`);
+      toast(`로그인을 실패하였습니다.`);
     } finally {
       setIsLoading(false);
     }
