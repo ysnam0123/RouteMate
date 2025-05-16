@@ -26,39 +26,38 @@ export default function App() {
         closeOnClick
         closeButton={false}
       />
+            <Routes>
+                {/* 인증없이 사용가능한 라우터 */}
+                <Route element={<PublicRouter />}>
+                    <Route path="/" element={<Home />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/login" element={<Login />} />
+                </Route>
 
-      <Routes>
-        {/* 인증없이 사용가능한 라우터 */}
-        <Route element={<PublicRouter />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-        </Route>
+                <Route path="/layout" element={<Layout />} />
 
-        <Route path="/layout" element={<Layout />} />
+                {/* 임시로 둔곳 */}
+                <Route element={<Layout />}>
+                    <Route path="/channel" element={<Channel />} />
+                    <Route path="/userprofile/:userId" element={<UserProfile />} />
+                    <Route path="/userlist" element={<UserList />} />
 
-        {/* 임시로 둔곳 */}
-        <Route element={<Layout />}>
-          <Route path="/channel" element={<Channel />} />
-          <Route path="/userprofile/:userId" element={<UserProfile />} />
-          <Route path="/userlist" element={<UserList />} />
+                    {/* 인증(로그인)이 있어야 사용가능한 라우터 */}
+                    <Route element={<ProtectedRouter />}>
+                        <Route path="/profileedit" element={<ProfileEdit />} />
+                        <Route path="/myprofile" element={<MyProfile />} />
+                        <Route path="/write" element={<Write />} />
+                    </Route>
 
-          {/* 인증(로그인)이 있어야 사용가능한 라우터 */}
-          <Route element={<ProtectedRouter />}>
-            <Route path="/profileedit" element={<ProfileEdit />} />
-            <Route path="/myprofile" element={<MyProfile />} />
-            <Route path="/write" element={<Write />} />
-          </Route>
+                    {/* SuperAdmin만 접근 가능한 관리자 페이지 */}
+                    <Route path="/superadmin" element={<AdminRouter />}>
+                        <Route index element={<SuperAdmin />} />
+                    </Route>
+                </Route>
 
-          {/* SuperAdmin만 접근 가능한 관리자 페이지 */}
-          <Route path="/superadmin" element={<AdminRouter />}>
-            <Route index element={<SuperAdmin />} />
-          </Route>
-        </Route>
-
-        {/* 없는 라우터면 NotFound */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+                {/* 없는 라우터면 NotFound */}
+                <Route path="*" element={<NotFound />} />
+            </Routes>
     </>
   );
 }

@@ -13,7 +13,6 @@ import Train from '../assets/achievementIcons/train.svg';
 import Tag from '../components/Tag';
 import { useEffect, useState } from 'react';
 import { axiosInstance } from '../api/axios';
-import Layout from '../layout/Layout';
 import PasswordInput from '../components/PaswordInput';
 import { useAuthStore } from '../stores/authStore';
 import { useNavigate } from 'react-router-dom';
@@ -116,102 +115,139 @@ export default function ProfileEdit() {
       console.log(data);
       setUser(data);
     };
-    getUser();
-  }, [userId]);
 
-  // 이름 받아오기
-  useEffect(() => {
-    if (user?.fullName) {
-      setEditName(user.fullName);
-    }
-  }, [user]);
+    // 비밀번호 업데이트
+    const updatePassword = async () => {
+        if (!isPasswordConfirm) {
+            return alert('비밀번호가 일치하지 않습니다!');
+        }
+        try {
+            const res = await axiosInstance.put('/settings/update-password', {
+                password: newPassword.trim(),
+            });
+            alert('비밀번호가 변경되었습니다.');
+            console.log('업데이트 결과:', res.data);
+            setIsPasswordChanged(true);
+        } catch (error) {
+            console.error('업데이트 실패:', error);
+            alert('정보 변경에 실패했습니다.');
+        }
+    };
 
-  const rawUsername = user?.username ?? '';
+    // 비밀번호 변경됐는지 확인
+    useEffect(() => {
+        setIsPasswordChanged(false);
+    }, [newPassword, confirmPassword]);
 
-  // 정규표현식으로 소개/칭호 분리
-  const match = rawUsername.match(/^(.*)\s?\[(.*)\]$/);
+    // 서버에서 정보 받아오기
+    useEffect(() => {
+        const getUser = async () => {
+            if (!userId) return;
+            const { data } = await axiosInstance.get(`users/${userId}`);
+            console.log(data);
+            setUser(data);
+        };
+        getUser();
+    }, [userId]);
 
-  const introduction = match?.[1] ?? rawUsername;
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const titles = match?.[2]?.split(',').map((t) => t.trim()) ?? [];
+    // 이름 받아오기
+    useEffect(() => {
+        if (user?.fullName) {
+            setEditName(user.fullName);
+        }
+    }, [user]);
 
-  // 소개 받아오기
-  useEffect(() => {
-    if (introduction) {
-      setText(introduction);
-    }
-  }, [introduction]);
+    const rawUsername = user?.username ?? '';
 
-  // 프로필 이미지 변경 함수
-  const handleImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files !== null) {
-      const file = e.target.files[0];
-      if (file) {
-        setProfileImgFile(file);
-        setIsImageDeleted(false);
-      }
-    }
-  };
+    // 정규표현식으로 소개/칭호 분리
+    const match = rawUsername.match(/^(.*)\s?\[(.*)\]$/);
 
-  const handleImgDelete = () => {
-    setProfileImgFile(null);
-    setIsImageDeleted(true);
-  };
+    const introduction = match?.[1] ?? rawUsername;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const titles = match?.[2]?.split(',').map((t) => t.trim()) ?? [];
 
-  // 칭호 선택 함수
-  const tagFields = [
-    { label: '제주 중독', icon: Jeju },
-    { label: '밥보단 커피', icon: Cafe },
-    { label: '김정호..?', icon: KoreaPin },
-    { label: '1박 2일 애호가', icon: Star },
-    { label: '낭만가', icon: Train },
-    { label: 'Power J', icon: PowerJ },
-    { label: '산타아저씨', icon: Hiking },
-    { label: '혼자서도 잘해요', icon: Alone },
-    { label: '한달살이 경험자', icon: House },
-  ];
+    // 소개 받아오기
+    useEffect(() => {
+        if (introduction) {
+            setText(introduction);
+        }
+    }, [introduction]);
 
-  const handleTagClick = (label: string) => {
-    setSelectedTags((prev) => {
-      const lowerLabel = label.toLowerCase();
+    // 프로필 이미지 변경 함수
+    const handleImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files !== null) {
+            const file = e.target.files[0];
+            if (file) {
+                setProfileImgFile(file);
+                setIsImageDeleted(false);
+            }
+        }
+    };
 
-      const alreadySelected = prev.some(
-        (tag) => tag.toLowerCase() === lowerLabel
-      );
+    const handleImgDelete = () => {
+        setProfileImgFile(null);
+        setIsImageDeleted(true);
+    };
 
-      if (alreadySelected) {
-        return prev.filter((tag) => tag.toLowerCase() !== lowerLabel);
-      } else {
-        return prev.length < 2 ? [...prev, label] : prev;
-      }
-    });
-  };
+    // 칭호 선택 함수
+    const tagFields = [
+        { label: '제주 중독', icon: Jeju },
+        { label: '밥보단 커피', icon: Cafe },
+        { label: '김정호..?', icon: KoreaPin },
+        { label: '1박 2일 애호가', icon: Star },
+        { label: '낭만가', icon: Train },
+        { label: 'Power J', icon: PowerJ },
+        { label: '산타아저씨', icon: Hiking },
+        { label: '혼자서도 잘해요', icon: Alone },
+        { label: '한달살이 경험자', icon: House },
+    ];
 
-  // 칭호 받아와서 기본선택 적용
-  useEffect(() => {
-    if (!hasInitialized && titles.length > 0) {
-      setSelectedTags(titles.slice(0, 2));
-      setHasInitialized(true);
-    }
-  }, [titles, hasInitialized]);
+    const handleTagClick = (label: string) => {
+        setSelectedTags((prev) => {
+            const lowerLabel = label.toLowerCase();
 
-  // 비밀번호
-  useEffect(() => {
-    if (!newPassword && !confirmPassword) {
-      setIsPasswordConfirm(false);
-    } else {
-      setIsPasswordConfirm(newPassword === confirmPassword);
-    }
-  }, [newPassword, confirmPassword]);
+            const alreadySelected = prev.some((tag) => tag.toLowerCase() === lowerLabel);
 
-  // 비밀번호 변경 버튼
-  const handlePasswordSubmit = () => {
-    updatePassword();
-  };
+            if (alreadySelected) {
+                return prev.filter((tag) => tag.toLowerCase() !== lowerLabel);
+            } else {
+                return prev.length < 2 ? [...prev, label] : prev;
+            }
+        });
+    };
 
-  // 저장하기 버튼
-  const handleSubmit = async () => {
-    const hasPasswordInput = newPassword.trim() || confirmPassword.trim();
+    // 칭호 받아와서 기본선택 적용
+    useEffect(() => {
+        if (!hasInitialized && titles.length > 0) {
+            setSelectedTags(titles.slice(0, 2));
+            setHasInitialized(true);
+        }
+    }, [titles, hasInitialized]);
+
+    // 비밀번호
+    useEffect(() => {
+        if (!newPassword && !confirmPassword) {
+            setIsPasswordConfirm(false);
+        } else {
+            setIsPasswordConfirm(newPassword === confirmPassword);
+        }
+    }, [newPassword, confirmPassword]);
+
+    // 비밀번호 변경 버튼
+    const handlePasswordSubmit = () => {
+        updatePassword();
+    };
+
+    // 저장하기 버튼
+    const handleSubmit = async () => {
+        const hasPasswordInput = newPassword.trim() || confirmPassword.trim();
+
+        if (hasPasswordInput && !isPasswordChanged) {
+            alert('비밀번호 변경 버튼을 눌러주세요!');
+            return;
+        }
+        updateUser();
+    };
 
     if (hasPasswordInput && !isPasswordChanged) {
       toast('비밀번호 변경 버튼을 눌러주세요!');
