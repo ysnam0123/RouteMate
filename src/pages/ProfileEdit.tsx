@@ -16,6 +16,8 @@ import { axiosInstance } from '../api/axios';
 import PasswordInput from '../components/PaswordInput';
 import { useAuthStore } from '../stores/authStore';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Loading from '../components/Loading';
 
 export default function ProfileEdit() {
     const userId = useAuthStore((state) => state.userId);
@@ -67,13 +69,13 @@ export default function ProfileEdit() {
                 });
                 console.log('프로필사진 업데이트 결과:', res3.data);
             }
-            alert('정보가 성공적으로 변경되었습니다!');
+            toast.success('정보가 성공적으로 변경되었습니다!');
             console.log('업데이트 결과:', res1.data);
-            // window.location.reload();
+            window.scrollTo(0, 0);
             navigate('/myprofile');
         } catch (error) {
             console.error('업데이트 실패:', error);
-            alert('정보 변경에 실패했습니다.');
+            toast.error('정보 변경에 실패했습니다.');
         } finally {
             setLoading(false);
         }
@@ -82,18 +84,18 @@ export default function ProfileEdit() {
     // 비밀번호 업데이트
     const updatePassword = async () => {
         if (!isPasswordConfirm) {
-            return alert('비밀번호가 일치하지 않습니다!');
+            return toast('비밀번호가 일치하지 않습니다!');
         }
         try {
             const res = await axiosInstance.put('/settings/update-password', {
                 password: newPassword.trim(),
             });
-            alert('비밀번호가 변경되었습니다.');
+            toast.success('비밀번호가 변경되었습니다.');
             console.log('업데이트 결과:', res.data);
             setIsPasswordChanged(true);
         } catch (error) {
             console.error('업데이트 실패:', error);
-            alert('정보 변경에 실패했습니다.');
+            toast.error('정보 변경에 실패했습니다.');
         }
     };
 
@@ -206,14 +208,14 @@ export default function ProfileEdit() {
         const hasPasswordInput = newPassword.trim() || confirmPassword.trim();
 
         if (hasPasswordInput && !isPasswordChanged) {
-            alert('비밀번호 변경 버튼을 눌러주세요!');
+            toast('비밀번호 변경 버튼을 눌러주세요!');
             return;
         }
         updateUser();
     };
 
     if (loading) {
-        return <p className="montserrat text-[20px]">로딩 중...</p>;
+        return <Loading />;
     }
 
     return (

@@ -1,91 +1,140 @@
-import React from 'react';
+import { useState } from 'react';
+// svg 최적화
 import profile from '../../assets/images/profile.svg';
-import userImage from '../../assets/images/Ellipse 25.png';
+
 import bedIcon from '../../assets/icons/bedIcon.svg';
 import ImageSlider from './ImageSlider';
 import PostInteraction from './PostInteraction';
 import PostComments from './PostComments';
+import testImage from '../../assets/images/textImage.png';
+
 interface PostProps {
-    post: {
-        _id: string;
-        title: string;
-        createdAt: string;
-        // likes: any[];
-        likes: likesObj[];
-        comments: any[];
-        author: {
-            fullName: string;
-        };
-        image: string;
-    };
-}
-interface likesObj {
+  post: {
     _id: string;
-    user: string;
-    post: string;
+    title: string;
     createdAt: string;
+    // likes: any[];
+    likes: likesObj[];
+    comments: any[];
+    author: {
+      fullName: string;
+    };
+    image: string;
+    Base64s: Base64Image;
+  };
+}
+
+type Base64Image = { url: string }[];
+interface likesObj {
+  _id: string;
+  user: string;
+  post: string;
+  createdAt: string;
 }
 export default function Post({ post }: PostProps) {
-    const parsedTitle = JSON.parse(post.title);
+  const parsedTitle = JSON.parse(post.title);
 
-    return (
-        <div className="border border-[var(--color-post-border)] p-4 rounded-lg shadow-sm bg-white max-w-[1094px] h-[910px] px-[30px]  mb-[30px] ">
-            <div className="flex justify-between mb-[10px]">
-                <div className="flex items-center gap-3">
-                    <img src={profile} alt="user" className="w-[50px] h-[50px]" />
-                    {parsedTitle.auther || post.author.fullName}
-                </div>
-                <div className="flex gap-3">
-                    <div className="bg-[#2A728C] text-white w-[65px] h-[35px] rounded-xl text-[15px] flex justify-center items-center">
-                        카페
-                    </div>
-                    <div className="bg-[#2A728C] text-white w-[65px] h-[35px] rounded-xl text-[15px] flex justify-center items-center">
-                        해운대
-                    </div>
-                </div>
-            </div>
+  // undefined
+  // console.log('comments:', comments);
 
-            <ImageSlider images={[post.image]} alt={parsedTitle.title} />
+  const [showBox, setShowBox] = useState(false);
+  // console.log('showBox:', showBox);
+  const toggleCommentBox = () => {
+    setShowBox((prev) => !prev);
+  };
 
-            <div className="flex flex-row gap-7 h-[450px]">
-                <div className="min-w-[670px]">
-                    <div className="flex justify-between">
-                        <h2 className="text-[25px] font-bold text-[var(--color-title)] mb-[10px]">
-                            {parsedTitle.title}
-                        </h2>
-                        <div className="flex justify-end text-[var(--color-subtext)]">
-                            작성일: {new Date(post.createdAt).toLocaleDateString()}
-                        </div>
-                    </div>
-
-                    <div className="flex gap-3 text-[14px] text-[var(--color-subtext)] border-b-2 border-[var(--color-lightGray)] mb-[10px] w-[100%] ">
-                        <div className="flex gap-3">
-                            <p>부산 해운대</p>
-                            <p>부산 광안리</p>
-                            <p>부산 대학교</p>
-                        </div>
-                        <div className="ml-auto">총 비용: 200,000 ₩</div>
-                    </div>
-
-                    <div className="border-b-2 border-[var(--color-lightGray)] flex gap-2 mb-[10px]">
-                        <img src={bedIcon} alt="bed" className="mb-auto" />
-                        <div className="mb-[10px]">
-                            <div className="text-[var(--color-subtext)] text-[15px]">부산 해운대 호텔 1</div>
-                            <div className="text-[var(--color-subtext)] text-[15px]">부산 해운대 호텔 2</div>
-                        </div>
-                    </div>
-
-                    <div className="h-[280px] overflow-auto">
-                        <p className="text-[15px] whitespace-pre-line">{parsedTitle.body}</p>
-                        <p className="text-[15px] whitespace-pre-line">{parsedTitle.body}</p>
-                    </div>
-                </div>
-                <div className="w-[330px] h-full border-[var(--color-black)] border-1 py-[15px] px-[25px] rounded-xl flex flex-col ">
-                    <PostInteraction postId={post._id} likes={post.likes} comments={post.comments} />
-
-                    <PostComments postId={post._id} comments={post.comments} />
-                </div>
-            </div>
+  return (
+    <div className="border border-[var(--color-post-border)] p-4 rounded-lg shadow-sm bg-white max-w-[600px] h-100% px-[30px]  mb-[30px] ">
+      <div className="flex justify-between mb-[10px]">
+        <div className="flex items-center gap-0.2">
+          <img src={profile} alt="user" className="w-[40px] h-[40px]" />
+          <div className="font-bold text-[18px]">
+            {parsedTitle.author || post.author.fullName}
+          </div>
         </div>
-    );
+        <div className="flex gap-3 h-[40px]">
+          {parsedTitle.tags?.map((tag, idx) => (
+            <div
+              key={idx}
+              className="bg-[#2A728C] text-white px-3 py-1 h-[25px] rounded-xl text-[13px] flex items-center"
+            >
+              {tag}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* <ImageSlider images={post.Base64s.url} alt={parsedTitle.writtenTitle} /> */}
+      <div className="flex justify-center">
+        <img
+          src={testImage}
+          alt="testImage"
+          className="w-[320px] h-[250px] mb-[10px]"
+        />
+      </div>
+
+      {/* 이미지 아래부분 전체 */}
+      <div className="flex flex-row  gap-2">
+        {/* 댓글 좋아요 상자 제외 전체 */}
+        <div className="w-[600px]">
+          {/* 제목,날짜, */}
+          <div className="flex justify-between items-center">
+            <h2 className="text-[30px] font-bold text-[var(--color-title)] mb-[20px]">
+              {parsedTitle.writtenTitle}
+            </h2>
+            <div className="flex justify-end text-[var(--color-subText)]">
+              {new Date(post.createdAt).toLocaleDateString()}
+            </div>
+            {/* import dayjs from 'dayjs';
+            dayjs(post.createdAt).format('YYYY.MM.DD') */}
+          </div>
+
+          {/* 장소,비용 */}
+          <div className="flex gap-3  text-[var(--color-subText)] border-b-2 border-[var(--color-lightGray)] mb-[10px] w-[100%] py-[5px]">
+            <div className="flex gap-3 text-[15px]">
+              {parsedTitle.locations?.map((loc, idx) => (
+                <p key={idx}>{loc}</p>
+              ))}
+            </div>
+            <div className="ml-auto text-[12px]">
+              총 비용: {parsedTitle.cost} ₩
+            </div>
+          </div>
+
+          {/* 숙소 */}
+          {parsedTitle.hotels?.map((hotel, idx) => (
+            <div key={idx} className=" flex gap-2  ">
+              <img src={bedIcon} alt="bed" className="mb-auto" />
+              <div className="mb-[10px] text-[var(--color-subText)] text-[15px] ">
+                {hotel}
+              </div>
+            </div>
+          ))}
+          {/* 본문내용 */}
+          <div className="min-h-[130px] overflow-auto border-t-2 border-[var(--color-lightGray)] py-3">
+            <p className="text-[15px] whitespace-pre-line">
+              {parsedTitle.context}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="w-100% border-[var(--color-black)]  flex flex-col ">
+        <PostInteraction
+          postId={post._id}
+          likes={post.likes}
+          comments={post.comments}
+        />
+        {!showBox && (
+          <div
+            className="text-[var(--color-subText)] cursor-pointer underline py-0.5 ml-[4px]"
+            onClick={toggleCommentBox}
+          >
+            발자국 {post.comments.length}개 모두보기...
+          </div>
+        )}
+
+        {showBox && <PostComments postId={post._id} comments={post.comments} />}
+      </div>
+    </div>
+  );
 }

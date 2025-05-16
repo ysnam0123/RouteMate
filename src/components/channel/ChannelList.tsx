@@ -1,15 +1,16 @@
 import { useState } from 'react';
+import filterIcon from '../../assets/icons/filterIcon.svg';
 
-// 채널에는 아이디랑 이름만 있으면 된다
 interface Channel {
   _id: string;
   name: string;
 }
+
 interface ChannelListProps {
   channels: Channel[];
-  // 이렇게 하면 ChannelNav 안에 있는 showChannel 함수를 onSelect로 작동하게 된다.
   onSelect: (channelId: string) => void;
   selectedChannelId: string | null;
+  onFilterChange?: (filters: { cost?: number; location?: string }) => void;
   className?: string;
 }
 
@@ -17,37 +18,77 @@ export default function ChannelList({
   channels,
   onSelect,
   selectedChannelId,
+  onFilterChange,
 }: ChannelListProps) {
   const [cost, setCost] = useState<number>(0);
+  const [location, setLocation] = useState<string>('');
+
+  const [useCostFilter, setUseCostFilter] = useState(false);
+  const [useLocationFilter, setUseLocationFilter] = useState(false);
+
+  const [showFilter, setShowFilter] = useState(true);
+  const filterToggle = () => setShowFilter((prev) => !prev);
+
+  const applyFilters = () => {
+    const filters: { cost?: number; location?: string } = {};
+    if (useCostFilter) filters.cost = cost;
+    if (useLocationFilter) filters.location = location;
+
+    if (onFilterChange) {
+      onFilterChange(filters);
+    }
+  };
+  const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setLocation(value);
+  };
 
   return (
-    <>
+    <div className="flex justify-center relative">
       <div className="flex-col">
-        <ul className="flex space-x-4 mt-[10px] mb-[30px] flex-row h-[55px]">
+        <ul className="flex space-x-4 mt-[10px] mb-[20px] flex-row h-[55px]">
           {channels.map((channel) => {
             const isSelected = channel._id === selectedChannelId;
-
             return (
               <li
                 key={channel._id}
                 onClick={() => onSelect(channel._id)}
                 className={`border-[1px] rounded-xl py-[15px] px-[40px] text-[15px] cursor-pointer transition-all duration-75 ease-in-out
-              ${
-                isSelected
-                  ? 'bg-[#EFF8FF] text-[var(--color-main-blue)] scale-[1.15] border-[3px] border-[var(--color-main-blue)]'
-                  : 'text-[#8F8F8F] hover:scale-[1.15]'
-              }`}
+                ${
+                  isSelected
+                    ? 'bg-[#EFF8FF] text-[var(--color-main-blue)] scale-[1.15] border-[3px] border-[var(--color-main-blue)]'
+                    : 'text-[#8F8F8F] hover:scale-[1.15]'
+                }`}
               >
                 {channel.name}
               </li>
             );
           })}
         </ul>
-        <div className="flex-col flex gap-4">
-          <div>
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" />
-              <span>경비</span>
+
+        {/* 필터 토글 버튼 */}
+        <img
+          src={filterIcon}
+          alt="filterIcon"
+          className="w-[30px] h-[30px] absolute right-[30px] top-[90px] cursor-pointer hover:scale-[1.3]"
+          onClick={filterToggle}
+        />
+
+        {!showFilter && <div className="h-[40px]"></div>}
+
+        {/* 필터 UI */}
+        {showFilter && (
+          <div className="flex-col flex gap-4 pl-[30px] px-[10px] py-[20px]">
+            {/* 비용 필터 */}
+            <div className="flex items-center gap-3">
+              <label className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={useCostFilter}
+                  onChange={(e) => setUseCostFilter(e.target.checked)}
+                />
+                <span>경비</span>
+              </label>
               <input
                 type="range"
                 id="cost"
@@ -56,38 +97,52 @@ export default function ChannelList({
                 step={10000}
                 value={cost}
                 onChange={(e) => setCost(Number(e.target.value))}
-                className="w-[300px]"
+                className="w-[100px]"
                 list="markers"
+                disabled={!useCostFilter}
               />
               <datalist id="markers">
-                <option value="150000"></option>
-                <option value="500000"></option>
-                <option value="800000"></option>
+                <option value="200000"></option>
+                <option value="700000"></option>
                 <option value="1200000"></option>
-                <option value="1500000"></option>
+                <option value="1600000"></option>
               </datalist>
-
               <span>200만원 이상</span>
-            </label>
+              <button
+                onClick={applyFilters}
+                className="ml-3 bg-[var(--color-main-navy)] text-white px-4 py-2 rounded hover:bg-[var(--color-main-navy-hover)] rounded-xl w-[60px] ml-[130px] "
+                disabled={!useCostFilter && !useLocationFilter}
+              >
+                적용
+              </button>
+            </div>
 
-            {/* 실시간 보여주는 비용 */}
-            <p id="setCost" className="text-m text-gray-600">
+            <p className="text-gray-600">
               현재 설정된 경비: <strong>{cost.toLocaleString()}원</strong>
             </p>
+
+            {/* 장소 필터 */}
+            <div className="flex items-center gap-2">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={useLocationFilter}
+                  onChange={(e) => setUseLocationFilter(e.target.checked)}
+                />
+                <span>장소</span>
+              </label>
+              <input
+                type="text"
+                value={location}
+                onChange={handleLocationChange}
+                className="border rounded-[5px] w-[300px] h-[20px] px-[10px] py-[15px]"
+                placeholder="장소를 입력하세요"
+                disabled={!useLocationFilter}
+              />
+            </div>
           </div>
-          <div className="flex gap-2 mb-[25px]">
-            <label className="flex items-center space-x-2">
-              <input type="checkbox" />
-              <span>장소: </span>
-            </label>
-            <input
-              type="text"
-              className="border rounded-[5px] w-[450px] h-[30px] px-[10px] py-[20px]"
-              placeholder="장소를 입력하세요"
-            />
-          </div>
-        </div>
+        )}
       </div>
-    </>
+    </div>
   );
 }

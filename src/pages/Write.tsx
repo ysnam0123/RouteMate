@@ -7,25 +7,18 @@ import rightArrowNavy from '../assets/icons/rightArrowNavy.png';
 import pin from '../assets/icons/pin.svg';
 import bedIcon from '../assets/icons/bedIcon.svg';
 import plus from '../assets/icons/plus.svg';
+import deleteTags from '../assets/icons/deleteTags.png';
 import { useEffect, useRef, useState } from 'react';
 import Button from '../components/button';
 import { axiosInstance } from '../api/axios';
+import { cloudinaryAxiosInstance } from '../api/cloudinaryAxios';
+import { toast } from 'react-toastify';
 
 export default function Write() {
     //이미지 등록
     const [images, setImages] = useState<string[]>([]); //미리보기용
     const [imageFiles, setImageFiles] = useState<File[]>([]); //image 필드용
-    const [Base64s, setBase64s] = useState<{ url: string }[]>([]); //title에 들어가는 image용
-
-    //이미지 파일 Base64로 인코딩하는 함수
-    const encodeFileToBase64 = (image: File) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(image);
-            reader.onload = (event: any) => resolve(event.target.result);
-            reader.onerror = (error) => reject(error);
-        });
-    };
+    const [uploadedImages, setUploadedImages] = useState<string[]>([]); // 업로드된 이미지 URLs
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = e.target.files;
@@ -35,18 +28,35 @@ export default function Write() {
 
             setImages(imgUrls);
             setImageFiles(fileArray);
+            handleCloudinaryUpload(fileArray);
         }
     };
 
-    useEffect(() => {
-        if (imageFiles.length > 0) {
-            setBase64s([]);
-            imageFiles.forEach((image) => {
-                encodeFileToBase64(image).then((data) => setBase64s((prev) => [...prev, { url: data as string }]));
-            });
-        }
-    }, [imageFiles]);
-    console.log(Base64s);
+    const handleCloudinaryUpload = async (files: File[]) => {
+        const uploadPromises = files.map((file) => {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'programmersProject2');
+
+            return cloudinaryAxiosInstance
+                .post('', formData)
+                .then((response) => response.data.secure_url)
+                .catch((error) => {
+                    console.error('Cloudinary 업로드 실패:', error);
+                    return null;
+                });
+        });
+
+        const uploadedUrls = await Promise.all(uploadPromises);
+
+        // 실패한 이미지 URL은 제외하고 성공한 URL만 필터링
+        const successfulUrls = uploadedUrls.filter((url) => url !== null);
+
+        setUploadedImages(successfulUrls);
+
+        // 업로드된 이미지 URLs 확인
+        console.log('업로드된 이미지 URLs:', successfulUrls);
+    };
 
     //이미지 슬라이더
     const [imgIndex, setImgIndex] = useState(0);
@@ -107,6 +117,7 @@ export default function Write() {
     //tag 등록
     const [tags, setTags] = useState<string[]>([]);
     const inputRef = useRef<HTMLInputElement | null>(null);
+
     const addTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
         if (e.key === 'Enter') {
             const value = inputRef.current?.value.trim();
@@ -117,20 +128,25 @@ export default function Write() {
         }
     };
 
+    //tag 삭제
+    const deleteTag = (indexToDelete: number) => {
+        setTags(tags.filter((_, index) => index !== indexToDelete));
+    };
+
     //API POST
     const handleSubmit = async () => {
         if (!writtenTitle) {
-            alert('제목을 입력하세요.');
+            toast('제목을 입력하세요.');
             return;
         }
 
         if (!selectedChannelId) {
-            alert('채널을 선택하세요.');
+            toast('채널을 선택하세요.');
             return;
         }
 
         if (imageFiles.length === 0) {
-            alert('이미지를 하나 이상 선택해주세요.');
+            toast('이미지를 하나 이상 선택해주세요.');
             return; // 이미지가 없으면 더 이상 진행하지 않음
         }
 
@@ -139,7 +155,7 @@ export default function Write() {
         formData.append(
             'title',
             JSON.stringify({
-                Base64s,
+                uploadedImages,
                 writtenTitle,
                 tags,
                 locations,
@@ -161,17 +177,17 @@ export default function Write() {
                 },
             });
             console.log('post 성공:', res.data);
-            alert('게시 완료');
+            toast.success('게시 완료');
         } catch (error) {
             console.log('post 실패:', error);
-            alert('게시 실패');
+            toast.error('게시 실패');
         }
     };
 
     return (
         <>
             {/* 전체 contents 박스 */}
-            <div className="w-[1049px] h-[1115px] p-[23px] absolute left-[30vw] top-[65px]">
+            <div className="max-w-[1049px] w-full min-h-screen px-6 mx-auto relative">
                 {/* 채널 선택 영역 */}
                 <div className="w-full h-[110px] pt-[30px] pb-[30px]">
                     <WriteInfo iconSrc={channelIcon} tagName="채널" onSelectChange={handleChannelChange}></WriteInfo>
@@ -254,9 +270,11 @@ export default function Write() {
                                 {tags.map((tag, index) => (
                                     <li
                                         key={index}
-                                        className="flex items-center justify-center text-[10px] text-[#ffff] w-[46px] h-[22px] rounded-[15px] bg-[#2A728C] mr-[5px]"
+                                        onClick={() => deleteTag(index)}
+                                        className="flex gap-[5px] items-center justify-center text-[10px] text-[#ffff] w-auto h-[22px] rounded-[15px] bg-[#2A728C] mr-[5px] px-[10px] cursor-pointer"
                                     >
                                         {tag}
+                                        <img src={deleteTags} alt="deleteTagsIcon" />
                                     </li>
                                 ))}
                             </ul>
@@ -297,7 +315,7 @@ export default function Write() {
                     />
                 </div>
                 {/* 버튼 */}
-                <div className="flex gap-3 justify-end">
+                <div className="flex gap-3 justify-end mb-2">
                     <Button className="w-[100px] h-[40px] bg-white text-[var(--color-main-navy)] text-base font-bold rounded-[10px] border border-[#d1d1d1]">
                         취소
                     </Button>

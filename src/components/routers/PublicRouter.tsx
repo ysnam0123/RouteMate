@@ -10,7 +10,6 @@ export default function PublicRouter() {
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
     // 상태관리에서 관리자인지 확인을위해 역할을 가져온다.
     const userRole = useAuthStore((state) => state.userRole);
-
     useEffect(() => {
         // 로그인 상태라면 채널화면으로 이동
         if (isLoggedIn) {
@@ -18,7 +17,7 @@ export default function PublicRouter() {
             if (userRole === 'SuperAdmin') {
                 navigate('/superadmin');
             } else {
-                navigate('/layout');
+                navigate('/channel');
             }
         }
         setIsShow(true);
