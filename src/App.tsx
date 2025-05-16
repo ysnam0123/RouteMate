@@ -14,9 +14,18 @@ import UserList from './pages/UserList';
 import SuperAdmin from './pages/SuperAdmin';
 import AdminRouter from './components/routers/AdminRouter';
 import Layout from './layout/Layout';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export default function App() {
-    return (
-        <>
+  return (
+    <>
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar
+        closeOnClick
+        closeButton={false}
+      />
             <Routes>
                 {/* 인증없이 사용가능한 라우터 */}
                 <Route element={<PublicRouter />}>
@@ -49,6 +58,6 @@ export default function App() {
                 {/* 없는 라우터면 NotFound */}
                 <Route path="*" element={<NotFound />} />
             </Routes>
-        </>
-    );
+    </>
+  );
 }
