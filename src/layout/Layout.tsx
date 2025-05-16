@@ -8,7 +8,6 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
         <div>
             <Header />
             <div className="flex flex-1 min-h-screen">
-                {/* {isAuthenticated ? <SidebarIsLogged /> : <SidebarIsNotLogged />} */}
                 <Sidebar />
                 <main className="flex-1 overflow-y-auto p-4">{children || <Outlet />}</main>
             </div>

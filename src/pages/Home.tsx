@@ -18,7 +18,7 @@ export default function Home() {
     };
 
     const goToChannel = () => {
-        navigate('/layout');
+        navigate('/channel');
     };
     const video = useRandomVideo();
     return (
@@ -33,10 +33,10 @@ export default function Home() {
                     <h1 className="text-[110px] text-white font-bold leading-[1]">
                         Days are yours, <br /> Route are ours.
                     </h1>
-                    {/* 여행이야기, 검색하기 */}
-                    <div className="flex flex-row gap-30 ml-[150px] mt-[50px]">
+                    {/* 여행이야기 */}
+                    <div className="flex flex-row gap-30 ml-[150px] mt-[50px] ">
                         <Button
-                            className="flex gap-2 items-center justify-center bg-[white] w-[400px] h-[50px] text-black
+                            className="flex gap-2 items-center justify-center bg-[rgba(255,255,255,0.8)] w-[400px] h-[50px] text-black
               hover:border-2 hover:border-[var(--color-main-navy)] hover:text-black"
                             onClick={goToChannel}
                         >
@@ -55,13 +55,7 @@ export default function Home() {
                 </div>
                 {/* 오른쪽 */}
                 {/* 오른쪽 전체 wrapper */}
-                <div
-                    className="  w-[450px] h-[600px] bg-white
-        flex flex-col items-center gap-15 rounded-xl
-        shadow-[11px_12px_4px_rgba(0,0,0,0.25)] 
-        
-        "
-                >
+                <div className="w-[450px] h-[600px] bg-[rgba(255,255,255,0.8)] flex flex-col items-center gap-15 rounded-xl shadow-lg">
                     {/* 로고이미지, 텍스트 */}
                     <div className="mt-[75px] flex flex-col items-center gap-10">
                         <img src={homeLogo} alt="homeLogo" className="w-[102px] h-[110px]" />
@@ -72,13 +66,13 @@ export default function Home() {
                     {/* button box */}
                     <div className="flex flex-col gap-5">
                         <Button
-                            className="bg-[#063579] w-[248px] h-[50px] text-[22px]  hover:bg-[#001A40] shadow-[4px_6px_4px_0_rgba(0,0,0,0.25)]"
+                            className="bg-[#063579] w-[248px] h-[50px] text-[22px]  hover:bg-[#001A40]"
                             onClick={goToLogin}
                         >
                             Log In
                         </Button>
                         <Button
-                            className="bg-white w-[248px] h-[50px]  text-[22px] text-black hover:bg-[#B4B4B4] shadow-[4px_6px_4px_0_rgba(0,0,0,0.25)]"
+                            className="bg-white w-[248px] h-[50px]  text-[22px] text-black hover:bg-[#B4B4B4]"
                             onClick={goToRegister}
                         >
                             Register

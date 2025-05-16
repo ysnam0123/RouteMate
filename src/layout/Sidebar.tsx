@@ -6,10 +6,10 @@ import letter from '../assets/icons/letterIcon.svg';
 import notice from '../assets/icons/notificationIcon.svg';
 import history from '../assets/icons/profileIcon.svg';
 import settings from '../assets/icons/setting.svg';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SearchPanel from '../components/SearchPanel';
 import NoticePanel from '../components/NoticePanel';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
 
 export default function Sidebar(): React.ReactElement {
@@ -17,7 +17,41 @@ export default function Sidebar(): React.ReactElement {
     const navigate = useNavigate();
 
     const [isSearchMode, setIsSearchMode] = useState<boolean>(false);
-    const [highlightedItemId, setHighlightedItemId] = useState<string | null>('mate');
+    const [highlightedItemId, setHighlightedItemId] = useState<string | null>(null);
+
+    const location = useLocation();
+
+    useEffect(() => {
+        switch (location.pathname) {
+            case '/write':
+                setHighlightedItemId('share');
+                setIsSearchMode(false);
+                break;
+            case '/channel':
+                setHighlightedItemId('mate');
+                setIsSearchMode(false);
+                break;
+            case '/myprofile':
+                setHighlightedItemId('history');
+                setIsSearchMode(false);
+                break;
+            case '/profileedit':
+                setHighlightedItemId('settings');
+                setIsSearchMode(false);
+                break;
+            case '/search':
+                setHighlightedItemId('search');
+                setIsSearchMode(true);
+                break;
+            case '/notice':
+                setHighlightedItemId('notice');
+                setIsSearchMode(false);
+                break;
+            default:
+                setHighlightedItemId(null);
+                setIsSearchMode(false);
+        }
+    }, [location.pathname]);
 
     const handleItemClick = (item: MenuItem, event: React.MouseEvent) => {
         event.preventDefault();
