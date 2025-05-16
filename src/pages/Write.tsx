@@ -17,17 +17,6 @@ export default function Write() {
   const [images, setImages] = useState<string[]>([]) //미리보기용
   const [imageFiles, setImageFiles] = useState<File[]>([]) //image 필드용
   const [uploadedImages, setUploadedImages] = useState<string[]>([]) // 업로드된 이미지 URLs
-  // const [Base64s, setBase64s] = useState<{ url: string }[]>([]); //title에 들어가는 image용
-
-  // //이미지 파일 Base64로 인코딩하는 함수
-  // const encodeFileToBase64 = (image: File) => {
-  //     return new Promise((resolve, reject) => {
-  //         const reader = new FileReader();
-  //         reader.readAsDataURL(image);
-  //         reader.onload = (event: any) => resolve(event.target.result);
-  //         reader.onerror = (error) => reject(error);
-  //     });
-  // };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -45,48 +34,27 @@ export default function Write() {
     const uploadPromises = files.map((file) => {
       const formData = new FormData()
       formData.append('file', file)
-      formData.append('upload_preset', 'programmersProject2') // Cloudinary에서 제공하는 업로드 프리셋
+      formData.append('upload_preset', 'programmersProject2')
 
       return cloudinaryAxiosInstance
-        .post('', formData) // Cloudinary 업로드 API 엔드포인트로 요청
-        .then((response) => response.data.secure_url) // 업로드된 이미지 URL 반환
+        .post('', formData)
+        .then((response) => response.data.secure_url)
         .catch((error) => {
           console.error('Cloudinary 업로드 실패:', error)
-          return null // 실패 시 null 반환
+          return null
         })
     })
 
-    // 모든 업로드가 완료될 때까지 기다림
     const uploadedUrls = await Promise.all(uploadPromises)
 
     // 실패한 이미지 URL은 제외하고 성공한 URL만 필터링
     const successfulUrls = uploadedUrls.filter((url) => url !== null)
 
-    // 업로드된 이미지 URLs를 상태에 저장
     setUploadedImages(successfulUrls)
 
     // 업로드된 이미지 URLs 확인
     console.log('업로드된 이미지 URLs:', successfulUrls)
-
-    // `uploadedImages` 상태가 제대로 업데이트되었는지 확인하기 위해 서버로 전송하거나 추가적인 작업을 여기에 추가할 수 있습니다.
   }
-
-  useEffect(() => {
-    if (uploadedImages.length > 0) {
-      // 업로드된 이미지 URLs이 있을 때 서버로 전송하거나 추가 작업 수행
-      console.log('업로드된 이미지 URLs:', uploadedImages)
-    }
-  }, [uploadedImages]) // uploadedImages가 변경될 때마다 실행
-
-  // useEffect(() => {
-  //     if (imageFiles.length > 0) {
-  //         setBase64s([]);
-  //         imageFiles.forEach((image) => {
-  //             encodeFileToBase64(image).then((data) => setBase64s((prev) => [...prev, { url: data as string }]));
-  //         });
-  //     }
-  // }, [imageFiles]);
-  // console.log(Base64s);
 
   //이미지 슬라이더
   const [imgIndex, setImgIndex] = useState(0)
