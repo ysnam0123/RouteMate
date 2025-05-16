@@ -7,12 +7,17 @@ import rightArrowNavy from '../assets/icons/rightArrowNavy.png'
 import pin from '../assets/icons/pin.svg'
 import bedIcon from '../assets/icons/bedIcon.svg'
 import plus from '../assets/icons/plus.svg'
+import deleteTags from '../assets/icons/deleteTags.png'
 import { useEffect, useRef, useState } from 'react'
 import Button from '../components/button'
 import { axiosInstance } from '../api/axios'
 import { cloudinaryAxiosInstance } from '../api/cloudinaryAxios'
+import { toast } from 'react-toastify'
+import Loading from '../components/Loading'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 export default function Write() {
+  const navigate = useNavigate()
   //이미지 등록
   const [images, setImages] = useState<string[]>([]) //미리보기용
   const [imageFiles, setImageFiles] = useState<File[]>([]) //image 필드용
@@ -115,6 +120,7 @@ export default function Write() {
   //tag 등록
   const [tags, setTags] = useState<string[]>([])
   const inputRef = useRef<HTMLInputElement | null>(null)
+
   const addTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       const value = inputRef.current?.value.trim()
@@ -125,20 +131,26 @@ export default function Write() {
     }
   }
 
+  //tag 삭제
+  const deleteTag = (indexToDelete: number) => {
+    setTags(tags.filter((_, index) => index !== indexToDelete))
+  }
+
+  const [loading, setLoading] = useState(false)
   //API POST
   const handleSubmit = async () => {
     if (!writtenTitle) {
-      alert('제목을 입력하세요.')
+      toast('제목을 입력하세요.')
       return
     }
 
     if (!selectedChannelId) {
-      alert('채널을 선택하세요.')
+      toast('채널을 선택하세요.')
       return
     }
 
     if (imageFiles.length === 0) {
-      alert('이미지를 하나 이상 선택해주세요.')
+      toast('이미지를 하나 이상 선택해주세요.')
       return // 이미지가 없으면 더 이상 진행하지 않음
     }
 
@@ -163,23 +175,31 @@ export default function Write() {
     formData.append('channelId', selectedChannelId)
 
     try {
+      setLoading(true)
       const res = await axiosInstance.post('/posts/create', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       })
       console.log('post 성공:', res.data)
-      alert('게시 완료')
+      toast.success('게시 완료')
+      navigate('/channel')
     } catch (error) {
       console.log('post 실패:', error)
-      alert('게시 실패')
+      toast.error('게시 실패')
+    } finally {
+      setLoading(false)
     }
+  }
+
+  if (loading) {
+    return <Loading />
   }
 
   return (
     <>
       {/* 전체 contents 박스 */}
-      <div className="w-[1049px] h-[1115px] p-[23px] absolute left-[30vw] top-[65px]">
+      <div className="max-w-[1049px] w-full min-h-screen px-6 mx-auto relative">
         {/* 채널 선택 영역 */}
         <div className="w-full h-[110px] pt-[30px] pb-[30px]">
           <WriteInfo
@@ -271,9 +291,11 @@ export default function Write() {
                 {tags.map((tag, index) => (
                   <li
                     key={index}
-                    className="flex items-center justify-center text-[10px] text-[#ffff] w-[46px] h-[22px] rounded-[15px] bg-[#2A728C] mr-[5px]"
+                    onClick={() => deleteTag(index)}
+                    className="flex gap-[5px] items-center justify-center text-[10px] text-[#ffff] w-auto h-[22px] rounded-[15px] bg-[#2A728C] mr-[5px] px-[10px] cursor-pointer"
                   >
                     {tag}
+                    <img src={deleteTags} alt="deleteTagsIcon" />
                   </li>
                 ))}
               </ul>
@@ -314,7 +336,7 @@ export default function Write() {
           />
         </div>
         {/* 버튼 */}
-        <div className="flex gap-3 justify-end">
+        <div className="flex gap-3 justify-end mb-2">
           <Button className="w-[100px] h-[40px] bg-white text-[var(--color-main-navy)] text-base font-bold rounded-[10px] border border-[#d1d1d1]">
             취소
           </Button>
