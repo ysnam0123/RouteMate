@@ -14,8 +14,10 @@ import { axiosInstance } from '../api/axios'
 import { cloudinaryAxiosInstance } from '../api/cloudinaryAxios'
 import { toast } from 'react-toastify'
 import Loading from '../components/Loading'
+import { Navigate, useNavigate } from 'react-router-dom'
 
 export default function Write() {
+  const navigate = useNavigate()
   //이미지 등록
   const [images, setImages] = useState<string[]>([]) //미리보기용
   const [imageFiles, setImageFiles] = useState<File[]>([]) //image 필드용
@@ -181,6 +183,7 @@ export default function Write() {
       })
       console.log('post 성공:', res.data)
       toast.success('게시 완료')
+      navigate('/channel')
     } catch (error) {
       console.log('post 실패:', error)
       toast.error('게시 실패')
