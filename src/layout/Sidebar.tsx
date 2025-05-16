@@ -14,6 +14,7 @@ import { useAuthStore } from '../stores/authStore';
 
 export default function Sidebar(): React.ReactElement {
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
+    const userRole = useAuthStore((state) => state.userRole);
     const navigate = useNavigate();
 
     const [isSearchMode, setIsSearchMode] = useState<boolean>(false);
@@ -35,8 +36,8 @@ export default function Sidebar(): React.ReactElement {
                 setHighlightedItemId('history');
                 setIsSearchMode(false);
                 break;
-            case '/profileedit':
-                setHighlightedItemId('settings');
+            case '/superadmin':
+                setHighlightedItemId('superadmin settings');
                 setIsSearchMode(false);
                 break;
             case '/search':
@@ -78,10 +79,9 @@ export default function Sidebar(): React.ReactElement {
             case 'history':
                 navigate('/myprofile');
                 break;
-            case 'settings':
-                navigate('/profileedit');
+            case 'superadmin settings':
+                navigate('/superadmin');
                 break;
-            // 편지/알림은 패널 열기 전용이므로 라우팅 없음
         }
     };
 
@@ -128,12 +128,16 @@ export default function Sidebar(): React.ReactElement {
                   text: '나의 여정 기록',
                   path: '/history',
               },
-              {
-                  id: 'settings',
-                  icon: <img src={settings} />,
-                  text: '설정',
-                  path: '/settings',
-              },
+              ...(userRole === 'SuperAdmin'
+                  ? [
+                        {
+                            id: 'superadmin settings',
+                            icon: <img src={settings} />,
+                            text: '관리자 설정',
+                            path: '/superadmin settings',
+                        },
+                    ]
+                  : []),
           ]
         : [
               {
