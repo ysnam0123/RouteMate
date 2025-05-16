@@ -17,7 +17,7 @@ export default function PublicRouter() {
             if (userRole === 'SuperAdmin') {
                 navigate('/superadmin');
             } else {
-                navigate('/layout');
+                navigate('/channel');
             }
         }
         setIsShow(true);
