@@ -25,6 +25,8 @@ export default function App() {
                     <Route path="/login" element={<Login />} />
                 </Route>
 
+                <Route path="/layout" element={<Layout />} />
+
                 {/* 임시로 둔곳 */}
                 <Route element={<Layout />}>
                     <Route path="/channel" element={<Channel />} />
