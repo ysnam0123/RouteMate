@@ -89,9 +89,10 @@ export default function WriteInfo({
               ref={selectRef}
               onChange={handleSelectChange}
               className="border border-[#AFB1B6] w-[440px] rounded-md px-2 py-1 active:outline-[#60b5ff] focus:outline-[#60b5ff]"
-              defaultValue=""
+              defaultValue="default"
               name="channelSelect"
             >
+              <option value="default">채널을 선택하세요.</option>
               {channels.map((channel) => (
                 <option key={channel.id} value={channel.id}>
                   {channel.name}
