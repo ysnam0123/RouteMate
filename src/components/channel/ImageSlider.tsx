@@ -14,7 +14,7 @@ export default function ImageSlider({
   alt = 'post image',
 }: ImageSliderProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
-  console.log('현재 이미지:', images);
+
   const showPrev = () => {
     if (currentIndex > 0) setCurrentIndex(currentIndex - 1);
   };
@@ -23,49 +23,62 @@ export default function ImageSlider({
     if (currentIndex < images.length - 1) setCurrentIndex(currentIndex + 1);
   };
 
+  if (!images || images.length === 0) {
+    return <div className="text-gray-500">이미지가 없습니다.</div>;
+  }
+
   return (
-    <div className="flex justify-center items-center gap-4 w-full relative mb-8">
+    <div className="relative w-full max-w-md mx-auto mb-8">
+      {/* 이미지 */}
+      <img
+        src={images[currentIndex]}
+        alt={`${alt} ${currentIndex + 1}`}
+        className="w-full h-64 object-cover rounded-lg"
+      />
+
       {/* 왼쪽 화살표 */}
       {images.length > 1 && (
-        <div className="absolute left-0">
-          <button onClick={showPrev} disabled={currentIndex === 0}>
-            <img
-              src={currentIndex > 0 ? leftArrowBlue : leftArrowGray}
-              alt="left arrow"
-              className="w-10 h-10"
-            />
-          </button>
-        </div>
+        <button
+          onClick={showPrev}
+          disabled={currentIndex === 0}
+          className="absolute top-1/2 left-2 transform -translate-y-1/2"
+        >
+          <img
+            src={currentIndex > 0 ? leftArrowBlue : leftArrowGray}
+            alt="이전 이미지"
+            className="w-10 h-10"
+          />
+        </button>
       )}
-
-      {/* 이미지 */}
-      <div className="flex overflow-auto">
-        <img
-          src={images[currentIndex]}
-          alt={alt}
-          className="h-[52px] w-[52px] object-cover rounded-lg"
-        />
-      </div>
 
       {/* 오른쪽 화살표 */}
       {images.length > 1 && (
-        <div className="absolute right-0">
-          <button
-            onClick={showNext}
-            disabled={currentIndex === images.length - 1}
-          >
-            <img
-              src={
-                currentIndex < images.length - 1
-                  ? rightArrowBlue
-                  : rightArrowGray
-              }
-              alt="right arrow"
-              className="w-10 h-10"
-            />
-          </button>
-        </div>
+        <button
+          onClick={showNext}
+          disabled={currentIndex === images.length - 1}
+          className="absolute top-1/2 right-2 transform -translate-y-1/2"
+        >
+          <img
+            src={
+              currentIndex < images.length - 1 ? rightArrowBlue : rightArrowGray
+            }
+            alt="다음 이미지"
+            className="w-10 h-10"
+          />
+        </button>
       )}
+
+      {/* 인디케이터 (선택사항) */}
+      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
+        {images.map((_, i) => (
+          <div
+            key={i}
+            className={`w-2 h-2 rounded-full ${
+              i === currentIndex ? 'bg-blue-500' : 'bg-gray-300'
+            }`}
+          />
+        ))}
+      </div>
     </div>
   );
 }

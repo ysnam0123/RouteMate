@@ -9,29 +9,24 @@ import { toast } from 'react-toastify';
 interface PostCommentsProps {
   postId: string; // 게시물 id
   comments: commentsObj[]; // 게시물 댓글 배열
-  userData: {
-    _id: string;
-    fullName: string;
-    image: string;
-    isOnline: boolean;
-    posts: any[];
-    likes: any[];
-    comments: string[];
-    username: string;
-  };
 }
-
+interface UserData {
+  _id: string;
+  fullName: string;
+  image: string;
+  isOnline: boolean;
+  posts: any[];
+  likes: any[];
+  comments: string[];
+  username: string;
+}
 interface commentsObj {
   _id: string;
   comment: string;
-  author: { fullname: string };
+  author: { fullname: string; image: string };
 }
 
-export default function PostComments({
-  postId,
-  comments,
-  userData,
-}: PostCommentsProps) {
+export default function PostComments({ postId, comments }: PostCommentsProps) {
   // console.log(comments);
   const userId = useAuthStore((state) => state.userId); // 로그인된 사용자 id
   // console.log(userId);
@@ -72,6 +67,7 @@ export default function PostComments({
       comment: comment,
       author: {
         fullname: userFullname,
+        image: userId,
       },
     };
     // console.log(commentList);
@@ -116,7 +112,7 @@ export default function PostComments({
               className="w-[50px] h-[50px] rounded-full object-cover"
             />
             <div>
-              <p className="font-semibold">{comment.author.fullName}</p>
+              <p className="font-semibold">{comment.author.fullname}</p>
               <p>{comment.comment}</p>
             </div>
           </div>
