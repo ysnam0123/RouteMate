@@ -1,11 +1,14 @@
 import React, { useEffect } from 'react'; // Import React
 import { useState } from 'react';
 import profile from '../assets/images/profile.svg';
+import online from '../assets/icons/onLine.svg';
+import offline from '../assets/icons/offLine.svg';
 // import { useAuthStore } from "../stores/authStore";
 import { axiosInstance } from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 import Channel from './Channel';
 import Loading from './Loading';
+import { useDarkModeStore } from '../stores/darkModeStore';
 
 interface SearchPanelProps {
   onClose: () => void;
@@ -53,6 +56,28 @@ export default function SearchPanel({
   const [recentPostSearches, setRecentPostSearches] = useState<Post[]>([]);
 
   const navigate = useNavigate();
+
+  const { isDarkMode, toggleDarkMode } = useDarkModeStore();
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDarkMode) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
+  // 검색어가 없으면 전체 users, 있으면 필터링된 filteredUsers
+  // 검색어가 없으면 전체 users, 있으면 필터링된 filteredUsers
+  const displayUsers = (searchInput.trim() === '' ? users : filteredUsers)
+    .slice() // 원본 배열 변경 방지용 복사
+    .sort((a, b) => {
+      // 온라인 상태면 앞으로 오도록 정렬
+      if (a.isOnline === b.isOnline) return 0;
+      if (a.isOnline) return -1;
+      return 1;
+    });
 
   useEffect(() => {
     if (searchType === 'post') {
@@ -181,12 +206,12 @@ export default function SearchPanel({
 
   return (
     <div
-      className="px-4 flex text-[var(--color-sidebar-text)] flex-col text-sm bg-[var(--color-main-bg)] rounded-lg shadow-md h-full w-90"
+      className="px-4 flex flex-col text-[var(--color-sidebar-text)] text-sm bg-[var(--color-sideBody)] rounded-lg shadow-md h-full w-90"
       style={{ boxShadow: '4px 0 6px rgba(0, 0, 0, 0.15)' }}
     >
       <div className="flex justify-between items-center pt-4">
         {' '}
-        <h2 className=" text-2xl font-semibold flex-shrink-0 mr-28.5"> 검색</h2>
+        <h2 className="text-2xl font-semibold flex-shrink-0 mr-28.5"> 검색</h2>
         <div className="flex space-x-4 flex-grow justify-end">
           {' '}
           <label className="flex items-right cursor-pointer text-sm">
@@ -261,6 +286,7 @@ export default function SearchPanel({
         {' '}
         <input
           type="text"
+          placeholder="검색어를 입력하세요"
           className="w-full p-2 border border-gray-300 rounded focus:outline-none"
           value={searchInput}
           onChange={handleSearchInputChange}
@@ -271,17 +297,15 @@ export default function SearchPanel({
       </div>
       <div className="flex-grow overflow-y-auto border-t border-gray-200 pt-3 pb-4">
         {/* 검색 결과 */}
-        <div className="flex-grow overflow-y-auto border-gray-200 pt-3 pb-4">
+        <h3 className="text-base font-bold mb-2 text-black-700">검색 결과</h3>
+        <div className="flex-grow overflow-y-auto border-gray-200 pt-3 pb-4 max-h-140">
           {loading ? (
-            <p className="text-center text-gray-500">로딩 중...</p>
+            <Loading />
           ) : searchType === 'user' ? (
             <>
-              <h3 className="text-base font-bold mb-2 text-black-700">
-                검색 결과
-              </h3>
-              {filteredUsers.length > 0 ? (
+              {displayUsers.length > 0 ? (
                 <ul>
-                  {filteredUsers.map((user) => (
+                  {displayUsers.map((user) => (
                     <li
                       key={user._id}
                       className="flex justify-between items-center py-1.5 mb-1 group cursor-pointer"
@@ -295,6 +319,14 @@ export default function SearchPanel({
                         />
                         <span className="text-gray-800">{user.fullName}</span>
                       </div>
+                      {/* 온라인 상태 아이콘 */}
+                      <div className="mr-4">
+                        <img
+                          src={user.isOnline ? online : offline}
+                          alt={user.isOnline ? '온라인' : '오프라인'}
+                          className="w-5 h-5"
+                        />
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -306,9 +338,7 @@ export default function SearchPanel({
             </>
           ) : (
             <>
-              <h3 className="text-base font-bold mb-2 text-black-700">
-                검색 결과
-              </h3>
+              <div></div>
               {Array.isArray(filteredPosts) && filteredPosts.length > 0 ? (
                 <ul>
                   {filteredPosts.map((post) => (
