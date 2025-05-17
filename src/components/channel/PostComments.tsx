@@ -3,36 +3,24 @@ import profile from '../../assets/images/profile.svg';
 import whiteFootPrint from '../../assets/icons/footprintWhite.png';
 import { axiosInstance } from '../../api/axios';
 import { useAuthStore } from '../../stores/authStore';
-import userImage from '../../assets/images/Ellipse 25.png';
 import { toast } from 'react-toastify';
 
 interface PostCommentsProps {
   postId: string; // 게시물 id
   comments: commentsObj[]; // 게시물 댓글 배열
 }
-interface UserData {
-  _id: string;
-  fullName: string;
-  image: string;
-  isOnline: boolean;
-  posts: any[];
-  likes: any[];
-  comments: string[];
-  username: string;
-}
 interface commentsObj {
   _id: string;
   comment: string;
-  author: { fullname: string; image: string };
+  author: { fullName: string; image: string };
 }
 
 export default function PostComments({ postId, comments }: PostCommentsProps) {
-  // console.log(comments);
-  const userId = useAuthStore((state) => state.userId); // 로그인된 사용자 id
-  // console.log(userId);
-  const [comment, setComment] = useState(''); // 댓글의 내용
-  const [commentList, setCommentList] = useState<commentsObj[]>(comments); // 기본값은 API에서 받아오는 댓글 목록
-  const [userFullname, setUserFullname] = useState(''); // 풀네임
+  const userId = useAuthStore((state) => state.userId);
+  const [comment, setComment] = useState('');
+  const [commentList, setCommentList] = useState<commentsObj[]>(comments);
+  const [userFullname, setUserFullname] = useState('');
+  const [userImage, setUserImage] = useState('');
 
   // 댓글창에 입력되고있는 댓글
   const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,40 +28,73 @@ export default function PostComments({ postId, comments }: PostCommentsProps) {
   };
 
   // 유저 정보 불러오기
-  const fetchUserinfo = async (userId: string) => {
+  const fetchUserinfo = async () => {
     try {
       const response = await axiosInstance.get(`/users/${userId}`);
-      setUserFullname(response.data.fullname);
-      // console.log('userdata:', response.data);
+      const fullname = response.data.fullName;
+      const image = response.data.image;
+      setUserFullname(fullname);
+      setUserImage(image);
+      console.log('유저 정보 가져오기 성공:', fullname, image);
+      return { fullname, image };
     } catch (error) {
       console.error('유저 정보 가져오기 실패:', error);
+      return null;
     }
   };
 
   useEffect(() => {
-    if (userId) {
-      fetchUserinfo(userId); // 사용자 fullname 미리 받아오기
+    const fetchData = async () => {
+      try {
+        // const response = await axiosInstance.get(`/posts/${postId}`);
+
+        if (userId) {
+          const userInfo = await fetchUserinfo();
+          if (userInfo) {
+            setUserFullname(userInfo.fullname);
+            setUserImage(userInfo.image);
+          }
+        }
+      } catch (error) {
+        console.error('데이터 불러오기 실패:', error);
+      }
+    };
+
+    fetchData(); // 함수 호출
+  }, [userId, postId]);
+
+  useEffect(() => {
+    if (userFullname && userImage) {
+      console.log('값이 변경됨!');
+      console.log('userFullname:', userFullname);
+      console.log('userImage:', userImage);
+      // 여기서 이 값들을 이용해 뭔가 작업 가능
     }
-  }, [userId]);
+  }, [userFullname, userImage]);
 
   // 댓글 등록 버튼
-  const commentHandler = async () => {
-    if (!comment.trim()) return; // 입력한게 없으면 리턴
+  const commentHandler = async (fullname: string, image: string) => {
+    if (!comment.trim()) return;
 
     // 낙관적 업데이트 -> 임시 댓글 객체
     const fakeComment: commentsObj = {
-      // id값 수정 필요
       _id: 'temp-' + Date.now(),
       comment: comment,
       author: {
-        fullname: userFullname,
-        image: userId,
+        fullName: userFullname,
+        image: userImage,
       },
     };
-    // console.log(commentList);
+    console.log(fakeComment);
 
     // 일단 화면에 댓글 추가
-    setCommentList((prev) => [...prev, fakeComment]);
+    setCommentList((prev) => {
+      const updated = [...prev, fakeComment];
+      console.log(updated);
+      console.log(commentList);
+      // console.log('업데이트된 댓글 리스트:', JSON.stringify(updated, null, 2));
+      return updated;
+    });
 
     // 입력창 초기화
     setComment('');
@@ -84,35 +105,38 @@ export default function PostComments({ postId, comments }: PostCommentsProps) {
         postId,
         comment,
       });
+      // 내가 새로 작성한 댓글내용
       const realComment: commentsObj = response.data.comment;
-      // console.log('진짜댓글:', response.data);
+      console.log('진짜댓글의 객체:', response.data);
+
       // 성공 시 → 임시 댓글을 진짜 댓글로 교체
-      // 근데 이것도 문제임
-      setCommentList((prev) =>
-        prev.map((c) => (c._id === fakeComment._id ? realComment : c))
-      );
+      // setCommentList((prev) =>
+      //   prev.map((c) => (c.comment === fakeComment.comment ? realComment : c))
+      // );
     } catch (error) {
       console.error('댓글 작성 실패:', error);
 
       // 실패 시 → 임시 댓글 제거
-      setCommentList((prev) => prev.filter((c) => c._id !== fakeComment._id));
+      setCommentList((prev) =>
+        prev.filter((c) => c.comment !== fakeComment.comment)
+      );
 
       toast('댓글 작성에 실패했어요. 다시 시도해 주세요.');
     }
   };
-
+  console.log(commentList);
   return (
     <>
       <div className="overflow-scroll max-h-[450px] mt-[20px] ">
-        {comments.map((comment) => (
+        {commentList.map((comment) => (
           <div key={comment._id} className="flex items-center gap-3 mb-2">
             <img
-              src={comment.author.image}
+              src={comment.author.image || profile} // fallback으로 로그인 유저 이미지 사용 가능
               alt="user"
               className="w-[50px] h-[50px] rounded-full object-cover"
             />
             <div>
-              <p className="font-semibold">{comment.author.fullname}</p>
+              <p className="font-semibold">{comment.author.fullName}</p>
               <p>{comment.comment}</p>
             </div>
           </div>
@@ -129,7 +153,12 @@ export default function PostComments({ postId, comments }: PostCommentsProps) {
         />
         <button
           className="bg-[var(--color-main-skyBlue)] w-[60px] h-[50px] flex justify-center items-center rounded-xl hover:bg-[var(--color-main-skyBlue-hover)] active:bg-[var(--color-main-skyBlue-active)]"
-          onClick={commentHandler}
+          onClick={async () => {
+            const userInfo = await fetchUserinfo();
+            if (userInfo) {
+              commentHandler(userInfo.fullname, userInfo.image);
+            }
+          }}
         >
           <img
             src={whiteFootPrint}
