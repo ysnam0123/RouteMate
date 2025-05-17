@@ -41,7 +41,7 @@ export default function Post({ post }: PostProps) {
   const parsedTitle = JSON.parse(post.title) as ParsedTitle;
   const [showBox, setShowBox] = useState(false);
   const toggleCommentBox = () => setShowBox((prev) => !prev);
-  console.log('parsedTitle: ', parsedTitle);
+  // console.log('parsedTitle: ', parsedTitle);
 
   // 이미지 배열 추출
   const imageUrls: string[] = parsedTitle.uploadedImages ?? [];
