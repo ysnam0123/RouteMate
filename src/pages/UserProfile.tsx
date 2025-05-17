@@ -11,7 +11,7 @@ import Star from '../assets/achievementIcons/Star.svg';
 import Train from '../assets/achievementIcons/train.svg';
 // import Tag from '../components/Tag'
 import testLike from '../assets/icons/Heart.png';
-import testFoot from '../assets/icons/footprintWhite.png';
+import testFoot from '../assets/icons/footprintWhite.svg';
 import Button from '../components/button';
 import { useAuthStore } from '../stores/authStore';
 import { useEffect, useState } from 'react';

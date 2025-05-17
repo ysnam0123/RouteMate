@@ -47,11 +47,15 @@ export default function Post({ post }: PostProps) {
   const imageUrls: string[] = parsedTitle.uploadedImages ?? [];
 
   return (
-    <div className="border border-[var(--color-post-border)] p-4 rounded-lg shadow-sm bg-white max-w-[600px] h-100% px-[30px]  mb-[30px]">
+    <div className="border border-[var(--color-border)] p-4 rounded-lg shadow-sm bg-[var(--color-post-bg)] max-w-[600px] h-100% px-[30px]  mb-[30px]">
       <div className="flex justify-between mb-[10px]">
         <div className="flex items-center gap-0.2">
-          <img src={profile} alt="user" className="w-[40px] h-[40px]" />
-          <div className="font-bold text-[18px]">
+          <img
+            src={profile}
+            alt="user"
+            className="w-[40px] h-[40px] mr-[10px] rounded-3xl"
+          />
+          <div className="font-bold text-[18px] text-[var(--color-post-text)]">
             {parsedTitle.author || post.author.fullName}
           </div>
         </div>
@@ -87,7 +91,11 @@ export default function Post({ post }: PostProps) {
           </div>
 
           {/* 장소, 비용 */}
-          <div className="flex gap-3 text-[var(--color-subText)] border-b-2 border-[var(--color-lightGray)] mb-[10px] w-[100%] py-[5px]">
+          <div
+            className="flex gap-3 text-[var(--color-subText)] 
+          mb-[10px] w-[100%] py-[5px]"
+            // border-b-2 border-[var(--color-lightGray)]
+          >
             <div className="flex gap-3 text-[15px]">
               {parsedTitle.locations?.map((loc: string, idx: number) => (
                 <p key={idx}>{loc}</p>
@@ -109,8 +117,8 @@ export default function Post({ post }: PostProps) {
           ))}
 
           {/* 본문 */}
-          <div className="min-h-[130px] overflow-auto border-t-2 border-[var(--color-lightGray)] py-3">
-            <p className="text-[15px] whitespace-pre-line">
+          <div className="min-h-[130px] overflow-auto border-t-2 border-[var(--color-border)] py-3">
+            <p className="text-[15px] text-[var(--color-post-text)] whitespace-pre-line">
               {parsedTitle.context}
             </p>
           </div>
@@ -126,7 +134,7 @@ export default function Post({ post }: PostProps) {
         />
         {!showBox && (
           <div
-            className="text-[var(--color-subText)] cursor-pointer underline py-0.5 ml-[4px]"
+            className="text-[var(--color-commentBox-open)] cursor-pointer underline py-0.5 ml-[4px]"
             onClick={toggleCommentBox}
           >
             발자국 {post.comments.length}개 모두보기...

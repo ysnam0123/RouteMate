@@ -1,182 +1,197 @@
 // src/components/NoticePanel.tsx
 
-import React, { useState, useEffect, useCallback } from 'react'
-import { axiosInstance } from '../api/axios'
-import profile from '../assets/images/profile.svg'
+import React, { useState, useEffect, useCallback } from 'react';
+import { axiosInstance } from '../api/axios';
+import profile from '../assets/images/profile.svg';
+import { useDarkModeStore } from '../stores/darkModeStore';
 
 interface NotificationUser {
-  _id: string
-  fullName: string
-  image?: string
+  _id: string;
+  fullName: string;
+  image?: string;
 }
 
 interface NotificationPost {
-  _id: string
-  title?: string
+  _id: string;
+  title?: string;
 }
 
 interface NotificationLike {
-  _id: string
+  _id: string;
 }
 
 interface NotificationComment {
-  _id: string
-  content?: string
+  _id: string;
+  content?: string;
 }
 
 interface Notification {
-  _id: string
-  seen: boolean
-  author: NotificationUser
-  user: NotificationUser
-  post?: NotificationPost
-  like?: NotificationLike
-  comment?: NotificationComment
-  notificationType?: 'LIKE' | 'COMMENT' | 'FOLLOW' | 'MESSAGE'
-  createdAt: string
-  updatedAt: string
+  _id: string;
+  seen: boolean;
+  author: NotificationUser;
+  user: NotificationUser;
+  post?: NotificationPost;
+  like?: NotificationLike;
+  comment?: NotificationComment;
+  notificationType?: 'LIKE' | 'COMMENT' | 'FOLLOW' | 'MESSAGE';
+  createdAt: string;
+  updatedAt: string;
 }
 
 interface NoticePanelProps {
-  onClose: () => void
-  isOpen?: boolean
+  onClose: () => void;
+  isOpen?: boolean;
 }
 
 function NoticePanel({
   onClose,
   isOpen,
 }: NoticePanelProps): React.ReactElement {
-  const [notifications, setNotifications] = useState<Notification[]>([])
-  const [loading, setLoading] = useState(false) // 초기 로딩 false
-  const [error, setError] = useState<string | null>(null)
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [loading, setLoading] = useState(false); // 초기 로딩 false
+  const [error, setError] = useState<string | null>(null);
   // const navigate = useNavigate(); // 페이지 이동 시 필요
+  const { isDarkMode, toggleDarkMode } = useDarkModeStore();
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDarkMode) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   const fetchNotifications = useCallback(async () => {
-    console.log('Fetching notifications...')
-    setLoading(true)
-    setError(null)
+    console.log('Fetching notifications...');
+    setLoading(true);
+    setError(null);
     try {
-      const response = await axiosInstance.get<Notification[]>('/notifications')
-      console.log('API Response Data:', JSON.stringify(response.data, null, 2))
-      setNotifications(response.data)
+      const response = await axiosInstance.get<Notification[]>(
+        '/notifications'
+      );
+      console.log('API Response Data:', JSON.stringify(response.data, null, 2));
+      setNotifications(response.data);
     } catch (err: any) {
-      console.error('알림 목록을 가져오는 데 실패했습니다:', err)
+      console.error('알림 목록을 가져오는 데 실패했습니다:', err);
       setError(
         err.response?.data?.message ||
           err.message ||
           '알림을 불러올 수 없습니다.'
-      )
-      setNotifications([])
+      );
+      setNotifications([]);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (isOpen) {
-      console.log('NoticePanel is open, fetching notifications.')
-      fetchNotifications()
+      console.log('NoticePanel is open, fetching notifications.');
+      fetchNotifications();
     }
-  }, [isOpen, fetchNotifications])
+  }, [isOpen, fetchNotifications]);
 
   const handleMarkAllAsSeen = async () => {
-    const hasUnseenNotifications = notifications.some((n) => !n.seen)
+    const hasUnseenNotifications = notifications.some((n) => !n.seen);
     if (!hasUnseenNotifications && notifications.length > 0) {
-      console.log('모든 알림이 이미 읽음 상태입니다.')
-      return
+      console.log('모든 알림이 이미 읽음 상태입니다.');
+      return;
     }
     if (notifications.length === 0) {
-      console.log('읽을 알림이 없습니다.')
-      return
+      console.log('읽을 알림이 없습니다.');
+      return;
     }
 
     try {
-      console.log('모든 알림 읽음 처리 API 호출 시도...')
-      await axiosInstance.put('/notifications/seen')
-      console.log('PUT /notifications/seen API 호출 성공')
+      console.log('모든 알림 읽음 처리 API 호출 시도...');
+      await axiosInstance.put('/notifications/seen');
+      console.log('PUT /notifications/seen API 호출 성공');
 
       // 프론트엔드 상태를 즉시 모두 읽음으로 변경
       setNotifications((prevNotifications) =>
         prevNotifications.map((n) => ({ ...n, seen: true }))
-      )
+      );
     } catch (err) {
-      console.error('알림 전체 읽음 처리 API 호출 실패:', err)
-      alert('모든 알림을 읽음 처리하는 중 오류가 발생했습니다.')
+      console.error('알림 전체 읽음 처리 API 호출 실패:', err);
+      alert('모든 알림을 읽음 처리하는 중 오류가 발생했습니다.');
     }
-  }
+  };
 
   const getNotificationMessage = (notice: Notification): string => {
-    const actor = notice.author
+    const actor = notice.author;
 
-    let message = `${actor?.fullName || '누군가'}님의 새로운 활동이 있습니다.`
+    let message = `${actor?.fullName || '누군가'}님의 새로운 활동이 있습니다.`;
 
     if (notice.notificationType) {
       switch (notice.notificationType) {
         case 'LIKE':
           message = `${
             actor?.fullName || '누군가'
-          }님이 회원님의 게시글을 좋아합니다.`
-          break
+          }님이 회원님의 게시글을 좋아합니다.`;
+          break;
         case 'COMMENT':
-          const commentContent = notice.comment?.content
+          const commentContent = notice.comment?.content;
           if (commentContent) {
             message = `${
               actor?.fullName || '누군가'
             }님이 댓글을 남겼습니다: "${commentContent.substring(0, 20)}${
               commentContent.length > 20 ? '...' : ''
-            }"`
+            }"`;
           } else {
             message = `${
               actor?.fullName || '누군가'
-            }님이 회원님의 게시글에 댓글을 남겼습니다.`
+            }님이 회원님의 게시글에 댓글을 남겼습니다.`;
           }
-          break
+          break;
         case 'FOLLOW':
           message = `${
             actor?.fullName || '누군가'
-          }님이 회원님을 팔로우하기 시작했습니다.`
-          break
+          }님이 회원님을 팔로우하기 시작했습니다.`;
+          break;
       }
     } else if (notice.like) {
       message = `${
         actor?.fullName || '누군가'
-      }님이 회원님의 게시글을 좋아합니다.`
+      }님이 회원님의 게시글을 좋아합니다.`;
     } else if (notice.comment) {
-      const commentContent = notice.comment?.content
+      const commentContent = notice.comment?.content;
       if (commentContent) {
         message = `${
           actor?.fullName || '누군가'
         }님이 댓글을 남겼습니다: "${commentContent.substring(0, 20)}${
           commentContent.length > 20 ? '...' : ''
-        }"`
+        }"`;
       } else {
         message = `${
           actor?.fullName || '누군가'
-        }님이 회원님의 게시글에 댓글을 남겼습니다.`
+        }님이 회원님의 게시글에 댓글을 남겼습니다.`;
       }
     }
 
-    return message
-  }
+    return message;
+  };
 
   if (isOpen && loading && notifications.length === 0) {
     return (
       <div
-        className="px-4 flex flex-col text-sm bg-white rounded-lg shadow-md h-full w-[360px] items-center justify-center"
+        className="px-4 flex flex-col text-sm bg-[var(--color-notice-bg)] rounded-lg shadow-md h-full w-[360px] items-center justify-center"
         style={{ boxShadow: '4px 0 6px rgba(0, 0, 0, 0.15)' }}
       >
-        <p>알림을 불러오는 중...</p>
+        <p className="text-[var(--color-notice-text)]">알림을 불러오는 중...</p>
       </div>
-    )
+    );
   }
 
   return (
     <div
-      className="px-4 flex flex-col text-sm bg-white rounded-lg shadow-md h-full w-[360px]"
+      className="px-4 flex flex-col text-sm bg-[var(--color-main-bg)] rounded-lg shadow-md h-full w-[360px]"
       style={{ boxShadow: '4px 0 6px rgba(0, 0, 0, 0.15)' }}
     >
       <div className="flex justify-between items-center mb-2 pt-4">
-        <h2 className="text-xl font-bold text-gray-800">알림</h2>
+        <h2 className="text-xl font-bold text-[var(--color-sidebar-text)]">
+          알림
+        </h2>
         {notifications.some((n) => !n.seen) && (
           <button
             onClick={handleMarkAllAsSeen}
@@ -244,7 +259,7 @@ function NoticePanel({
         </ul>
       )}
     </div>
-  )
+  );
 }
 
-export default NoticePanel
+export default NoticePanel;

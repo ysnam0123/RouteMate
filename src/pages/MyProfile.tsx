@@ -12,7 +12,7 @@ import Star from '../assets/achievementIcons/Star.svg';
 import Train from '../assets/achievementIcons/train.svg';
 // import Tag from '../components/Tag'
 import testLike from '../assets/icons/Heart.png';
-import testFoot from '../assets/icons/footprintWhite.png';
+import testFoot from '../assets/icons/footprintWhite.svg';
 import Button from '../components/button';
 import { useAuthStore } from '../stores/authStore';
 import { useEffect, useState } from 'react';
@@ -145,24 +145,28 @@ export default function MyProfile() {
             })}
           </div>
 
-          <h2 className="text-[45px] mb-2 font-bold">{user.fullName}</h2>
-          <p className="text-[20px]">{introduction}</p>
+          <h2 className="text-[45px] mb-2 font-bold text-[var(--color-profile-text)]">
+            {user.fullName}
+          </h2>
+          <p className="text-[20px] text-[var(--color-profile-text)]">
+            {introduction}
+          </p>
         </div>
 
         {/* 팔로워숫자 및 내 정보 수정 */}
         <div className="flex flex-col gap-2 w-[273px] ml-28">
-          <div className="flex justify-between w-full">
-            <div className=" h-[33px] flex flex-col text-[20px] text-black font-semibold">
+          <div className="flex justify-between w-full text-[var(--color-profile-text)]">
+            <div className=" h-[33px] flex flex-col text-[20px]  font-semibold">
               <span className="text-left">게시글</span>
               <span className="text-center">{user.posts.length}</span>
             </div>
 
-            <div className=" h-[33px] flex flex-col items-center text-[20px] text-black font-semibold">
+            <div className=" h-[33px] flex flex-col items-center text-[20px]  font-semibold">
               <span>팔로워</span>
               <span>{user.followers.length}</span>
             </div>
 
-            <div className=" h-[33px] flex flex-col items-center text-[20px] text-black font-semibold">
+            <div className=" h-[33px] flex flex-col items-center text-[20px] font-semibold">
               <span className="text-right">팔로잉</span>
               <span>{user.following.length}</span>
             </div>

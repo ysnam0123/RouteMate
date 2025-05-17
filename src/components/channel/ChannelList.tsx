@@ -78,7 +78,7 @@ export default function ChannelList({
 
         {/* 필터 UI */}
         {showFilter && (
-          <div className="flex-col flex gap-4 pl-[30px] px-[10px] py-[20px]">
+          <div className="flex-col flex gap-2 pl-[30px] px-[10px] py-[20px]">
             {/* 비용 필터 */}
             <div className="flex items-center gap-3">
               <label className="flex items-center gap-2">
@@ -87,7 +87,7 @@ export default function ChannelList({
                   checked={useCostFilter}
                   onChange={(e) => setUseCostFilter(e.target.checked)}
                 />
-                <span>경비</span>
+                <span className="text-[var(--color-text-filter)]">경비</span>
               </label>
               <input
                 type="range"
@@ -101,23 +101,25 @@ export default function ChannelList({
                 list="markers"
                 disabled={!useCostFilter}
               />
-              <datalist id="markers">
+              <datalist id="markers" className="">
                 <option value="200000"></option>
                 <option value="700000"></option>
                 <option value="1200000"></option>
                 <option value="1600000"></option>
               </datalist>
-              <span>200만원 이상</span>
+              <span className="text-[var(--color-text-filter)]">
+                200만원 이상
+              </span>
               <button
                 onClick={applyFilters}
-                className="ml-3 bg-[var(--color-main-navy)] text-white px-4 py-2 rounded hover:bg-[var(--color-main-navy-hover)] rounded-xl w-[60px] ml-[130px] "
+                className="bg-[var(--color-main-navy)] text-white cursor-pointer px-4 py-2 hover:bg-[var(--color-main-navy-hover)] rounded-xl w-[80px] ml-[100px] "
                 disabled={!useCostFilter && !useLocationFilter}
               >
                 적용
               </button>
             </div>
 
-            <p className="text-gray-600">
+            <p className="text-[var(--color-cost-text)] mb-[10px]">
               현재 설정된 경비: <strong>{cost.toLocaleString()}원</strong>
             </p>
 
@@ -129,13 +131,13 @@ export default function ChannelList({
                   checked={useLocationFilter}
                   onChange={(e) => setUseLocationFilter(e.target.checked)}
                 />
-                <span>장소</span>
+                <span className="text-[var(--color-text-filter)]">장소</span>
               </label>
               <input
                 type="text"
                 value={location}
                 onChange={handleLocationChange}
-                className="border rounded-[5px] w-[300px] h-[20px] px-[10px] py-[15px]"
+                className="border rounded-[5px] w-[300px] h-[20px] px-[10px] py-[20px] text-[var(--color-text-filter)]"
                 placeholder="장소를 입력하세요"
                 disabled={!useLocationFilter}
               />

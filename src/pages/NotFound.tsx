@@ -13,7 +13,9 @@ export default function NotFound() {
         alt="NotFoundImg"
         className="w-[210px] h-[210px] mb-[70px]"
       />
-      <h1 className="text-[54px] font-extrabold mb-[50px]">PAGE NOT FOUND</h1>
+      <h1 className="text-[54px] font-extrabold mb-[50px] text-[var(--color-notFound)]">
+        PAGE NOT FOUND
+      </h1>
       <p className="text-[var(--color-main-skyBlue)] text-[20px] font-bold mb-[15px]">
         길을 잃으셨나요?
       </p>
