@@ -212,24 +212,38 @@ export default function Write() {
         {/* 이미지 영역 */}
         <div className="h-[210px] w-full pt-[5px] pb-[5px] flex relative overflow-hidden">
           <div className="flex justify-between items-center w-full">
+            {/* 왼쪽 화살표 */}
             <div
-              className="w-[60px] content-center absolute left-0"
+              className="w-[60px] content-center absolute left-0 group"
               onClick={handleLeftSlider}
             >
-              <img src={leftArrowGray} className="block group-hover:hidden" />
-              <img src={leftArrowNavy} className="hidden group-hover:block" />
+              <img
+                src={leftArrowGray}
+                className="block group-hover:hidden cursor-pointer"
+              />
+              <img
+                src={leftArrowNavy}
+                className="hidden group-hover:block cursor-pointer"
+              />
             </div>
+            {/* 오른쪽 화살표 */}
             <div
-              className="w-[60px] flex items-center justify-center content-center absolute right-0 "
+              className="w-[60px] flex items-center justify-center content-center absolute right-0 group"
               onClick={handleRightSlider}
             >
-              <img src={rightArrowGray} className="block group-hover:hidden" />
-              <img src={rightArrowNavy} className="hidden group-hover:block" />
+              <img
+                src={rightArrowGray}
+                className="block group-hover:hidden cursor-pointer"
+              />
+              <img
+                src={rightArrowNavy}
+                className="hidden group-hover:block cursor-pointer"
+              />
             </div>
           </div>
 
           {/* 이미지 보여지는 영역 */}
-          <div className="h-full w-[920px]  flex overflow-hidden absolute left-[60px]">
+          <div className="h-full w-[860px]  flex overflow-hidden absolute left-[60px]">
             {/* 이미지 나열되는 영역 */}
             <div
               className=" absolute left-0 w-[4000px] flex flex-wrap gap-4 transition-transform duration-300"
@@ -275,7 +289,7 @@ export default function Write() {
           <input
             type="text"
             placeholder="제목을 입력하세요."
-            className="h-[44px] w-full outline-none text-[var(--color-title)] placeholder-[#989B9D] font-bold text-[32px] text-(--color-main-navy)"
+            className="h-[44px] w-full outline-none text-[var(--color-title)] placeholder-[#989B9D] font-bold text-[32px] "
             onChange={handlerTitleChange}
           />
 

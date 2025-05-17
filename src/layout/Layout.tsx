@@ -30,7 +30,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
       </div>
 
       {/* 본문 영역 */}
-      <main className="ml-[235px] mt-[85px]  h-[calc(100vh-85px)] overflow-y-auto bg-[var(--color-main-bg)] ">
+      <main className="ml-[235px] mt-[85px]  h-[calc(100vh-85px)] overflow-y-auto bg-[var(--color-main-bg)] transition-all duration-300 ">
         {children || <Outlet />}
         <button
           onClick={toggleDarkMode}

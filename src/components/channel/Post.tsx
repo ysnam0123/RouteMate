@@ -47,7 +47,7 @@ export default function Post({ post }: PostProps) {
   const imageUrls: string[] = parsedTitle.uploadedImages ?? [];
 
   return (
-    <div className="border border-[var(--color-post-border)] p-4 rounded-lg shadow-sm bg-[var(--color-post-bg)] max-w-[600px] h-100% px-[30px]  mb-[30px]">
+    <div className="border border-[var(--color-border)] p-4 rounded-lg shadow-sm bg-[var(--color-post-bg)] max-w-[600px] h-100% px-[30px]  mb-[30px]">
       <div className="flex justify-between mb-[10px]">
         <div className="flex items-center gap-0.2">
           <img

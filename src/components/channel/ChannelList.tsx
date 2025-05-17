@@ -112,7 +112,7 @@ export default function ChannelList({
               </span>
               <button
                 onClick={applyFilters}
-                className="bg-[var(--color-main-navy)] text-white px-4 py-2 hover:bg-[var(--color-main-navy-hover)] rounded-xl w-[80px] ml-[130px] "
+                className="bg-[var(--color-main-navy)] text-white cursor-pointer px-4 py-2 hover:bg-[var(--color-main-navy-hover)] rounded-xl w-[80px] ml-[100px] "
                 disabled={!useCostFilter && !useLocationFilter}
               >
                 적용

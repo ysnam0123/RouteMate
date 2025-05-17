@@ -27,10 +27,10 @@
   --color-header: #f9fafb;
 
   /* 사이드바 */
-  --color-sideBody: #ffffff;
+  --color-sideBody: #001a40;
   --color-notSelected: #989b9d;
   --color-selected: #3b82f6;
-  --color-sidebar-text: #000000;
+  --color-sidebar-text: #ffffff;
 
   /* 알림 사이드바 */
   --color-notice-bg: #ffffff;

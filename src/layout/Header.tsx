@@ -30,7 +30,7 @@ export default function Header() {
   }, [isDarkMode]);
   return (
     <>
-      <header className="bg-[var(--color-header)] h-[85px]">
+      <header className="bg-[var(--color-header)] h-[85px] transition-all duration-300">
         <div className="max-w-8xl mx-auto px-[30px] sm:px-5 py-2.5 h-full">
           <div className="flex justify-between h-full">
             <div className="flex">
