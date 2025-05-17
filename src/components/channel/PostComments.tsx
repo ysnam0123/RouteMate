@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import profile from '../../assets/images/profile.svg';
-import whiteFootPrint from '../../assets/icons/footprintWhite.png';
+import whiteFootPrint from '../../assets/icons/footprintWhite.svg';
 import { axiosInstance } from '../../api/axios';
 import { useAuthStore } from '../../stores/authStore';
 import { toast } from 'react-toastify';
@@ -136,8 +136,12 @@ export default function PostComments({ postId, comments }: PostCommentsProps) {
               className="w-[50px] h-[50px] rounded-full object-cover"
             />
             <div>
-              <p className="font-semibold">{comment.author.fullName}</p>
-              <p>{comment.comment}</p>
+              <p className="font-semibold text-[var(--color-post-text)]">
+                {comment.author.fullName}
+              </p>
+              <p className="font-medium text-[14px] text-[var(--color-post-text)]">
+                {comment.comment}
+              </p>
             </div>
           </div>
         ))}
@@ -146,7 +150,7 @@ export default function PostComments({ postId, comments }: PostCommentsProps) {
       <div className="flex gap-2 mt-[20px]  justify-between border-t-1 border-[var(--color-border)] pt-[10px]">
         <input
           type="text"
-          className="px-[10px] w-[500px]"
+          className="px-[10px] w-[500px] text-[var(--color-post-text)]"
           placeholder="발자국 남기기"
           value={comment}
           onChange={changeHandler}
@@ -165,6 +169,7 @@ export default function PostComments({ postId, comments }: PostCommentsProps) {
             alt="footprint"
             className="w-[30px] h-[30px]"
           />
+          {/* <div className="bg-[url('/light.svg')] dark:bg-[url('/dark.svg')] bg-cover w-full h-screen" /> */}
         </button>
       </div>
     </>

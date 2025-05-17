@@ -1,9 +1,12 @@
 import { useEffect, useState } from 'react';
 import likeIcon from '../../assets/icons/like.svg';
+import darkModeLike from '../../assets/icons/darkModeLike.svg';
 import likedIcon from '../../assets/icons/liked.svg';
 import footPrint from '../../assets/icons/footPrintBlack.svg';
+import footPrintWhite from '../../assets/icons/footprintWhite.svg';
 import { axiosInstance } from '../../api/axios';
 import { useAuthStore } from '../../stores/authStore';
+import { useDarkModeStore } from '../../stores/darkModeStore';
 
 // 외부로부터 어떤 props를 받는지 정의
 interface PostInteractionProps {
@@ -14,19 +17,6 @@ interface PostInteractionProps {
   // 게시물 댓글 배열
   comments: commentsObj[];
   className?: string;
-  // post: {
-  //   _id: string;
-  //   title: string;
-  //   createdAt: string;
-  //   // likes: any[];
-  //   likes: likesObj[];
-  //   comments: any[];
-  //   author: {
-  //     fullName: string;
-  //   };
-  //   image: string;
-  //   Base64s: Base64Image;
-  // };
 }
 
 interface commentsObj {
@@ -47,7 +37,8 @@ export default function PostInteraction({
   postId,
   likes,
 }: PostInteractionProps) {
-  // console.log('comments from postInteraction.tsx:', comments);
+  const { isDarkMode, toggleDarkMode } = useDarkModeStore();
+
   // 좋아요를 눌렀는지 안눌렀는지
   const [liked, setLiked] = useState(false);
   // 게시물의 좋아요 수 (기본값을 likes.length 로 넣어, 처음 로딩 시 받은 데이터를 기반으로 렌더링한다)
@@ -81,6 +72,15 @@ export default function PostInteraction({
       setLikeId(null);
     }
   }, [likes, userId]);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (isDarkMode) {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+  }, [isDarkMode]);
 
   // 특정 포스트의 정보 불러오기
   // const postDetails = async () => {
@@ -136,16 +136,26 @@ export default function PostInteraction({
             onClick={toggleLike}
           >
             <img
-              src={liked ? likedIcon : likeIcon}
+              src={
+                liked
+                  ? likedIcon // 좋아요 눌렀을 때는 항상 빨간 하트
+                  : isDarkMode
+                  ? darkModeLike // 다크모드일 때 기본 하트
+                  : likeIcon // 일반 모드일 때 기본 하트
+              }
               alt="like"
               className="w-[20px]"
             />
-            좋아요
-            {/* {likeCount}개 */}
+            <p className="text-[var(--color-post-text)]">좋아요</p>
+            <p className="text-[var(--color-post-text)]">{likeCount}개</p>
           </div>
           <div className="flex flex-row gap-1">
-            <img src={footPrint} alt="footprint" className="w-[20px]" />
-            발자국
+            <img
+              src={isDarkMode ? footPrintWhite : footPrint}
+              alt="footprint"
+              className="w-[20px]"
+            />
+            <p className="text-[var(--color-post-text)]">발자국</p>
           </div>
         </div>
       </div>
