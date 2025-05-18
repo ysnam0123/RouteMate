@@ -304,7 +304,7 @@ export default function Write() {
                 onCompositionStart={() => setIsComposing(true)}
                 onCompositionEnd={() => setIsComposing(false)}
                 ref={inputRef}
-                placeholder="태그을 입력하세요."
+                placeholder="태그를 입력하세요."
                 className="h-[19px] w-[120px] outline-none text-[var(--color-tag)] placeholder-[#989B9D] font-bold text-[14px]  "
               />
             </div>
@@ -345,7 +345,7 @@ export default function Write() {
           {/* 경비 */}
           <input
             type="number"
-            placeholder="경비을 입력하세요."
+            placeholder="경비를 입력하세요."
             className="h-[22px] w-full outline-none placeholder-[#989B9D] text-[var(--color-write-main-text)] font-bold text-[16px] mb-[18px] "
             onChange={handlerCostChange}
             onInput={preventInvalidInput}
