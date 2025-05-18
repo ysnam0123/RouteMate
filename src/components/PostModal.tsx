@@ -36,11 +36,8 @@ interface PostType {
 interface PostModalProps {
   post: PostType | null;
   onClose: () => void;
-  user: {
-    _id: string;
-    fullName: string;
-    image: string;
-  };
+  onSaved?: (updatedPost: PostType) => void;
+  user: { _id: string; fullName: string; image: string };
 }
 
 interface ParsedTitle {
@@ -54,7 +51,12 @@ interface ParsedTitle {
   author?: any[];
 }
 
-export default function PostModal({ post, onClose, user }: PostModalProps) {
+export default function PostModal({
+  post,
+  onClose,
+  user,
+  onSaved,
+}: PostModalProps) {
   if (!post) return null;
 
   const parsedTitle = JSON.parse(post.title) as ParsedTitle;
@@ -155,7 +157,10 @@ export default function PostModal({ post, onClose, user }: PostModalProps) {
       await axiosInstance.put(`/posts/update`, payload);
       toast('게시글이 수정되었습니다.');
       setIsEditing(false);
-      window.location.reload();
+      onClose(); // window.location.reload() 대신 상태로 갱신하는 게 이상적
+      if (onSaved) {
+        onSaved({ ...post, title: payload.title, image: payload.image });
+      }
     } catch (err) {
       console.error(err);
       toast.error('수정 실패');

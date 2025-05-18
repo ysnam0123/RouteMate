@@ -69,6 +69,7 @@ export default function MyProfile() {
   const [titles, setTitles] = useState<string[]>([]);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [posts, setPosts] = useState<Post[]>([]);
 
   const openPostModal = (post: Post) => {
     setSelectedPost(post);
@@ -85,6 +86,12 @@ export default function MyProfile() {
   const handleClick = () => {
     navigate('/profileedit');
   };
+
+  useEffect(() => {
+    if (user) {
+      setPosts(user.posts);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!userId) return;
@@ -205,10 +212,10 @@ export default function MyProfile() {
 
       {/* 글쓰기목록 영역(임시로 둔 영역 글 목록 넣어줘야함) */}
       <div className="flex flex-wrap">
-        {user.posts.map((post) => (
+        {posts.map((post) => (
           <div
             key={post._id}
-            className="w-full max-w-[230px] h-[230px] relative group bg-cover bg-center rounded-md cursor-pointer"
+            className="w-full max-w-[230px] h-[230px] relative group bg-cover bg-center rounded-md cursor-pointer mx-2"
             style={{ backgroundImage: `url(${post.image})` }}
             onClick={() =>
               openPostModal({
@@ -253,6 +260,18 @@ export default function MyProfile() {
         <PostModal
           post={selectedPost}
           onClose={closeModal}
+          onSaved={(updatedPost) => {
+            setPosts((prev) =>
+              prev.map((p) =>
+                p._id === updatedPost._id
+                  ? {
+                      ...updatedPost,
+                      imagePublicId: p.imagePublicId ?? '', // 혹은 유지
+                    }
+                  : p
+              )
+            );
+          }}
           user={{
             _id: user._id,
             fullName: user.fullName,
