@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import profile from '../assets/images/profile.svg';
-import bedIcon from '/../assets/icons/bedIcon.svg';
+import bedIcon from '../assets/icons/bedIcon.svg';
 import ImageSlider from './channel/ImageSlider';
 import PostInteraction from './channel/PostInteraction';
 import PostComments from './channel/PostComments';
@@ -313,6 +313,7 @@ export default function PostModal({ post, onClose, user }: PostModalProps) {
             <div className="w-100% border-[var(--color-black)] flex flex-col">
               <PostInteraction
                 postId={post._id}
+                postAuthorId={post.author._id}
                 likes={post.likes}
                 comments={post.comments}
               />

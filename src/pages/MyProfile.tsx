@@ -208,7 +208,7 @@ export default function MyProfile() {
         {user.posts.map((post) => (
           <div
             key={post._id}
-            className="w-full max-w-[230px] h-[230px] relative group bg-cover bg-center rounded-md cursor-pointer"
+            className="w-full max-w-[230px] h-[230px] relative group bg-cover bg-center rounded-md cursor-pointer mr-[15px]"
             style={{ backgroundImage: `url(${post.image})` }}
             onClick={() =>
               openPostModal({
