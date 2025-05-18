@@ -46,7 +46,7 @@ export default function Header() {
                   <img
                     src={isDarkMode ? LogoTextDark : LogoText}
                     alt="TravelMate 로고텍스트"
-                    className="h-10"
+                    className="h-9.5"
                   />
                 </Link>
               </div>
