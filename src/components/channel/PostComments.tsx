@@ -109,6 +109,10 @@ export default function PostComments({ postId, comments }: PostCommentsProps) {
       const realComment: commentsObj = response.data.comment;
       console.log('진짜댓글의 객체:', response.data);
 
+      // setCommentList((prev) =>
+      //   prev.map((c) => (c._id === fakeComment._id ? realComment : c))
+      // );
+
       // 성공 시 → 임시 댓글을 진짜 댓글로 교체
       // setCommentList((prev) =>
       //   prev.map((c) => (c.comment === fakeComment.comment ? realComment : c))

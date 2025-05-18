@@ -206,7 +206,7 @@ export default function SearchPanel({
 
   return (
     <div
-      className="px-4 flex flex-col text-[var(--color-sidebar-text)] text-sm bg-[var(--color-sideBody)] rounded-lg shadow-md h-full w-90"
+      className="px-4 flex flex-col text-[var(--color-search-text)] text-sm bg-[var(--color-search-bg)] rounded-lg shadow-md h-full w-90"
       style={{ boxShadow: '4px 0 6px rgba(0, 0, 0, 0.15)' }}
     >
       <div className="flex justify-between items-center pt-4">
@@ -253,7 +253,7 @@ export default function SearchPanel({
               setSelectedChannelId(e.target.value || null);
               setSearchInput('');
             }}
-            className="w-1/2 p-2 border border-gray-300 rounded focus:outline-none"
+            className="w-1/2 p-2 border border-gray-300 bg-[--color-sideBody] rounded focus:outline-none"
             style={{
               borderColor: 'var(--color-main-skyBlue-hover)',
               boxShadow: '0 0 0 1px var(--color-lightGray-focus)',
