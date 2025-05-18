@@ -189,11 +189,10 @@ export default function Sidebar(): React.ReactElement {
                                     {item.icon}
                                 </span>
                                 <span
-                                    className="text-sm"
-                                    style={{
-                                        color: isItemActive ? 'white' : 'var(--color-notSelected)',
-                                        display: shouldShrinkSidebar ? 'none' : 'inline',
-                                    }}
+                                    className={`text-sm 
+                                        ${isItemActive ? 'text-white' : 'text-[var(--color-notSelected)]'} 
+                                        ${shouldShrinkSidebar ? 'hidden' : 'inline'}
+                                    `}
                                 >
                                     {item.text}
                                 </span>
