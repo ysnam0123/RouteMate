@@ -191,10 +191,7 @@ export default function SearchPanel({ onClose }: SearchPanelProps): React.ReactE
     }
 
     return (
-        <div
-            className="px-4 flex flex-col text-[var(--color-sidebar-text)] text-sm bg-[var(--color-sideBody)] h-full w-90"
-            style={{ boxShadow: '4px 0 6px rgba(0, 0, 0, 0.15)' }}
-        >
+        <div className="px-4 flex flex-col text-[var(--color-sidebar-text)] text-sm bg-[var(--color-sideBody)] h-full w-[22.5rem] shadow-[4px_0_6px_rgba(0,0,0,0.15)]">
             <div className="flex justify-between items-center pt-4">
                 {' '}
                 <h2 className="text-2xl font-semibold flex-shrink-0 mr-28.5"> 검색</h2>
@@ -245,12 +242,8 @@ export default function SearchPanel({ onClose }: SearchPanelProps): React.ReactE
                             setSelectedChannelId(e.target.value || null);
                             setSearchInput('');
                         }}
-                        className="w-1/2 p-2 border border-gray-300 rounded focus:outline-none"
-                        style={{
-                            borderColor: 'var(--color-main-skyBlue-hover)',
-                            boxShadow: '0 0 0 1px var(--color-lightGray-focus)',
-                            appearance: 'none',
-                        }}
+                        className="w-1/2 p-2 rounded appearance-none border border-[var(--color-main-skyBlue-hover)] 
+                        shadow-[0_0_0_1px_var(--color-lightGray-focus)] focus:outline-none"
                     >
                         <option value="" disabled={!selectedChannelId}>
                             채널 선택
@@ -350,9 +343,11 @@ export default function SearchPanel({ onClose }: SearchPanelProps): React.ReactE
                                                                     const parsed = JSON.parse(post.title);
                                                                     return (
                                                                         <>
-                                                                            <h3>제목 : {parsed.writtenTitle}</h3>
+                                                                            <h3 className="text-lg font-bold overflow-hidden text-ellipsis line-clamp-1 mb-2">
+                                                                                {parsed.writtenTitle}
+                                                                            </h3>
                                                                             <p className="overflow-hidden text-ellipsis line-clamp-2">
-                                                                                내용 : {parsed.context}
+                                                                                {parsed.context}
                                                                             </p>
                                                                         </>
                                                                     );
@@ -431,9 +426,11 @@ export default function SearchPanel({ onClose }: SearchPanelProps): React.ReactE
                                                     const parsed = JSON.parse(post.title);
                                                     return (
                                                         <>
-                                                            <h3>제목 : {parsed.writtenTitle}</h3>
+                                                            <h3 className="text-lg font-bold overflow-hidden text-ellipsis line-clamp-1 mb-2">
+                                                                {parsed.writtenTitle}
+                                                            </h3>
                                                             <p className="overflow-hidden text-ellipsis line-clamp-2">
-                                                                내용 : {parsed.context}
+                                                                {parsed.context}
                                                             </p>
                                                         </>
                                                     );
