@@ -1,8 +1,9 @@
+// src/components/NoticePanel.tsx
+
 import React, { useState, useEffect, useCallback } from 'react';
 import { axiosInstance } from '../api/axios';
 import profile from '../assets/images/profile.svg';
 import { useDarkModeStore } from '../stores/darkModeStore';
-import { toast } from 'react-toastify';
 
 interface NotificationUser {
     _id: string;
@@ -42,7 +43,7 @@ interface NoticePanelProps {
     isOpen?: boolean;
 }
 
-export default function NoticePanel({ onClose, isOpen }: NoticePanelProps): React.ReactElement {
+function NoticePanel({ onClose, isOpen }: NoticePanelProps): React.ReactElement {
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [loading, setLoading] = useState(false); // 초기 로딩 false
     const [error, setError] = useState<string | null>(null);
@@ -85,19 +86,24 @@ export default function NoticePanel({ onClose, isOpen }: NoticePanelProps): Reac
     const handleMarkAllAsSeen = async () => {
         const hasUnseenNotifications = notifications.some((n) => !n.seen);
         if (!hasUnseenNotifications && notifications.length > 0) {
+            console.log('모든 알림이 이미 읽음 상태입니다.');
             return;
         }
         if (notifications.length === 0) {
+            console.log('읽을 알림이 없습니다.');
             return;
         }
 
         try {
+            console.log('모든 알림 읽음 처리 API 호출 시도...');
             await axiosInstance.put('/notifications/seen');
+            console.log('PUT /notifications/seen API 호출 성공');
 
             // 프론트엔드 상태를 즉시 모두 읽음으로 변경
             setNotifications((prevNotifications) => prevNotifications.map((n) => ({ ...n, seen: true })));
         } catch (err) {
-            toast.error('모든 알림을 읽음 처리하는 중 오류가 발생했습니다.');
+            console.error('알림 전체 읽음 처리 API 호출 실패:', err);
+            alert('모든 알림을 읽음 처리하는 중 오류가 발생했습니다.');
         }
     };
 
@@ -144,10 +150,7 @@ export default function NoticePanel({ onClose, isOpen }: NoticePanelProps): Reac
 
     if (isOpen && loading && notifications.length === 0) {
         return (
-            <div
-                className="px-4 flex flex-col text-sm bg-[var(--color-notice-bg)] 
-                rounded-lg shadow-[4px_0_6px_rgba(0,0,0,0.15)] h-full w-[360px] items-center justify-center"
-            >
+            <div className="px-4 flex flex-col text-sm bg-[var(--color-notice-bg)] rounded-lg shadow-[4px_0_6px_rgba(0,0,0,0.15)] h-full w-[360px] items-center justify-center">
                 <p className="text-[var(--color-notice-text)]">알림을 불러오는 중...</p>
             </div>
         );
@@ -222,3 +225,5 @@ export default function NoticePanel({ onClose, isOpen }: NoticePanelProps): Reac
         </div>
     );
 }
+
+export default NoticePanel;
