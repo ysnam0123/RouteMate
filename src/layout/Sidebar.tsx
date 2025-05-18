@@ -62,6 +62,9 @@ export default function Sidebar(): React.ReactElement {
     const handleItemClick = (item: MenuItem, event: React.MouseEvent) => {
         event.preventDefault();
 
+        // 현재 선택된 항목이면 아무것도 하지 않음
+        if (item.id === highlightedItemId) return;
+
         if (item.isSearchTrigger) {
             const nextSearchMode = !isSearchMode;
             setIsSearchMode(nextSearchMode);
