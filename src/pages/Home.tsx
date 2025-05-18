@@ -2,7 +2,6 @@ import useRandomVideo from '../hook/RandomVideo';
 import Button from '../components/button';
 import homeButtonIcon from '../assets/icons/homeIcon.svg';
 import homeLogo from '../assets/images/homeLogo.svg';
-import Footer from '../layout/Footer';
 import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
@@ -69,7 +68,6 @@ export default function Home() {
                     </div>
                 </div>
             </div>
-            <Footer />
         </div>
     );
 }

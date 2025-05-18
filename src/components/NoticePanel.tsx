@@ -174,10 +174,7 @@ function NoticePanel({
 
   if (isOpen && loading && notifications.length === 0) {
     return (
-      <div
-        className="px-4 flex flex-col text-sm bg-[var(--color-notice-bg)] rounded-lg shadow-md h-full w-[360px] items-center justify-center"
-        style={{ boxShadow: '4px 0 6px rgba(0, 0, 0, 0.15)' }}
-      >
+      <div className="px-4 flex flex-col text-sm bg-[var(--color-notice-bg)] rounded-lg shadow-[4px_0_6px_rgba(0,0,0,0.15)] h-full w-[360px] items-center justify-center">
         <p className="text-[var(--color-notice-text)]">알림을 불러오는 중...</p>
       </div>
     );
@@ -185,17 +182,17 @@ function NoticePanel({
 
   return (
     <div
-      className="px-4 flex flex-col text-sm bg-[var(--color-notice-bg)] rounded-lg shadow-md h-full w-[360px]"
+      className="px-4 flex flex-col text-sm bg-[var(--color-notice-bg)] shadow-md h-full w-[360px]"
       style={{ boxShadow: '4px 0 6px rgba(0, 0, 0, 0.15)' }}
     >
       <div className="flex justify-between items-center mb-2 pt-4">
-        <h2 className="text-xl font-bold text-[var(--color-sidebar-text)]">
+        <h2 className="text-xl font-bold text-[var(--color-notice-text)]">
           알림
         </h2>
         {notifications.some((n) => !n.seen) && (
           <button
             onClick={handleMarkAllAsSeen}
-            className="text-xs text-blue-600 hover:text-blue-800 px-2 py-1 rounded"
+            className="text-xs text-[var(--color-notice-text)] hover:text-blue-800 px-2 py-1 rounded"
           >
             모두 읽음
           </button>

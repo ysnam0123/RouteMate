@@ -1,9 +1,8 @@
-import React, { useEffect } from 'react'; // Import React
+import React, { useEffect } from 'react';
 import { useState } from 'react';
 import profile from '../assets/images/profile.svg';
 import online from '../assets/icons/onLine.svg';
 import offline from '../assets/icons/offLine.svg';
-// import { useAuthStore } from "../stores/authStore";
 import { axiosInstance } from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 import Channel from './Channel';
@@ -174,7 +173,7 @@ export default function SearchPanel({
     navigate(`/profile/${user._id}`);
     setRecentSearches((prev) => {
       const filtered = prev.filter((u) => u._id !== user._id);
-      return [user, ...filtered].slice(0, 5); //최대 5개
+      return [user, ...filtered].slice(0, 3);
     });
   };
 
@@ -187,7 +186,7 @@ export default function SearchPanel({
       navigate(`/profile/${post.author._id}`);
       setRecentPostSearches((prev) => {
         const filtered = prev.filter((p) => p._id !== post._id);
-        return [post, ...filtered].slice(0, 5);
+        return [post, ...filtered].slice(0, 3);
       });
     } else {
       console.warn('작성자 정보가 없어 프로필로 이동할 수 없습니다:', post);
@@ -202,13 +201,8 @@ export default function SearchPanel({
     return <Loading />;
   }
 
-  console.log(filteredPosts.map((post) => post.title));
-
   return (
-    <div
-      className="px-4 flex flex-col text-[var(--color-search-text)] text-sm bg-[var(--color-search-bg)] rounded-lg shadow-md h-full w-90"
-      style={{ boxShadow: '4px 0 6px rgba(0, 0, 0, 0.15)' }}
-    >
+    <div className="px-4 flex flex-col text-[var(--color-notice-text)] text-sm bg-[var(--color-notice-bg)] h-full w-[22.5rem] shadow-[4px_0_6px_rgba(0,0,0,0.15)]">
       <div className="flex justify-between items-center pt-4">
         {' '}
         <h2 className="text-2xl font-semibold flex-shrink-0 mr-28.5"> 검색</h2>
@@ -220,7 +214,10 @@ export default function SearchPanel({
               name="searchType"
               value="post"
               checked={searchType === 'post'}
-              onChange={() => setSearchType('post')}
+              onChange={() => {
+                setSearchType('post');
+                setSearchInput('');
+              }}
               className="mr-1 accent-blue-500"
             />
             게시글
@@ -231,7 +228,10 @@ export default function SearchPanel({
               name="searchType"
               value="user"
               checked={searchType === 'user'}
-              onChange={() => setSearchType('user')}
+              onChange={() => {
+                setSearchType('user');
+                setSearchInput('');
+              }}
               className="mr-1 accent-blue-500"
             />
             사용자
@@ -253,13 +253,8 @@ export default function SearchPanel({
               setSelectedChannelId(e.target.value || null);
               setSearchInput('');
             }}
-            className="w-1/2 p-2 border border-gray-300 bg-[--color-sideBody] rounded focus:outline-none"
-            style={{
-              borderColor: 'var(--color-main-skyBlue-hover)',
-              boxShadow: '0 0 0 1px var(--color-lightGray-focus)',
-              appearance: 'none',
-            }}
-            defaultValue=""
+            className="w-1/2 p-2 rounded appearance-none border border-[var(--color-main-skyBlue-hover)] 
+                        shadow-[0_0_0_1px_var(--color-lightGray-focus)] focus:outline-none"
           >
             <option value="" disabled={!selectedChannelId}>
               채널 선택
@@ -295,10 +290,10 @@ export default function SearchPanel({
           }}
         />
       </div>
-      <div className="flex-grow overflow-y-auto border-t border-gray-200 pt-3 pb-4">
+      <div className="flex-grow border-t pt-3 pb-4">
         {/* 검색 결과 */}
         <h3 className="text-base font-bold mb-2 text-black-700">검색 결과</h3>
-        <div className="flex-grow overflow-y-auto border-gray-200 pt-3 pb-4 max-h-140">
+        <div className="flex-grow overflow-y-auto pt-3 pb-4 max-h-90">
           {loading ? (
             <Loading />
           ) : searchType === 'user' ? (
@@ -317,7 +312,9 @@ export default function SearchPanel({
                           alt="프로필"
                           className="w-8 h-8 rounded-full mr-1 object-cover"
                         />
-                        <span className="text-gray-800">{user.fullName}</span>
+                        <span className="text-[var(--color-notice-text)]">
+                          {user.fullName}
+                        </span>
                       </div>
                       {/* 온라인 상태 아이콘 */}
                       <div className="mr-4">
@@ -331,7 +328,7 @@ export default function SearchPanel({
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-gray-500 text-center">
+                <p className="text-sm text-[var(--color-notice-text)] text-center">
                   일치하는 사용자가 없습니다.
                 </p>
               )}
@@ -354,8 +351,26 @@ export default function SearchPanel({
                           className="w-8 h-8 rounded-full object-cover"
                         />
                         <div>
-                          <span className="text-gray-800 group-hover:text-blue-600 block font-medium">
-                            {post.title}
+                          <span className="text-[var(--color-notice-text)] group-hover:text-blue-600 block font-medium">
+                            <div>
+                              {(() => {
+                                try {
+                                  const parsed = JSON.parse(post.title);
+                                  return (
+                                    <>
+                                      <h3 className="text-lg font-bold overflow-hidden text-ellipsis line-clamp-1 mb-2">
+                                        {parsed.writtenTitle}
+                                      </h3>
+                                      <p className="overflow-hidden text-ellipsis line-clamp-2">
+                                        {parsed.context}
+                                      </p>
+                                    </>
+                                  );
+                                } catch (e) {
+                                  return '오류';
+                                }
+                              })()}
+                            </div>
                           </span>
                           {post.author?.fullName && (
                             <span className="text-xs text-gray-500 group-hover:text-blue-500">
@@ -368,7 +383,7 @@ export default function SearchPanel({
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-gray-500 text-center">
+                <p className="text-sm text-[var(--color-notice-text)] text-center">
                   일치하는 게시글이 없습니다.
                 </p>
               )}
@@ -376,7 +391,7 @@ export default function SearchPanel({
           )}
         </div>
 
-        {recentSearches.length > 0 && (
+        {searchType === 'user' && recentSearches.length > 0 && (
           <div className="mt-6">
             <h4 className="font-semibold mb-2">최근 검색 항목</h4>
             <ul>
@@ -392,14 +407,16 @@ export default function SearchPanel({
                       alt="프로필"
                       className="w-8 h-8 rounded-full mr-1 object-cover"
                     />
-                    <span className="text-gray-800">{user.fullName}</span>
+                    <span className="text-[var(--color-notice-text)]">
+                      {user.fullName}
+                    </span>
                   </div>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       handleDeleteRecent(user._id);
                     }}
-                    className="text-gray-400 hover:text-red-500 text-sm"
+                    className="text-[var(--color-notice-text)] hover:text-[var(--color-red)] mr-8"
                   >
                     ✕
                   </button>
@@ -420,8 +437,24 @@ export default function SearchPanel({
                   onClick={() => handlePostClick(post)}
                 >
                   <div className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
-                    <span className="text-gray-800">
-                      {post.title || '제목 없음'}
+                    <span className="text-[var(--color-notice-text)]">
+                      {(() => {
+                        try {
+                          const parsed = JSON.parse(post.title);
+                          return (
+                            <>
+                              <h3 className="text-lg font-bold overflow-hidden text-ellipsis line-clamp-1 mb-2">
+                                {parsed.writtenTitle}
+                              </h3>
+                              <p className="overflow-hidden text-ellipsis line-clamp-2">
+                                {parsed.context}
+                              </p>
+                            </>
+                          );
+                        } catch (e) {
+                          return '오류';
+                        }
+                      })() || '제목 없음'}
                     </span>
                   </div>
                   <button
@@ -429,7 +462,7 @@ export default function SearchPanel({
                       e.stopPropagation();
                       handleDeleteRecentPost(post._id);
                     }}
-                    className="text-gray-400 hover:text-red-500 text-sm"
+                    className="text-[var(--color-notice-text)] hover:text-[var(--color-red)]"
                   >
                     ✕
                   </button>

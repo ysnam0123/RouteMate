@@ -19,6 +19,8 @@ import { useEffect, useState } from 'react';
 import { axiosInstance } from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 import Loading from '../components/Loading';
+import Post from '../components/channel/Post';
+import PostModal from '../components/PostModal';
 // import { useParams } from 'react-router-dom'
 
 interface Post {
@@ -27,7 +29,11 @@ interface Post {
   image: string;
   imagePublicId: string;
   channel: string;
-  author: string;
+  author: {
+    _id: string;
+    fullName: string;
+    image: string;
+  };
   likes: any[];
   comments: any[];
   createdAt: string;
@@ -61,6 +67,18 @@ export default function MyProfile() {
   const [user, setUser] = useState<UserData | null>(null);
   const [introduction, setIntroduction] = useState('');
   const [titles, setTitles] = useState<string[]>([]);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openPostModal = (post: Post) => {
+    setSelectedPost(post);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedPost(null);
+  };
 
   const navigate = useNavigate();
 
@@ -190,10 +208,20 @@ export default function MyProfile() {
         {user.posts.map((post) => (
           <div
             key={post._id}
-            className="w-full max-w-[230px] h-[230px] relative group bg-cover bg-center rounded-md"
+            className="w-full max-w-[230px] h-[230px] relative group bg-cover bg-center rounded-md cursor-pointer"
             style={{ backgroundImage: `url(${post.image})` }}
+            onClick={() =>
+              openPostModal({
+                ...post,
+                author: {
+                  _id: user._id,
+                  fullName: user.fullName,
+                  image: user.image,
+                },
+              })
+            }
           >
-            <div className="w-[111px] h-[24px] absolute bottom-3 right-5 flex gap-5 text-white opacity-0 group-hover:opacity-100 group-hover:visible invisible">
+            <div className="w-[111px] h-[24px] absolute bottom-3 right-0 flex gap-5 text-white opacity-0 group-hover:opacity-100 group-hover:visible invisible">
               <div className="flex items-center gap-1">
                 <img
                   src={testLike}
@@ -214,6 +242,17 @@ export default function MyProfile() {
           </div>
         ))}
       </div>
+      {isModalOpen && selectedPost && (
+        <PostModal
+          post={selectedPost}
+          onClose={closeModal}
+          user={{
+            _id: user._id,
+            fullName: user.fullName,
+            image: user.image,
+          }}
+        />
+      )}
     </div>
   );
 }

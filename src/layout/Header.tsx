@@ -1,33 +1,33 @@
-import { Link, useNavigate } from 'react-router-dom';
-import { axiosInstance } from '../api/axios';
-import LogoImg from '../assets/images/headerLogoImg.svg';
-import LogoText from '../assets/images/headerLogoText.svg';
-import LogoTextDark from '../assets/images/headerLogoTextDark.svg';
-import { useAuthStore } from '../stores/authStore';
-import { useDarkModeStore } from '../stores/darkModeStore';
-import { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom'
+import { axiosInstance } from '../api/axios'
+import LogoImg from '../assets/images/headerLogoImg.svg'
+import LogoText from '../assets/images/headerLogoText.svg'
+import LogoTextDark from '../assets/images/headerLogoTextDark.svg'
+import { useAuthStore } from '../stores/authStore'
+import { useDarkModeStore } from '../stores/darkModeStore'
+import { useEffect } from 'react'
 
 export default function Header() {
-  const logout = useAuthStore((state) => state.logout);
-  const isAuthenticated = useAuthStore((state) => state.isLoggedIn);
-  const navigate = useNavigate();
+  const logout = useAuthStore((state) => state.logout)
+  const isAuthenticated = useAuthStore((state) => state.isLoggedIn)
+  const navigate = useNavigate()
   const logoutHandler = async () => {
-    const { status } = await axiosInstance.post('/logout');
+    const { status } = await axiosInstance.post('/logout')
     if (status === 200) {
-      console.log('logout');
-      logout();
-      navigate('/');
+      console.log('logout')
+      logout()
+      navigate('/')
     }
-  };
-  const { isDarkMode, toggleDarkMode } = useDarkModeStore();
+  }
+  const { isDarkMode, toggleDarkMode } = useDarkModeStore()
   useEffect(() => {
-    const root = document.documentElement;
+    const root = document.documentElement
     if (isDarkMode) {
-      root.classList.add('dark');
+      root.classList.add('dark')
     } else {
-      root.classList.remove('dark');
+      root.classList.remove('dark')
     }
-  }, [isDarkMode]);
+  }, [isDarkMode])
   return (
     <>
       <header className="bg-[var(--color-header)] h-[85px] transition-all duration-300">
@@ -46,7 +46,7 @@ export default function Header() {
                   <img
                     src={isDarkMode ? LogoTextDark : LogoText}
                     alt="TravelMate 로고텍스트"
-                    className="h-11"
+                    className="h-9.5"
                   />
                 </Link>
               </div>
@@ -96,5 +96,5 @@ export default function Header() {
         </div>
       </header>
     </>
-  );
+  )
 }
