@@ -25,7 +25,7 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
             </div>
 
             {/* 사이드바 고정 */}
-            <div className="fixed top-[85px] left-0 z-40 bg-[var(--color-sideBody)]">
+            <div className="fixed top-[85px] left-0 z-40">
                 <Sidebar />
             </div>
 
