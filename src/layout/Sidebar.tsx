@@ -72,9 +72,9 @@ export default function Sidebar(): React.ReactElement {
             return;
         }
 
-        // 클릭 시 색상 활성화
+        // 일반 메뉴 클릭시
         setIsSearchMode(false);
-        setHighlightedItemId(item.id === highlightedItemId ? null : item.id);
+        setHighlightedItemId(item.id);
 
         // 메뉴별 네비게이션 라우팅
         switch (item.id) {
