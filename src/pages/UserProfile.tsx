@@ -20,6 +20,7 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router';
 import { toast } from 'react-toastify';
 import Loading from '../components/Loading';
+import PostModal from '../components/PostModal';
 
 interface Post {
   _id: string;
@@ -27,7 +28,11 @@ interface Post {
   image: string;
   imagePublicId: string;
   channel: string;
-  author: string;
+  author: {
+    fullName: string;
+    image: string;
+    _id: string;
+  };
   likes: any[];
   comments: any[];
   createdAt: string;
@@ -62,6 +67,18 @@ export default function UserProfile() {
   const [introduction, setIntroduction] = useState('');
   const [titles, setTitles] = useState<string[]>([]);
   const navigate = useNavigate();
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openPostModal = (post: Post) => {
+    setSelectedPost(post);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedPost(null);
+  };
 
   // --- 로그인한 사용자 관련 상태 ---
   const loggedInUserId = useAuthStore((state) => state.userId); // Zustand 스토어에서 가져온 로그인한 사용자의 ID
@@ -103,30 +120,29 @@ export default function UserProfile() {
     }
   }, [user]);
 
+  const fetchLoggedInUserFollowing = async () => {
+    try {
+      const { data: loggedInData } = await axiosInstance.get(
+        `/users/${loggedInUserId}`
+      );
+      if (loggedInData && Array.isArray(loggedInData.following)) {
+        setLoggedInUserFollowingIds(
+          loggedInData.following.map((followedUser: any) =>
+            typeof followedUser === 'string' ? followedUser : followedUser._id
+          )
+        );
+      } else {
+        setLoggedInUserFollowingIds([]);
+      }
+    } catch (error) {
+      console.error('로그인한 사용자 팔로잉 정보 가져오기 실패:', error);
+      setLoggedInUserFollowingIds([]);
+    }
+  };
+
   // 3. 로그인한 사용자의 팔로잉 목록 가져오기
   useEffect(() => {
     if (loggedInUserId) {
-      const fetchLoggedInUserFollowing = async () => {
-        try {
-          const { data: loggedInData } = await axiosInstance.get(
-            `/users/${loggedInUserId}`
-          );
-          if (loggedInData && Array.isArray(loggedInData.following)) {
-            setLoggedInUserFollowingIds(
-              loggedInData.following.map((followedUser: any) =>
-                typeof followedUser === 'string'
-                  ? followedUser
-                  : followedUser._id
-              )
-            );
-          } else {
-            setLoggedInUserFollowingIds([]);
-          }
-        } catch (error) {
-          console.error('로그인한 사용자 팔로잉 정보 가져오기 실패:', error);
-          setLoggedInUserFollowingIds([]);
-        }
-      };
       fetchLoggedInUserFollowing();
     } else {
       setLoggedInUserFollowingIds([]); // 로그아웃 상태면 빈 배열
@@ -170,7 +186,21 @@ export default function UserProfile() {
         userId: user._id, // 팔로우 대상 ID
       });
       toast(`${user.fullName}님을 팔로우합니다.`);
+      await fetchLoggedInUserFollowing();
       // 필요하다면 팔로워 수 등을 업데이트하기 위해 user 상태를 다시 fetch 하거나 로컬에서 업데이트
+      setLoggedInUserFollowingIds((prev) => [...prev, user._id]);
+      setUser((prevUser) =>
+        prevUser
+          ? {
+              ...prevUser,
+              followers: [...prevUser.followers, loggedInUserId],
+            }
+          : prevUser
+      );
+      console.log(user.followers);
+      console.log(loggedInUserFollowingIds);
+      window.location.reload();
+
       // 예: setUser(prevUser => prevUser ? {...prevUser, followers: [...prevUser.followers, loggedInUserId]} : null);
       // 단, followers 배열의 정확한 타입과 백엔드 응답을 고려해야 함.
     } catch (error) {
@@ -194,16 +224,43 @@ export default function UserProfile() {
     const previousIsFollowing = isFollowing;
 
     try {
-      setIsFollowing(false);
-      localStorage.setItem(localStorageKey, JSON.stringify(false));
-      // API가 팔로우 관계 ID를 요구하는지, 아니면 팔로우 대상의 userId를 요구하는지 확인 필요
-      // 여기서는 팔로우 대상의 userId를 보낸다고 가정
-      await axiosInstance.delete('/follow/delete', {
-        data: { userId: user._id }, // 언팔로우 대상 ID
-      });
-      toast(`${user.fullName}님을 언팔로우합니다.`);
-      // 필요하다면 팔로워 수 등을 업데이트
-      // 예: setUser(prevUser => prevUser ? {...prevUser, followers: prevUser.followers.filter(id => id !== loggedInUserId)} : null);
+      const commonId = user.followers.find(
+        (followerId: { _id: string } | string) =>
+          loggedInUserFollowingIds.includes(
+            typeof followerId === 'string' ? followerId : followerId._id
+          )
+      );
+      if (commonId) {
+        const res = await axiosInstance.delete('/follow/delete', {
+          data: { id: commonId },
+        });
+        toast(`${user.fullName}님을 언팔로우합니다.`);
+        await fetchLoggedInUserFollowing();
+        window.location.reload();
+        console.log('언팔로우 결과:', res.data);
+        setIsFollowing(false);
+        // API가 팔로우 관계 ID를 요구하는지, 아니면 팔로우 대상의 userId를 요구하는지 확인 필요
+        localStorage.setItem(localStorageKey, JSON.stringify(false));
+        // 필요하다면 팔로워 수 등을 업데이트
+        setLoggedInUserFollowingIds((prev) =>
+          prev.filter((id) => id !== user._id)
+        );
+        setUser((prevUser) =>
+          prevUser
+            ? {
+                ...prevUser,
+                followers: prevUser.followers.filter((id) => {
+                  const targetId =
+                    typeof id === 'string' ? id : (id as any)._id;
+                  return targetId !== loggedInUserId;
+                }),
+              }
+            : prevUser
+        );
+        //   // 예: setUser(prevUser => prevUser ? {...prevUser, followers: prevUser.followers.filter(id => id !== loggedInUserId)} : null);
+      } else {
+        toast('팔로우 관계가 없습니다.');
+      }
     } catch (error) {
       console.error('언팔로우 실패:', error);
       toast.error(`${user.fullName}님 언팔로우 실패.`);
@@ -334,8 +391,9 @@ export default function UserProfile() {
         {user.posts.map((post) => (
           <div
             key={post._id}
-            className="w-full max-w-[230px] h-[230px] relative group bg-cover bg-center rounded-md"
+            className="w-full max-w-[230px] h-[230px] relative group bg-cover bg-center rounded-md cursor-pointer"
             style={{ backgroundImage: `url(${post.image})` }}
+            onClick={() => openPostModal(post)}
           >
             <div className="w-[111px] h-[24px] absolute bottom-3 right-5 flex gap-5 text-white opacity-0 group-hover:opacity-100 group-hover:visible invisible">
               <div className="flex items-center gap-1">
@@ -358,6 +416,17 @@ export default function UserProfile() {
           </div>
         ))}
       </div>
+      {isModalOpen && selectedPost && (
+        <PostModal
+          post={selectedPost}
+          onClose={closeModal}
+          user={{
+            _id: user._id,
+            fullName: user.fullName,
+            image: user.image,
+          }}
+        />
+      )}
     </div>
   );
 }
