@@ -354,7 +354,10 @@ export default function ProfileEdit() {
 
             {/* 버튼 */}
             <div className="flex gap-3 justify-end">
-              <Button className="w-[100px] h-[40px] bg-white text-[var(--color-main-navy)] text-base font-bold rounded-[10px] border border-[#d1d1d1]">
+              <Button
+                className="w-[100px] h-[40px] bg-white text-[var(--color-main-navy)] text-base font-bold rounded-[10px] border border-[#d1d1d1]"
+                onClick={() => navigate('/myprofile')}
+              >
                 취소
               </Button>
               <Button
