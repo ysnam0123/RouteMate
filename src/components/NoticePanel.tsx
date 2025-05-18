@@ -161,7 +161,7 @@ function NoticePanel({ onClose, isOpen }: NoticePanelProps): React.ReactElement 
 
     return (
         <div
-            className="px-4 flex flex-col text-sm bg-[var(--color-main-bg)] shadow-md h-full w-[360px]"
+            className="px-4 flex flex-col text-sm bg-[var(--color-notice-bg)] shadow-md h-full w-[360px]"
             style={{ boxShadow: '4px 0 6px rgba(0, 0, 0, 0.15)' }}
         >
             <div className="flex justify-between items-center mb-2 pt-4">

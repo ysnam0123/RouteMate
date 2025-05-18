@@ -191,7 +191,7 @@ export default function SearchPanel({ onClose }: SearchPanelProps): React.ReactE
     }
 
     return (
-        <div className="px-4 flex flex-col text-[var(--color-sidebar-text)] text-sm bg-[var(--color-sideBody)] h-full w-[22.5rem] shadow-[4px_0_6px_rgba(0,0,0,0.15)]">
+        <div className="px-4 flex flex-col text-[var(--color-notice-text)] text-sm bg-[var(--color-notice-bg)] h-full w-[22.5rem] shadow-[4px_0_6px_rgba(0,0,0,0.15)]">
             <div className="flex justify-between items-center pt-4">
                 {' '}
                 <h2 className="text-2xl font-semibold flex-shrink-0 mr-28.5"> 검색</h2>
@@ -297,9 +297,7 @@ export default function SearchPanel({ onClose }: SearchPanelProps): React.ReactE
                                                     alt="프로필"
                                                     className="w-8 h-8 rounded-full mr-1 object-cover"
                                                 />
-                                                <span className="text-[var(--color-sidebar-text)]">
-                                                    {user.fullName}
-                                                </span>
+                                                <span className="text-[var(--color-notice-text)]">{user.fullName}</span>
                                             </div>
                                             {/* 온라인 상태 아이콘 */}
                                             <div className="mr-4">
@@ -313,7 +311,7 @@ export default function SearchPanel({ onClose }: SearchPanelProps): React.ReactE
                                     ))}
                                 </ul>
                             ) : (
-                                <p className="text-sm text-[var(--color-sidebar-text)] text-center">
+                                <p className="text-sm text-[var(--color-notice-text)] text-center">
                                     일치하는 사용자가 없습니다.
                                 </p>
                             )}
@@ -336,7 +334,7 @@ export default function SearchPanel({ onClose }: SearchPanelProps): React.ReactE
                                                     className="w-8 h-8 rounded-full object-cover"
                                                 />
                                                 <div>
-                                                    <span className="text-[var(--color-sidebar-text)] group-hover:text-blue-600 block font-medium">
+                                                    <span className="text-[var(--color-notice-text)] group-hover:text-blue-600 block font-medium">
                                                         <div>
                                                             {(() => {
                                                                 try {
@@ -368,7 +366,7 @@ export default function SearchPanel({ onClose }: SearchPanelProps): React.ReactE
                                     ))}
                                 </ul>
                             ) : (
-                                <p className="text-sm text-[var(--color-sidebar-text)] text-center">
+                                <p className="text-sm text-[var(--color-notice-text)] text-center">
                                     일치하는 게시글이 없습니다.
                                 </p>
                             )}
@@ -392,7 +390,7 @@ export default function SearchPanel({ onClose }: SearchPanelProps): React.ReactE
                                             alt="프로필"
                                             className="w-8 h-8 rounded-full mr-1 object-cover"
                                         />
-                                        <span className="text-[var(--color-sidebar-text)]">{user.fullName}</span>
+                                        <span className="text-[var(--color-notice-text)]">{user.fullName}</span>
                                     </div>
                                     <button
                                         onClick={(e) => {
@@ -420,7 +418,7 @@ export default function SearchPanel({ onClose }: SearchPanelProps): React.ReactE
                                     onClick={() => handlePostClick(post)}
                                 >
                                     <div className="flex items-center gap-2 cursor-pointer hover:text-blue-600">
-                                        <span className="text-[var(--color-sidebar-text)]">
+                                        <span className="text-[var(--color-notice-text)]">
                                             {(() => {
                                                 try {
                                                     const parsed = JSON.parse(post.title);

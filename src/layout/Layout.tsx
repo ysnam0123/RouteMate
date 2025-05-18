@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
@@ -18,20 +18,20 @@ export default function Layout({ children }: { children?: React.ReactNode }) {
     }, [isDarkMode]);
 
     return (
-        <div className="h-screen w-screen flex flex-col">
-            {/* 헤더 */}
-            <div className="h-[85px] w-full fixed top-0 left-0 right-0 z-50">
+        <div className="h-screen w-screen overflow-hidden relative">
+            {/* 헤더 고정 */}
+            <div className="fixed top-0 left-0 right-0 z-50">
                 <Header />
             </div>
 
-            <div className="flex flex-row pt-[85px] h-full">
-                {/* 사이드바 */}
-                <div className="transition-all duration-300">
+            {/* 사이드바 고정 */}
+            <div className="bg-[var(--color-sideBody)]">
+                <div className="fixed top-[85px] left-0 z-40">
                     <Sidebar />
                 </div>
 
-                {/* 본문 */}
-                <main className="flex-grow bg-[var(--color-main-bg)] overflow-y-auto relative transition-all duration-300">
+                {/* 본문 영역 */}
+                <main className="ml-[235px] mt-[85px]  h-[calc(100vh-85px)] overflow-y-auto bg-[var(--color-main-bg)] transition-all duration-300 ">
                     {children || <Outlet />}
                     <button onClick={toggleDarkMode} className="absolute right-[30px] top-[90%] hover:scale-[1.1]">
                         <img
