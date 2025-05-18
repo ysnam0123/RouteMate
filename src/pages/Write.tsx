@@ -362,6 +362,7 @@ export default function Write() {
           <Button
             className="w-[120px] h-[40px] bg-white text-[var(--color-main-navy)] text-base font-bold rounded-[10px] border border-[#d1d1d1] hover:bg-[var(--color-red)] hover:text-white active:scale-[0.95]
           transition-bg duration-200"
+            onClick={() => navigate('/channel')}
           >
             취소
           </Button>
