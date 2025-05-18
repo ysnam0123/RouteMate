@@ -3,7 +3,7 @@ import profile from '../assets/images/profile.svg';
 import bedIcon from '/../assets/icons/bedIcon.svg';
 import ImageSlider from './channel/ImageSlider';
 import PostInteraction from './channel/PostInteraction';
-// import PostComments from './channel/PostComments';
+import PostComments from './channel/PostComments';
 import { axiosInstance } from '../api/axios';
 import { toast } from 'react-toastify';
 
@@ -40,12 +40,23 @@ interface PostModalProps {
   };
 }
 
+interface ParsedTitle {
+  uploadedImages: string[];
+  writtenTitle: string;
+  tags: string[];
+  locations: string[];
+  hotels: string[];
+  cost: string;
+  context: string;
+  author?: any[];
+}
+
 export default function PostModal({ post, onClose, user }: PostModalProps) {
   if (!post) return null;
-  const parsedTitle = JSON.parse(post.title);
+  const parsedTitle = JSON.parse(post.title) as ParsedTitle;
   const imageUrls: string[] = parsedTitle.uploadedImages ?? [];
-  // const [showBox, setShowBox] = useState(false);
-  // const toggleCommentBox = () => setShowBox((prev) => !prev);
+  const [showBox, setShowBox] = useState(false);
+  const toggleCommentBox = () => setShowBox((prev) => !prev);
   const [showMenu, setShowMenu] = useState(false);
   const toggleMenu = () => setShowMenu((prev) => !prev);
   const [isEditing, setIsEditing] = useState(false);
@@ -305,7 +316,7 @@ export default function PostModal({ post, onClose, user }: PostModalProps) {
                 likes={post.likes}
                 comments={post.comments}
               />
-              {/* {!showBox && (
+              {!showBox && (
                 <div
                   className="text-[var(--color-subText)] cursor-pointer underline py-0.5 ml-[4px]"
                   onClick={toggleCommentBox}
@@ -314,9 +325,8 @@ export default function PostModal({ post, onClose, user }: PostModalProps) {
                 </div>
               )}
               {showBox && (
-                
-              )} */}
-              {/* <PostComments postId={post._id} comments={post.comments} /> */}
+                <PostComments postId={post._id} comments={post.comments} />
+              )}
             </div>
           )}
         </div>

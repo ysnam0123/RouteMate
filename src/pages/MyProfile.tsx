@@ -218,6 +218,13 @@ export default function MyProfile() {
                   fullName: user.fullName,
                   image: user.image,
                 },
+                // 원래는 comment id값만와서 화면이 터지는 바람에 일단 화면이라도 살리기위해 author값 받았습니다
+                comments: post.comments.map(() => ({
+                  author: {
+                    fullName: user.fullName,
+                    image: user.image,
+                  },
+                })),
               })
             }
           >
