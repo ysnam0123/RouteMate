@@ -1,11 +1,11 @@
-import Button from '../components/button';
-import NotFoundImg from '../assets/images/NotFound.svg';
-import { useNavigate } from 'react-router';
+import Button from '../components/button'
+import NotFoundImg from '../assets/images/NotFound.svg'
+import { useNavigate } from 'react-router'
 export default function NotFound() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
   const goToChannel = () => {
-    navigate('/Channel');
-  };
+    navigate('/Channel')
+  }
   return (
     <div className="flex flex-col justify-center items-center mt-[10%]">
       <img
@@ -23,8 +23,8 @@ export default function NotFound() {
         className="bg-[var(--color-main-navy)] w-[248px] h-[53px] text-[22px]"
         onClick={goToChannel}
       >
-        RouteMate와 길 찾기
+        TravelMate와 길 찾기
       </Button>
     </div>
-  );
+  )
 }
