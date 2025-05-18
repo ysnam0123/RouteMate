@@ -1,17 +1,17 @@
-import { useState } from 'react';
-import filterIcon from '../../assets/icons/filterIcon.svg';
+import { useState } from 'react'
+import filterIcon from '../../assets/icons/filterIcon.svg'
 
 interface Channel {
-  _id: string;
-  name: string;
+  _id: string
+  name: string
 }
 
 interface ChannelListProps {
-  channels: Channel[];
-  onSelect: (channelId: string) => void;
-  selectedChannelId: string | null;
-  onFilterChange?: (filters: { cost?: number; location?: string }) => void;
-  className?: string;
+  channels: Channel[]
+  onSelect: (channelId: string) => void
+  selectedChannelId: string | null
+  onFilterChange?: (filters: { cost?: number; location?: string }) => void
+  className?: string
 }
 
 export default function ChannelList({
@@ -20,35 +20,35 @@ export default function ChannelList({
   selectedChannelId,
   onFilterChange,
 }: ChannelListProps) {
-  const [cost, setCost] = useState<number>(0);
-  const [location, setLocation] = useState<string>('');
+  const [cost, setCost] = useState<number>(0)
+  const [location, setLocation] = useState<string>('')
 
-  const [useCostFilter, setUseCostFilter] = useState(false);
-  const [useLocationFilter, setUseLocationFilter] = useState(false);
+  const [useCostFilter, setUseCostFilter] = useState(false)
+  const [useLocationFilter, setUseLocationFilter] = useState(false)
 
-  const [showFilter, setShowFilter] = useState(true);
-  const filterToggle = () => setShowFilter((prev) => !prev);
+  const [showFilter, setShowFilter] = useState(true)
+  const filterToggle = () => setShowFilter((prev) => !prev)
 
   const applyFilters = () => {
-    const filters: { cost?: number; location?: string } = {};
-    if (useCostFilter) filters.cost = cost;
-    if (useLocationFilter) filters.location = location;
+    const filters: { cost?: number; location?: string } = {}
+    if (useCostFilter) filters.cost = cost
+    if (useLocationFilter) filters.location = location
 
     if (onFilterChange) {
-      onFilterChange(filters);
+      onFilterChange(filters)
     }
-  };
+  }
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setLocation(value);
-  };
+    const value = e.target.value
+    setLocation(value)
+  }
 
   return (
     <div className="flex justify-center relative">
       <div className="flex-col">
         <ul className="flex space-x-4 mt-[10px] mb-[20px] flex-row h-[55px]">
           {channels.map((channel) => {
-            const isSelected = channel._id === selectedChannelId;
+            const isSelected = channel._id === selectedChannelId
             return (
               <li
                 key={channel._id}
@@ -62,7 +62,7 @@ export default function ChannelList({
               >
                 {channel.name}
               </li>
-            );
+            )
           })}
         </ul>
 
@@ -70,15 +70,34 @@ export default function ChannelList({
         <img
           src={filterIcon}
           alt="filterIcon"
-          className="w-[30px] h-[30px] absolute right-[30px] top-[90px] cursor-pointer hover:scale-[1.3]"
+          className="w-[30px] h-[30px] absolute left-0 top-[90px] cursor-pointer hover:scale-[1.3]"
           onClick={filterToggle}
         />
 
-        {!showFilter && <div className="h-[40px]"></div>}
+        {!showFilter && <div className="h-[40px] mb-[30px]"></div>}
 
         {/* 필터 UI */}
         {showFilter && (
-          <div className="flex-col flex gap-2 pl-[30px] px-[10px] py-[20px]">
+          <div className="flex-col flex gap-2 pl-[40px] px-[10px] pt-[5px] pb-[20px]">
+            {/* 장소 필터 */}
+            <div className="flex items-center gap-2">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  checked={useLocationFilter}
+                  onChange={(e) => setUseLocationFilter(e.target.checked)}
+                />
+                <span className="text-[var(--color-text-filter)]">장소</span>
+              </label>
+              <input
+                type="text"
+                value={location}
+                onChange={handleLocationChange}
+                className="border border-[#d9d9d9] rounded-[10px] w-[300px] h-[10px] px-[10px] py-[15px] text-[var(--color-text-filter)]"
+                placeholder="장소를 입력하세요"
+                disabled={!useLocationFilter}
+              />
+            </div>
             {/* 비용 필터 */}
             <div className="flex items-center gap-3">
               <label className="flex items-center gap-2">
@@ -97,7 +116,7 @@ export default function ChannelList({
                 step={10000}
                 value={cost}
                 onChange={(e) => setCost(Number(e.target.value))}
-                className="w-[100px]"
+                className="w-[200px]"
                 list="markers"
                 disabled={!useCostFilter}
               />
@@ -107,44 +126,25 @@ export default function ChannelList({
                 <option value="1200000"></option>
                 <option value="1600000"></option>
               </datalist>
-              <span className="text-[var(--color-text-filter)]">
+              <span className="text-[var(--color-text-filter)] text-[14px]">
                 200만원 이상
               </span>
-              <button
-                onClick={applyFilters}
-                className="bg-[var(--color-main-navy)] text-white cursor-pointer px-4 py-2 hover:bg-[var(--color-main-navy-hover)] rounded-xl w-[80px] ml-[100px] "
-                disabled={!useCostFilter && !useLocationFilter}
-              >
-                적용
-              </button>
             </div>
 
-            <p className="text-[var(--color-cost-text)] mb-[10px]">
+            <p className="text-[14px] text-[var(--color-cost-text)] mb-[10px]">
               현재 설정된 경비: <strong>{cost.toLocaleString()}원</strong>
             </p>
 
-            {/* 장소 필터 */}
-            <div className="flex items-center gap-2">
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={useLocationFilter}
-                  onChange={(e) => setUseLocationFilter(e.target.checked)}
-                />
-                <span className="text-[var(--color-text-filter)]">장소</span>
-              </label>
-              <input
-                type="text"
-                value={location}
-                onChange={handleLocationChange}
-                className="border rounded-[5px] w-[300px] h-[20px] px-[10px] py-[20px] text-[var(--color-text-filter)]"
-                placeholder="장소를 입력하세요"
-                disabled={!useLocationFilter}
-              />
-            </div>
+            <button
+              onClick={applyFilters}
+              className="absolute right-0 bottom-[30px] bg-[var(--color-main-navy)] text-white cursor-pointer px-4 py-2 hover:bg-[var(--color-main-navy-hover)] rounded-xl w-[80px]"
+              disabled={!useCostFilter && !useLocationFilter}
+            >
+              적용
+            </button>
           </div>
         )}
       </div>
     </div>
-  );
+  )
 }
