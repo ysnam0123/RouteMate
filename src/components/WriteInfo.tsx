@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from 'react';
-import WriteInfoMenu from './WriteInfoMenu';
-import { axiosInstance } from '../api/axios';
-import deleteTagsGray from '../assets/icons/deleteTagsGray.png';
+import { useEffect, useRef, useState } from 'react'
+import WriteInfoMenu from './WriteInfoMenu'
+import { axiosInstance } from '../api/axios'
+import deleteTagsGray from '../assets/icons/deleteTagsGray.png'
 
 interface Channel {
-  id: string;
-  name: string;
+  id: string
+  name: string
 }
 
 export default function WriteInfo({
@@ -15,60 +15,61 @@ export default function WriteInfo({
   onSelectChange,
   onTagChange,
 }: {
-  iconSrc: string;
-  tagName: string;
-  type?: string;
-  onSelectChange?: (selectedId: string) => void;
-  onTagChange?: (tags: string[]) => void;
+  iconSrc: string
+  tagName: string
+  type?: string
+  onSelectChange?: (selectedId: string) => void
+  onTagChange?: (tags: string[]) => void
 }) {
-  const [tags, setTags] = useState<string[]>([]);
-  const inputRef = useRef<HTMLInputElement | null>(null);
-  const selectRef = useRef<HTMLSelectElement | null>(null);
+  const [tags, setTags] = useState<string[]>([])
+  const inputRef = useRef<HTMLInputElement | null>(null)
+  const selectRef = useRef<HTMLSelectElement | null>(null)
+  const [isComposing, setIsComposing] = useState(false)
 
   const addTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !isComposing) {
       const value = type
         ? inputRef.current?.value.trim()
-        : selectRef.current?.value.trim();
+        : selectRef.current?.value.trim()
 
       if (value) {
-        const newTags = [...tags, value];
-        setTags(newTags);
+        const newTags = [...tags, value]
+        setTags(newTags)
         if (onTagChange) {
-          onTagChange(newTags);
+          onTagChange(newTags)
         }
-        if (type && inputRef.current) inputRef.current.value = '';
+        if (type && inputRef.current) inputRef.current.value = ''
       }
     }
-  };
+  }
 
   const deleteTag = (indexToDelete: number) => {
-    setTags(tags.filter((_, index) => index !== indexToDelete));
-  };
+    setTags(tags.filter((_, index) => index !== indexToDelete))
+  }
 
   //채널 목록 불러오기
-  const [channels, setChannels] = useState<Channel[]>([]);
+  const [channels, setChannels] = useState<Channel[]>([])
 
   useEffect(() => {
     const getChannel = async () => {
-      const { data } = await axiosInstance.get(`channels`);
+      const { data } = await axiosInstance.get(`channels`)
       //필요한 id,name 추출
       const simplified = data.map((channel: { _id: string; name: string }) => ({
         id: channel._id,
         name: channel.name,
-      }));
-      setChannels(simplified);
-    };
-    getChannel();
-  }, []);
+      }))
+      setChannels(simplified)
+    }
+    getChannel()
+  }, [])
 
   //Write.tsx에 channelId 전달
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedId = e.target.value;
+    const selectedId = e.target.value
     if (onSelectChange) {
-      onSelectChange(selectedId);
+      onSelectChange(selectedId)
     }
-  };
+  }
 
   return (
     <>
@@ -80,6 +81,8 @@ export default function WriteInfo({
             <input
               type={type}
               onKeyDown={addTag}
+              onCompositionStart={() => setIsComposing(true)}
+              onCompositionEnd={() => setIsComposing(false)}
               ref={inputRef}
               className="border border-[#AFB1B6] rounded-md py-1 px-2 w-[238px] text-[15px] focus:outline-[#60b5ff]"
               placeholder={tagName + ' 추가'}
@@ -124,5 +127,5 @@ export default function WriteInfo({
         </div>
       </div>
     </>
-  );
+  )
 }
