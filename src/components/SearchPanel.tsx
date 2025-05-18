@@ -397,7 +397,7 @@ export default function SearchPanel({ onClose }: SearchPanelProps): React.ReactE
                                             e.stopPropagation();
                                             handleDeleteRecent(user._id);
                                         }}
-                                        className="text-[var(--color-white)] hover:text-[var(--color-red)] mr-8"
+                                        className="text-[var(--color-notice-text)] hover:text-[var(--color-red)] mr-8"
                                     >
                                         ✕
                                     </button>
@@ -443,7 +443,7 @@ export default function SearchPanel({ onClose }: SearchPanelProps): React.ReactE
                                             e.stopPropagation();
                                             handleDeleteRecentPost(post._id);
                                         }}
-                                        className="text-[var(--color-white)] hover:text-[var(--color-red)]"
+                                        className="text-[var(--color-notice-text)] hover:text-[var(--color-red)]"
                                     >
                                         ✕
                                     </button>
