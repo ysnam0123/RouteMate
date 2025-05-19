@@ -317,7 +317,7 @@ export default function UserProfile() {
   ];
 
   return (
-    <div className="w-full max-w-[1200px] mx-auto p-4 mt-[55px]">
+    <div className="w-full max-w-[1100px] mx-auto p-4 mt-[55px]">
       {/* 상단 프로필 영역 */}
       <div className="flex flex-wrap md:flex-nowrap items-start gap-5">
         {/* 프로필 사진 */}
