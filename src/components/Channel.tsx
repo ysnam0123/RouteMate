@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+
 import ChannelNav from '../components/channel/ChannelNav';
-// import Sidebar from '../components/sidebar/Sidebar';
+import { axiosInstance } from '../api/axios';
 
 interface Channel {
   _id: string;
@@ -16,9 +16,7 @@ export default function Channel() {
   useEffect(() => {
     async function fetchChannels() {
       try {
-        const res = await axios.get<Channel[]>(
-          'http://13.125.208.179:5001/channels'
-        );
+        const res = await axiosInstance.get('/channels');
         setChannels(res.data);
       } catch (err) {
         console.error('채널 가져오기 실패:', err);

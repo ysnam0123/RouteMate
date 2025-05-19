@@ -56,7 +56,7 @@ export default function SearchPanel({
 
   const navigate = useNavigate();
 
-  const { isDarkMode, toggleDarkMode } = useDarkModeStore();
+  const { isDarkMode } = useDarkModeStore();
 
   useEffect(() => {
     const root = document.documentElement;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const videos = [
   '/videos/home1.mp4',
@@ -9,7 +9,7 @@ const videos = [
 ];
 
 export default function useRandomVideo() {
-  const [videoSrc, setVideoSrc] = useState(() => {
+  const [videoSrc] = useState(() => {
     const initial = videos[Math.floor(Math.random() * videos.length)];
     return initial;
   });

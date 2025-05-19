@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDarkModeStore } from '../stores/darkModeStore';
 
 export default function Loading() {
-  const { isDarkMode, toggleDarkMode } = useDarkModeStore();
+  const { isDarkMode } = useDarkModeStore();
   useEffect(() => {
     const root = document.documentElement;
     if (isDarkMode) {

@@ -19,6 +19,7 @@ interface Post {
   likes: any[];
   comments: any[];
   author: {
+    _id: string;
     fullName: string;
     image: string;
   };
@@ -71,9 +72,7 @@ export default function ChannelNav({ channels }: ChannelNavProps) {
   // 채널 게시글 불러오기
   const showChannel = async (channelId: string) => {
     try {
-      const res = await axiosInstance.get<Post[]>(
-        `/posts/channel/${channelId}`
-      );
+      const res = await axiosInstance.get(`/posts/channel/${channelId}`);
       setPosts(res.data);
       setSelectedChannel(channelId);
     } catch (error) {

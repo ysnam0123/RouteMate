@@ -19,7 +19,7 @@ export default function Header() {
       navigate('/');
     }
   };
-  const { isDarkMode, toggleDarkMode } = useDarkModeStore();
+  const { isDarkMode } = useDarkModeStore();
   useEffect(() => {
     const root = document.documentElement;
     if (isDarkMode) {

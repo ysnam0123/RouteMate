@@ -39,7 +39,7 @@ export default function PostInteraction({
   postAuthorId,
   likes,
 }: PostInteractionProps) {
-  const { isDarkMode, toggleDarkMode } = useDarkModeStore();
+  const { isDarkMode } = useDarkModeStore();
 
   // 좋아요를 눌렀는지 안눌렀는지
   const [liked, setLiked] = useState(false);

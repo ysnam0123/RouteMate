@@ -4,7 +4,10 @@ import { toast } from 'react-toastify';
 
 // Axios 인스턴스 생성
 export const axiosInstance = axios.create({
-  baseURL: 'http://13.125.208.179:5001',
+  baseURL:
+    window.location.hostname === 'localhost'
+      ? 'http://13.125.208.179:5001'
+      : '/api',
   headers: {
     'Content-Type': 'application/json',
   },

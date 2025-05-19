@@ -39,11 +39,6 @@ interface likesObj {
   createdAt: string;
 }
 
-interface commentsObj {
-  _id: string;
-  comment: string;
-  author: { fullname: string; image: string };
-}
 interface PostModalProps {
   isMyProfile?: boolean;
   post: PostType | null;

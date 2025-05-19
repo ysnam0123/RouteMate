@@ -81,8 +81,8 @@ export default function PostComments({ postId, comments }: PostCommentsProps) {
       _id: 'temp-' + Date.now(),
       comment: comment,
       author: {
-        fullName: userFullname,
-        image: userImage,
+        fullName: fullname,
+        image: image,
       },
     };
     console.log(fakeComment);
@@ -105,7 +105,7 @@ export default function PostComments({ postId, comments }: PostCommentsProps) {
         comment,
       });
       // 내가 새로 작성한 댓글내용
-      const realComment: commentsObj = response.data.comment;
+      // const realComment: commentsObj = response.data.comment;
       console.log('진짜댓글의 객체:', response.data);
 
       // setCommentList((prev) =>
