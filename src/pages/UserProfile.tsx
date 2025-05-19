@@ -70,11 +70,15 @@ export default function UserProfile() {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const openPostModal = (post: Post) => {
-    setSelectedPost(post);
-    setIsModalOpen(true);
-    console.log(selectedPost);
-    console.log(isModalOpen);
+  const openPostModal = async (post: Post) => {
+    try {
+      const { data: fullPost } = await axiosInstance.get(`/posts/${post._id}`);
+
+      setSelectedPost(fullPost);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('게시물 상세 불러오기 실패:', error);
+    }
   };
 
   const closeModal = () => {
