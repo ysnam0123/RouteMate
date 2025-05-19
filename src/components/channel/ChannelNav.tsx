@@ -39,7 +39,7 @@ export default function ChannelNav({ channels }: ChannelNavProps) {
     cost?: number;
     location?: string;
   }) => {
-    setFilters((prev) => ({ ...prev, ...newFilters }));
+    setFilters(newFilters);
   };
 
   // 필터된 게시글
@@ -105,9 +105,11 @@ export default function ChannelNav({ channels }: ChannelNavProps) {
 
       {/* 필터링된 게시글 출력 */}
       <div className="flex-col items-center justify-center">
-        {filteredPosts.map((post) => (
-          <Post key={post._id} post={post} />
-        ))}
+        {filteredPosts.length === 0 ? (
+          <p className="text-center text-gray-500 mt-10">게시글이 없습니다.</p>
+        ) : (
+          filteredPosts.map((post) => <Post key={post._id} post={post} />)
+        )}
       </div>
     </>
   );

@@ -74,20 +74,20 @@ export default function SuperAdmin() {
   return (
     <>
       <>
-        <div className="ml-[130px] mt-[50px] ">
+        <div className="ml-[130px] mt-[50px] text-[var(--color-auth-text)]">
           <section className="mb-[100px]">
             <h1 className="font-bold text-[32px] mb-[40px]">채널 관리</h1>
             <div className="flex">
               {channels.map((channel) => (
                 <div
                   key={channel.id}
-                  className="w-[150px] h-[55px] border rounded-[10px] border-[#0F172A] text-[15px] font-semibold  items-center flex justify-center mr-[10px] relative"
+                  className="w-[150px] h-[55px] border rounded-[10px] border-[var(--color-auth-channel-border)] text-[15px] font-semibold  items-center flex justify-center mr-[10px] relative"
                 >
                   {channel.name}
                   <img
                     src={deleteIcon}
                     alt="deleteIcon"
-                    className="absolute right-[-10px] top-[-10px] bg-[#fff]"
+                    className="absolute right-[-10px] top-[-10px] cursor-pointer hover:scale-[1.3]"
                     onClick={() => deleteChannel(channel.id)}
                   />
                 </div>
@@ -117,7 +117,7 @@ export default function SuperAdmin() {
               ) : (
                 <div
                   onClick={() => setIsCreating(true)}
-                  className="w-[150px] h-[55px] border rounded-[10px] border-[#60B5FF] bg-[#60B5FF] text-[#FCFDFF] text-[15px] font-semibold flex items-center justify-center mr-[10px] cursor-pointer"
+                  className="w-[150px] h-[55px] rounded-[10px]  bg-[#60B5FF] text-[#FCFDFF] text-[15px] font-semibold flex items-center justify-center mr-[10px] cursor-pointer transition-all duration-150 hover:scale-[1.1] hover:bg-[var(--color-main-blue-hover)]"
                 >
                   채널 생성
                 </div>
