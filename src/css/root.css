@@ -63,6 +63,8 @@
 
   /* 프로필 */
   --color-profile-text: #000000;
+  --color-tag-bg: #ffffff;
+  --color-tag-text: #000000;
 
   /* 로딩 */
   --color-loading-bg: #ffffff;
@@ -128,6 +130,8 @@
 
   /* 프로필 */
   --color-profile-text: #ffffff;
+  --color-tag-bg: #0f172a;
+  --color-tag-text: #ffffff;
 
   /* 로딩 */
   --color-loading-bg: #1d2635;

@@ -317,7 +317,7 @@ export default function UserProfile() {
   ];
 
   return (
-    <div className="w-full max-w-[1000px] mx-auto p-4 mt-[55px]">
+    <div className="w-full max-w-[1200px] mx-auto p-4 mt-[55px]">
       {/* 상단 프로필 영역 */}
       <div className="flex flex-wrap md:flex-nowrap items-start gap-5">
         {/* 프로필 사진 */}
@@ -338,16 +338,18 @@ export default function UserProfile() {
               return (
                 <Button
                   key={index}
-                  className="w-[174px] h-[31px] px-3 py-1 rounded-[19px] text-sm relative font-bold border border-[#434343] bg-white"
+                  className="w-[174px] h-[40px] px-3 py-1 rounded-[19px] text-sm relative font-bold border border-[#434343] bg-[var(--color-tag-bg)]"
                 >
                   {tag?.icon && (
                     <img
                       src={tag.icon}
                       alt={`${title} 아이콘`}
-                      className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2"
+                      className="w-7 h-7 absolute left-3 top-1/2 -translate-y-1/2 "
                     />
                   )}
-                  <span className="ml-5">{title}</span>
+                  <span className="ml-5 text-[var(--color-tag-text)]">
+                    {title}
+                  </span>
                 </Button>
               );
             })}
@@ -400,11 +402,11 @@ export default function UserProfile() {
         {user.posts.map((post) => (
           <div
             key={post._id}
-            className="w-full max-w-[230px] h-[230px] relative group bg-cover bg-center rounded-md cursor-pointer mr-[15px]"
+            className="w-1/5 aspect-square relative group bg-cover bg-center rounded-md cursor-pointer mr-[10px] mb-[10px]"
             style={{ backgroundImage: `url(${post.image})` }}
             onClick={() => openPostModal(post)}
           >
-            <div className="w-[111px] h-[24px] absolute bottom-3 right-5 flex gap-5 text-white opacity-0 group-hover:opacity-100 group-hover:visible invisible">
+            <div className="w-[111px] h-[24px] absolute bottom-3 right-1 flex gap-3 text-white opacity-0 group-hover:opacity-100 group-hover:visible invisible">
               <div className="flex items-center gap-1">
                 <img
                   src={testLike}

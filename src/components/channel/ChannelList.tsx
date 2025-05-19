@@ -123,10 +123,11 @@ export default function ChannelList({
                 disabled={!useCostFilter}
               />
               <datalist id="markers">
-                <option value="200000"></option>
+                <option value="100000"></option>
+                <option value="300000"></option>
                 <option value="700000"></option>
                 <option value="1200000"></option>
-                <option value="1600000"></option>
+                <option value="1700000"></option>
               </datalist>
               <span className="text-[var(--color-text-filter)] text-[14px]">
                 200만원 이상
@@ -137,14 +138,14 @@ export default function ChannelList({
               현재 설정된 경비: <strong>{cost.toLocaleString()}원</strong>
             </p>
 
-            {/* 적용 버튼은 이제 필수 아님 */}
-            <button
+            {/* 적용 버튼은 필수 아님 */}
+            {/* <button
               onClick={() => {}} // 선택사항: 아무 동작 안 하거나 제거해도 됨
               className="absolute right-0 bottom-[30px] bg-[var(--color-main-navy)] text-white cursor-pointer px-4 py-2 hover:bg-[var(--color-main-navy-hover)] rounded-xl w-[80px]"
               disabled={!useCostFilter && !useLocationFilter}
             >
               적용
-            </button>
+            </button> */}
           </div>
         )}
       </div>
