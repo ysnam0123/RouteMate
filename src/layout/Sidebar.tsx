@@ -3,6 +3,7 @@ import newPostIcon from '../assets/icons/newPostIcon.svg';
 import mate from '../assets/icons/homeIcon.svg';
 import search from '../assets/icons/Search.svg';
 import notice from '../assets/icons/notificationIcon.svg';
+import noticeon from '../assets/icons/notificationIconOn.svg';
 import history from '../assets/icons/profileIcon.svg';
 import settings from '../assets/icons/setting.svg';
 import { useEffect, useState } from 'react';
@@ -10,6 +11,7 @@ import SearchPanel from '../components/SearchPanel';
 import NoticePanel from '../components/NoticePanel';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/authStore';
+import { useNotificationStore } from '../stores/notificationStore';
 
 export default function Sidebar(): React.ReactElement {
     const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
@@ -20,6 +22,7 @@ export default function Sidebar(): React.ReactElement {
     const [highlightedItemId, setHighlightedItemId] = useState<string | null>(null);
 
     const location = useLocation();
+    const { hasUnread, fetchNotifications } = useNotificationStore();
 
     useEffect(() => {
         if (location.pathname.startsWith('/profile/')) {
@@ -58,6 +61,11 @@ export default function Sidebar(): React.ReactElement {
                 setIsSearchMode(false);
         }
     }, [location.pathname]);
+
+    useEffect(() => {
+        // 마운트 시 알림 상태 최신화
+        fetchNotifications();
+    }, []);
 
     const handleItemClick = (item: MenuItem, event: React.MouseEvent) => {
         event.preventDefault();
@@ -131,7 +139,7 @@ export default function Sidebar(): React.ReactElement {
 
               {
                   id: 'notice',
-                  icon: <img src={notice} />,
+                  icon: <img src={hasUnread ? noticeon : notice} />,
                   text: '여정 알림판',
                   path: '/notice',
               },
