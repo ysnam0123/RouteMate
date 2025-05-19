@@ -1,9 +1,9 @@
-// src/components/NoticePanel.tsx
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { axiosInstance } from '../api/axios';
 import profile from '../assets/images/profile.svg';
 import { useDarkModeStore } from '../stores/darkModeStore';
+import { useNotificationStore } from '../stores/notificationStore';
+import { toast } from 'react-toastify';
 
 interface NotificationUser {
     _id: string;
@@ -43,12 +43,13 @@ interface NoticePanelProps {
     isOpen?: boolean;
 }
 
-function NoticePanel({ onClose, isOpen }: NoticePanelProps): React.ReactElement {
+export default function NoticePanel({ onClose, isOpen }: NoticePanelProps): React.ReactElement {
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [loading, setLoading] = useState(false); // 초기 로딩 false
     const [error, setError] = useState<string | null>(null);
     // const navigate = useNavigate(); // 페이지 이동 시 필요
     const { isDarkMode, toggleDarkMode } = useDarkModeStore();
+    const { setHasUnread } = useNotificationStore();
 
     useEffect(() => {
         const root = document.documentElement;
@@ -60,7 +61,6 @@ function NoticePanel({ onClose, isOpen }: NoticePanelProps): React.ReactElement 
     }, [isDarkMode]);
 
     const fetchNotifications = useCallback(async () => {
-        console.log('Fetching notifications...');
         setLoading(true);
         setError(null);
         try {
@@ -78,32 +78,32 @@ function NoticePanel({ onClose, isOpen }: NoticePanelProps): React.ReactElement 
 
     useEffect(() => {
         if (isOpen) {
-            console.log('NoticePanel is open, fetching notifications.');
             fetchNotifications();
         }
     }, [isOpen, fetchNotifications]);
 
+    // 알림 불러오기 이후, 안 읽은 알림이 있는지 확인
+    useEffect(() => {
+        const hasUnread = notifications.some((n) => !n.seen);
+        setHasUnread(hasUnread);
+    }, [notifications]);
+
     const handleMarkAllAsSeen = async () => {
         const hasUnseenNotifications = notifications.some((n) => !n.seen);
         if (!hasUnseenNotifications && notifications.length > 0) {
-            console.log('모든 알림이 이미 읽음 상태입니다.');
             return;
         }
         if (notifications.length === 0) {
-            console.log('읽을 알림이 없습니다.');
             return;
         }
 
         try {
-            console.log('모든 알림 읽음 처리 API 호출 시도...');
             await axiosInstance.put('/notifications/seen');
-            console.log('PUT /notifications/seen API 호출 성공');
-
             // 프론트엔드 상태를 즉시 모두 읽음으로 변경
             setNotifications((prevNotifications) => prevNotifications.map((n) => ({ ...n, seen: true })));
+            setHasUnread(false);
         } catch (err) {
-            console.error('알림 전체 읽음 처리 API 호출 실패:', err);
-            alert('모든 알림을 읽음 처리하는 중 오류가 발생했습니다.');
+            toast.error('모든 알림을 읽음 처리하는 중 오류가 발생했습니다.');
         }
     };
 
@@ -225,5 +225,3 @@ function NoticePanel({ onClose, isOpen }: NoticePanelProps): React.ReactElement 
         </div>
     );
 }
-
-export default NoticePanel;
