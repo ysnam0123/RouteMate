@@ -140,7 +140,7 @@ export default function MyProfile() {
   ];
 
   return (
-    <div className="w-full max-w-[1000px] mx-auto p-4 mt-[55px]">
+    <div className="w-full max-w-[1100px] mx-auto p-4 mt-[55px]">
       {/* 상단 프로필 영역 */}
       <div className="flex flex-wrap md:flex-nowrap items-start gap-5">
         {/* 프로필 사진 */}
@@ -223,7 +223,7 @@ export default function MyProfile() {
         {posts.map((post) => (
           <div
             key={post._id}
-            className="w-full max-w-[230px] h-[230px] relative group bg-cover bg-center rounded-md cursor-pointer mr-[15px]"
+            className="w-1/5 aspect-square relative group bg-cover bg-center rounded-md cursor-pointer mr-[10px] mb-[10px]"
             style={{ backgroundImage: `url(${post.image})` }}
             onClick={() => openPostModal(post)}
           >
