@@ -148,7 +148,7 @@ export default function MyProfile() {
               return (
                 <Button
                   key={index}
-                  className="w-[174px] h-[31px] text-black px-3 py-1 rounded-[19px] text-sm relative font-bold border border-[#434343] bg-white"
+                  className="w-[174px] h-[31px] text-black px-3 py-1 rounded-[19px] text-sm relative font-bold border border-[#434343] bg-[var(--color-tag-bg)]"
                 >
                   {tag?.icon && (
                     <img
@@ -157,7 +157,9 @@ export default function MyProfile() {
                       className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2"
                     />
                   )}
-                  <span className="ml-5">{title}</span>
+                  <span className="ml-5 text-[var(--color-tag-text)]">
+                    {title}
+                  </span>
                 </Button>
               );
             })}
@@ -204,7 +206,7 @@ export default function MyProfile() {
       <hr className="mt-8 mb-10 border-gray-300" />
 
       {/* 글쓰기목록 영역(임시로 둔 영역 글 목록 넣어줘야함) */}
-      <div className="flex flex-wrap">
+      <div className="flex ">
         {user.posts.map((post) => (
           <div
             key={post._id}
