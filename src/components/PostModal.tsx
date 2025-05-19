@@ -83,6 +83,7 @@ export default function PostModal({
     editableTitle.tags?.join(', ') || ''
   );
 
+  // 이미지 부분
   const [images, setImages] = useState<string[]>([]);
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
@@ -94,6 +95,7 @@ export default function PostModal({
     }
   };
 
+  // 이미지 올리기
   const handleCloudinaryUpload = async (files: File[]) => {
     const uploadPromises = files.map((file) => {
       const formData = new FormData();
@@ -481,9 +483,11 @@ export default function PostModal({
             <div className="w-100% border-[var(--color-black)] flex flex-col">
               <PostInteraction
                 postId={post._id}
+                postAuthorId={post.author._id}
                 likes={post.likes}
                 comments={post.comments}
               />
+
               {!showBox && (
                 <div
                   className="text-[var(--color-subText)] cursor-pointer underline py-0.5 ml-[4px]"
