@@ -73,11 +73,14 @@ export default function UserProfile() {
   const openPostModal = (post: Post) => {
     setSelectedPost(post);
     setIsModalOpen(true);
+    console.log(selectedPost);
+    console.log(isModalOpen);
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
     setSelectedPost(null);
+    console.log();
   };
 
   // --- 로그인한 사용자 관련 상태 ---
@@ -331,7 +334,7 @@ export default function UserProfile() {
               return (
                 <Button
                   key={index}
-                  className="w-[174px] h-[31px] text-black px-3 py-1 rounded-[19px] text-sm relative font-bold border border-[#434343] bg-white"
+                  className="w-[174px] h-[31px] px-3 py-1 rounded-[19px] text-sm relative font-bold border border-[#434343] bg-white"
                 >
                   {tag?.icon && (
                     <img
@@ -346,35 +349,37 @@ export default function UserProfile() {
             })}
           </div>
 
-          <h2 className="text-[45px] mb-2 font-bold">{user.fullName}</h2>
-          <p className="text-[20px]">{introduction}</p>
+          <h2 className="text-[45px] mb-2 font-bold text-[var(--color-profile-text)]">
+            {user.fullName}
+          </h2>
+          <p className="text-[20px] text-[var(--color-profile-text)]">
+            {introduction}
+          </p>
         </div>
 
         {/* 팔로워숫자 및 내 정보 수정 */}
-        <div className="flex flex-col gap-2 w-[273px] ml-28">
-          <div className="flex justify-between w-full">
-            <div className=" h-[33px] flex flex-col text-[20px] text-black font-semibold">
+        <div className="flex flex-col gap-2 w-[273px] ml-28 text-[var(--color-profile-text)]">
+          <div className="flex justify-between w-full ">
+            <div className=" h-[33px] flex flex-col text-[20px]  font-semibold">
               <span className="text-left">게시글</span>
               <span className="text-center">{user.posts.length}</span>
             </div>
 
-            <div className=" h-[33px] flex flex-col items-center text-[20px] text-black font-semibold">
+            <div className=" h-[33px] flex flex-col items-center text-[20px] font-semibold">
               <span>팔로워</span>
               <span>{user.followers.length}</span>
             </div>
 
-            <div className=" h-[33px] flex flex-col items-center text-[20px] text-black font-semibold">
+            <div className=" h-[33px] flex flex-col items-center text-[20px] font-semibold">
               <span className="text-right">팔로잉</span>
               <span>{user.following.length}</span>
             </div>
           </div>
           <div className="flex mt-20">
             <div className="flex gap-2">
-              <Button className="h-[45px] min-w-[125px] bg-[#26303A] text-white text-[15px] font-semibold flex items-center justify-center px-3 rounded-[10px]">
-                편지 쓰기
-              </Button>
               <Button
-                className="h-[45px] min-w-[125px] bg-[#75BFFF] text-white text-[15px] font-semibold flex items-center justify-center px-3 rounded-[10px]"
+                className="h-[45px] min-w-[273px] bg-[#75BFFF] text-white text-[15px] font-semibold flex items-center justify-center px-3 rounded-[10px]
+                hover:bg-[var(--color-main-skyBlue-hover)] hover:scale-[1.02]"
                 onClick={handleFollow}
               >
                 {isFollowing ? '언팔로우' : '팔로우+'}{' '}
@@ -391,7 +396,7 @@ export default function UserProfile() {
         {user.posts.map((post) => (
           <div
             key={post._id}
-            className="w-full max-w-[230px] h-[230px] relative group bg-cover bg-center rounded-md cursor-pointer"
+            className="w-full max-w-[230px] h-[230px] relative group bg-cover bg-center rounded-md cursor-pointer mr-[15px]"
             style={{ backgroundImage: `url(${post.image})` }}
             onClick={() => openPostModal(post)}
           >

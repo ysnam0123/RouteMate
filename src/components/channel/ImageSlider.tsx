@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import leftArrowGray from '../../assets/icons/leftArrowGray.svg';
-import rightArrowGray from '../../assets/icons/rightArrowGray.svg';
-import leftArrowBlue from '../../assets/icons/leftArrowBlue.svg';
-import rightArrowBlue from '../../assets/icons/rightArrowBlue.svg';
+
+import leftArrowG from '../../assets/icons/leftArrowG.svg';
+import rightArrowGr from '../../assets/icons/rightArrowG.svg';
+import leftArrowB from '../../assets/icons/leftArrowB.svg';
+import rightArrowB from '../../assets/icons/rightArrowB.svg';
 
 interface ImageSliderProps {
   images: string[];
@@ -41,12 +42,13 @@ export default function ImageSlider({
         <button
           onClick={showPrev}
           disabled={currentIndex === 0}
-          className="absolute top-1/2 left-2 transform -translate-y-1/2"
+          className="absolute top-1/2 left-[-25px] transform -translate-y-1/2 cursor-pointer
+          hover:scale-[1.2]"
         >
           <img
-            src={currentIndex > 0 ? leftArrowBlue : leftArrowGray}
+            src={currentIndex > 0 ? leftArrowB : leftArrowG}
             alt="이전 이미지"
-            className="w-10 h-10"
+            className=""
           />
         </button>
       )}
@@ -56,19 +58,18 @@ export default function ImageSlider({
         <button
           onClick={showNext}
           disabled={currentIndex === images.length - 1}
-          className="absolute top-1/2 right-2 transform -translate-y-1/2"
+          className="absolute top-1/2 right-[-25px] transform -translate-y-1/2 cursor-pointer
+          hover:scale-[1.2]"
         >
           <img
-            src={
-              currentIndex < images.length - 1 ? rightArrowBlue : rightArrowGray
-            }
+            src={currentIndex < images.length - 1 ? rightArrowB : rightArrowGr}
             alt="다음 이미지"
-            className="w-10 h-10"
+            className=""
           />
         </button>
       )}
 
-      {/* 인디케이터 (선택사항) */}
+      {/* 인디케이터 */}
       <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
         {images.map((_, i) => (
           <div

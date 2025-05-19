@@ -36,6 +36,10 @@
   --color-notice-bg: #ffffff;
   --color-notice-text: #000000;
 
+  /* 검색 사이드바 */
+  --color-search-bg: #ffffff;
+  --color-search-text: #000000;
+
   /* 게시글 작성 */
   --color-write-main-text: #000000;
   --color-tag: #777777;
@@ -62,6 +66,10 @@
 
   /* 로딩 */
   --color-loading-bg: #ffffff;
+
+  /* 관리자 페이지 */
+  --color-auth-text: #000000;
+  --color-auth-channel-border: #000000;
 }
 
 .dark {
@@ -89,8 +97,12 @@
   --color-sidebar-text: #ffffff;
 
   /* 알림 사이드바 */
-  --color-notice-bg: #1d2635;
+  --color-notice-bg: #0f172a;
   --color-notice-text: #ffffff;
+
+  /* 검색 사이드바 */
+  --color-search-bg: #0f172a;
+  --color-search-text: #ffffff;
 
   /* 게시글 작성 */
   --color-write-main-text: #ffffff;
@@ -119,4 +131,8 @@
 
   /* 로딩 */
   --color-loading-bg: #1d2635;
+
+  /* 관리자 페이지 */
+  --color-auth-text: #ffffff;
+  --color-auth-channel-border: #ffffff;
 }

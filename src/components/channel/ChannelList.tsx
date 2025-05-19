@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import filterIcon from '../../assets/icons/filterIcon.svg'
+import { useEffect, useState } from 'react';
+import filterIcon from '../../assets/icons/filterIcon.svg';
 
 interface Channel {
-  _id: string
-  name: string
+  _id: string;
+  name: string;
 }
 
 interface ChannelListProps {
-  channels: Channel[]
-  onSelect: (channelId: string) => void
-  selectedChannelId: string | null
-  onFilterChange?: (filters: { cost?: number; location?: string }) => void
-  className?: string
+  channels: Channel[];
+  onSelect: (channelId: string) => void;
+  selectedChannelId: string | null;
+  onFilterChange?: (filters: { cost?: number; location?: string }) => void;
+  className?: string;
 }
 
 export default function ChannelList({
@@ -20,35 +20,36 @@ export default function ChannelList({
   selectedChannelId,
   onFilterChange,
 }: ChannelListProps) {
-  const [cost, setCost] = useState<number>(0)
-  const [location, setLocation] = useState<string>('')
+  const [cost, setCost] = useState<number>(0);
+  const [location, setLocation] = useState<string>('');
 
-  const [useCostFilter, setUseCostFilter] = useState(false)
-  const [useLocationFilter, setUseLocationFilter] = useState(false)
+  const [useCostFilter, setUseCostFilter] = useState(false);
+  const [useLocationFilter, setUseLocationFilter] = useState(false);
 
-  const [showFilter, setShowFilter] = useState(true)
-  const filterToggle = () => setShowFilter((prev) => !prev)
+  const [showFilter, setShowFilter] = useState(true);
 
-  const applyFilters = () => {
-    const filters: { cost?: number; location?: string } = {}
-    if (useCostFilter) filters.cost = cost
-    if (useLocationFilter) filters.location = location
+  // 필터 상태가 바뀌면 자동 반영
+  useEffect(() => {
+    const filters: { cost?: number; location?: string } = {};
+    if (useCostFilter) filters.cost = cost;
 
-    if (onFilterChange) {
-      onFilterChange(filters)
-    }
-  }
+    if (useLocationFilter) filters.location = location;
+
+    onFilterChange?.(filters);
+  }, [useCostFilter, useLocationFilter, cost, location]);
+
+  const filterToggle = () => setShowFilter((prev) => !prev);
+
   const handleLocationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setLocation(value)
-  }
+    setLocation(e.target.value);
+  };
 
   return (
     <div className="flex justify-center relative">
       <div className="flex-col">
         <ul className="flex space-x-4 mt-[10px] mb-[20px] flex-row h-[55px]">
           {channels.map((channel) => {
-            const isSelected = channel._id === selectedChannelId
+            const isSelected = channel._id === selectedChannelId;
             return (
               <li
                 key={channel._id}
@@ -62,7 +63,7 @@ export default function ChannelList({
               >
                 {channel.name}
               </li>
-            )
+            );
           })}
         </ul>
 
@@ -98,6 +99,7 @@ export default function ChannelList({
                 disabled={!useLocationFilter}
               />
             </div>
+
             {/* 비용 필터 */}
             <div className="flex items-center gap-3">
               <label className="flex items-center gap-2">
@@ -120,7 +122,7 @@ export default function ChannelList({
                 list="markers"
                 disabled={!useCostFilter}
               />
-              <datalist id="markers" className="">
+              <datalist id="markers">
                 <option value="200000"></option>
                 <option value="700000"></option>
                 <option value="1200000"></option>
@@ -135,8 +137,9 @@ export default function ChannelList({
               현재 설정된 경비: <strong>{cost.toLocaleString()}원</strong>
             </p>
 
+            {/* 적용 버튼은 이제 필수 아님 */}
             <button
-              onClick={applyFilters}
+              onClick={() => {}} // 선택사항: 아무 동작 안 하거나 제거해도 됨
               className="absolute right-0 bottom-[30px] bg-[var(--color-main-navy)] text-white cursor-pointer px-4 py-2 hover:bg-[var(--color-main-navy-hover)] rounded-xl w-[80px]"
               disabled={!useCostFilter && !useLocationFilter}
             >
@@ -146,5 +149,5 @@ export default function ChannelList({
         )}
       </div>
     </div>
-  )
+  );
 }
