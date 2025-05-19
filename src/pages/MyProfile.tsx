@@ -69,10 +69,17 @@ export default function MyProfile() {
   const [titles, setTitles] = useState<string[]>([]);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [posts, setPosts] = useState<Post[]>([]);
 
-  const openPostModal = (post: Post) => {
-    setSelectedPost(post);
-    setIsModalOpen(true);
+  const openPostModal = async (post: Post) => {
+    try {
+      const { data: fullPost } = await axiosInstance.get(`/posts/${post._id}`);
+
+      setSelectedPost(fullPost);
+      setIsModalOpen(true);
+    } catch (error) {
+      console.error('게시물 상세 불러오기 실패:', error);
+    }
   };
 
   const closeModal = () => {
@@ -85,6 +92,12 @@ export default function MyProfile() {
   const handleClick = () => {
     navigate('/profileedit');
   };
+
+  useEffect(() => {
+    if (user) {
+      setPosts(user.posts);
+    }
+  }, [user]);
 
   useEffect(() => {
     if (!userId) return;
@@ -205,28 +218,12 @@ export default function MyProfile() {
 
       {/* 글쓰기목록 영역(임시로 둔 영역 글 목록 넣어줘야함) */}
       <div className="flex flex-wrap">
-        {user.posts.map((post) => (
+        {posts.map((post) => (
           <div
             key={post._id}
             className="w-full max-w-[230px] h-[230px] relative group bg-cover bg-center rounded-md cursor-pointer mr-[15px]"
             style={{ backgroundImage: `url(${post.image})` }}
-            onClick={() =>
-              openPostModal({
-                ...post,
-                author: {
-                  _id: user._id,
-                  fullName: user.fullName,
-                  image: user.image,
-                },
-                // 원래는 comment id값만와서 화면이 터지는 바람에 일단 화면이라도 살리기위해 author값 받았습니다
-                comments: post.comments.map(() => ({
-                  author: {
-                    fullName: user.fullName,
-                    image: user.image,
-                  },
-                })),
-              })
-            }
+            onClick={() => openPostModal(post)}
           >
             <div className="w-[111px] h-[24px] absolute bottom-3 right-0 flex gap-5 text-white opacity-0 group-hover:opacity-100 group-hover:visible invisible">
               <div className="flex items-center gap-1">
@@ -253,11 +250,24 @@ export default function MyProfile() {
         <PostModal
           post={selectedPost}
           onClose={closeModal}
+          onSaved={(updatedPost) => {
+            setPosts((prev) =>
+              prev.map((p) =>
+                p._id === updatedPost._id
+                  ? {
+                      ...updatedPost,
+                      imagePublicId: p.imagePublicId ?? '',
+                    }
+                  : p
+              )
+            );
+          }}
           user={{
             _id: user._id,
             fullName: user.fullName,
             image: user.image,
           }}
+          isMyProfile={true}
         />
       )}
     </div>
