@@ -266,7 +266,7 @@ export default function MyProfile() {
                 p._id === updatedPost._id
                   ? {
                       ...updatedPost,
-                      imagePublicId: p.imagePublicId ?? '', // 혹은 유지
+                      imagePublicId: p.imagePublicId ?? '',
                     }
                   : p
               )

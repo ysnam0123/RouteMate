@@ -51,6 +51,11 @@ interface ParsedTitle {
   author?: any[];
 }
 
+interface UploadedImage {
+  url: string;
+  publicId: string;
+}
+
 export default function PostModal({
   post,
   onClose,
@@ -78,25 +83,17 @@ export default function PostModal({
     editableTitle.tags?.join(', ') || ''
   );
 
-  // 이미지 부분
   const [images, setImages] = useState<string[]>([]);
-  const [imageFiles, setImageFiles] = useState<File[]>([]);
-  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
 
-  // 이미지 추가(기존 파일에 +)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
       const fileArray = Array.from(files);
-      const imgUrls = fileArray.map((file) => URL.createObjectURL(file));
-
-      setImages((prev) => [...prev, ...imgUrls]);
-      setImageFiles((prev) => [...prev, ...fileArray]);
       handleCloudinaryUpload(fileArray);
     }
   };
 
-  // 이미지 업로드
   const handleCloudinaryUpload = async (files: File[]) => {
     const uploadPromises = files.map((file) => {
       const formData = new FormData();
@@ -105,7 +102,10 @@ export default function PostModal({
 
       return cloudinaryAxiosInstance
         .post('', formData)
-        .then((response) => response.data.secure_url)
+        .then((res) => ({
+          url: res.data.secure_url,
+          publicId: res.data.public_id,
+        }))
         .catch((error) => {
           console.error('Cloudinary 업로드 실패:', error);
           return null;
@@ -113,13 +113,23 @@ export default function PostModal({
     });
 
     const uploaded = await Promise.all(uploadPromises);
-    const successful = uploaded.filter((url) => url !== null) as string[];
+    const successful = uploaded.filter(
+      (item): item is UploadedImage => item !== null
+    );
 
     setUploadedImages((prev) => [...prev, ...successful]);
+    setImages((prev) => [...prev, ...successful.map((img) => img.url)]);
   };
 
-  // 이미지 삭제
   const handleImgDelete = (index: number) => {
+    if (images.length <= 1) {
+      toast.warning('이미지는 최소 한 장 필요합니다.');
+      return;
+    }
+    if (index === 0) {
+      toast.warning('첫 번째 이미지는 삭제할 수 없습니다.');
+      return;
+    }
     setImages((prev) => prev.filter((_, i) => i !== index));
     setUploadedImages((prev) => prev.filter((_, i) => i !== index));
   };
@@ -129,27 +139,36 @@ export default function PostModal({
       try {
         const parsed = JSON.parse(post.title) as ParsedTitle;
         setImages(parsed.uploadedImages ?? []);
-        setUploadedImages(parsed.uploadedImages ?? []);
+        setUploadedImages(
+          (parsed.uploadedImages ?? []).map((url) => ({ url, publicId: '' }))
+        );
       } catch (e) {
         console.error('이미지 파싱 실패', e);
       }
     }
   }, [post]);
 
-  // 수정 후 저장버튼
   const handleSave = async () => {
+    if (images.length === 0) {
+      toast.warning('이미지는 최소 한 장 필요합니다.');
+      return;
+    }
+
     const updatedTitle: ParsedTitle = {
       ...editableTitle,
-      uploadedImages: uploadedImages,
+      uploadedImages: uploadedImages.map((img) => img.url),
       tags: tagsInput.split(',').map((s) => s.trim()),
       locations: locationsInput.split(',').map((s) => s.trim()),
       hotels: hotelsInput.split(',').map((s) => s.trim()),
     };
 
+    const mainImageUrl = images[0];
+    const mainUploaded = uploadedImages.find((img) => img.url === mainImageUrl);
+
     const payload = {
       postId: post._id,
       title: JSON.stringify(updatedTitle),
-      image: uploadedImages[0] || '',
+      image: mainUploaded?.url || '',
       channelId: post.channel,
     };
 
@@ -157,7 +176,7 @@ export default function PostModal({
       await axiosInstance.put(`/posts/update`, payload);
       toast('게시글이 수정되었습니다.');
       setIsEditing(false);
-      onClose(); // window.location.reload() 대신 상태로 갱신하는 게 이상적
+      onClose();
       if (onSaved) {
         onSaved({ ...post, title: payload.title, image: payload.image });
       }
