@@ -7,16 +7,9 @@ import PostComments from './channel/PostComments';
 import { axiosInstance } from '../api/axios';
 import { toast } from 'react-toastify';
 
-interface likesObj {
-  _id: string;
-  user: string;
-  post: string;
-  createdAt: string;
-}
-
 interface PostType {
   likes: likesObj[];
-  comments: any[];
+  comments: commentsObj[];
   _id: string;
   title: string;
   image: string;
@@ -29,7 +22,18 @@ interface PostType {
   channel: string;
   updatedAt: string;
 }
+interface likesObj {
+  _id: string;
+  user: string;
+  post: string;
+  createdAt: string;
+}
 
+interface commentsObj {
+  _id: string;
+  comment: string;
+  author: { fullname: string; image: string };
+}
 interface PostModalProps {
   post: PostType | null;
   onClose: () => void;
@@ -85,6 +89,7 @@ export default function PostModal({ post, onClose, user }: PostModalProps) {
     }
   };
 
+  console.log(post.comments);
   return (
     <div className="fixed inset-0 bg-black/20 flex items-center justify-center pl-60 z-50">
       <div className="bg-white rounded-lg p-10 max-h-[90vh] overflow-y-auto relative">

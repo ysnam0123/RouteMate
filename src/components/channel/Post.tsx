@@ -1,51 +1,51 @@
-import { useState } from 'react'
-import profile from '../../assets/images/profile.svg'
-import bedIcon from '../../assets/icons/bedIcon.svg'
-import ImageSlider from './ImageSlider'
-import PostInteraction from './PostInteraction'
-import PostComments from './PostComments'
+import { useState } from 'react';
+import profile from '../../assets/images/profile.svg';
+import bedIcon from '../../assets/icons/bedIcon.svg';
+import ImageSlider from './ImageSlider';
+import PostInteraction from './PostInteraction';
+import PostComments from './PostComments';
 
 interface PostProps {
   post: {
-    likes: likesObj[]
-    comments: any[]
-    _id: string
-    title: string
-    image: string
-    createdAt: string
+    likes: likesObj[];
+    comments: any[];
+    _id: string;
+    title: string;
+    image: string;
+    createdAt: string;
     author: {
-      _id: string
-      fullName: string
-      image: string
-    }
-  }
+      _id: string;
+      fullName: string;
+      image: string;
+    };
+  };
 }
 interface likesObj {
-  _id: string
-  user: string
-  post: string
-  createdAt: string
+  _id: string;
+  user: string;
+  post: string;
+  createdAt: string;
 }
 
 interface ParsedTitle {
-  uploadedImages: string[]
-  writtenTitle: string
-  tags: string[]
-  locations: string[]
-  hotels: string[]
-  cost: string
-  context: string
-  author?: any[]
+  uploadedImages: string[];
+  writtenTitle: string;
+  tags: string[];
+  locations: string[];
+  hotels: string[];
+  cost: string;
+  context: string;
+  author?: any[];
 }
 
 export default function Post({ post }: PostProps) {
-  const parsedTitle = JSON.parse(post.title) as ParsedTitle
-  const [showBox, setShowBox] = useState(false)
-  const toggleCommentBox = () => setShowBox((prev) => !prev)
+  const parsedTitle = JSON.parse(post.title) as ParsedTitle;
+  const [showBox, setShowBox] = useState(false);
+  const toggleCommentBox = () => setShowBox((prev) => !prev);
   // console.log('parsedTitle: ', parsedTitle);
 
   // 이미지 배열 추출
-  const imageUrls: string[] = parsedTitle.uploadedImages ?? []
+  const imageUrls: string[] = parsedTitle.uploadedImages ?? [];
 
   return (
     <div className="border border-[var(--color-border)] p-4 rounded-lg shadow-sm bg-[var(--color-post-bg)] max-w-[600px] h-100% px-[30px]  mb-[30px]">
@@ -145,5 +145,5 @@ export default function Post({ post }: PostProps) {
         {showBox && <PostComments postId={post._id} comments={post.comments} />}
       </div>
     </div>
-  )
+  );
 }
