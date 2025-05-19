@@ -52,7 +52,7 @@ export default function Post({ post }: PostProps) {
       <div className="flex justify-between mb-[10px]">
         <div className="flex items-center gap-0.2">
           <img
-            src={profile}
+            src={post.author.image || profile}
             alt="user"
             className="w-[40px] h-[40px] mr-[10px] rounded-3xl"
           />
@@ -82,11 +82,11 @@ export default function Post({ post }: PostProps) {
       <div className="flex flex-row gap-2">
         <div className="w-[600px]">
           {/* 제목, 날짜 */}
-          <div className="flex justify-between items-center">
-            <h2 className="text-[30px] font-bold text-[var(--color-title)] mb-[20px]">
+          <div className="flex justify-between items-center relative ">
+            <h2 className="text-[30px] font-bold text-[var(--color-title)] mb-[20px]  ">
               {parsedTitle.writtenTitle}
             </h2>
-            <div className="flex justify-end text-[var(--color-subText)]">
+            <div className="flex justify-end text-[var(--color-subText)] text-[13px] absolute right-0 top-[50px]">
               {new Date(post.createdAt).toLocaleDateString()}
             </div>
           </div>
