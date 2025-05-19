@@ -267,6 +267,7 @@ export default function MyProfile() {
             fullName: user.fullName,
             image: user.image,
           }}
+          isMyProfile={true}
         />
       )}
     </div>

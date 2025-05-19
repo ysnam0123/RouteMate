@@ -34,6 +34,7 @@ interface PostType {
 }
 
 interface PostModalProps {
+  isMyProfile?: boolean;
   post: PostType | null;
   onClose: () => void;
   onSaved?: (updatedPost: PostType) => void;
@@ -61,6 +62,7 @@ export default function PostModal({
   onClose,
   user,
   onSaved,
+  isMyProfile,
 }: PostModalProps) {
   if (!post) return null;
 
@@ -214,7 +216,7 @@ export default function PostModal({
         </button>
 
         {/* 내 게시글일때만 */}
-        {user._id === post.author._id && !isEditing && (
+        {isMyProfile && !isEditing && (
           <div className="absolute top-1 right-15">
             <button
               onClick={toggleMenu}

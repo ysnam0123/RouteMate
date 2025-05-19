@@ -434,6 +434,7 @@ export default function UserProfile() {
             fullName: user.fullName,
             image: user.image,
           }}
+          isMyProfile={false}
         />
       )}
     </div>
